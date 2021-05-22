@@ -1,0 +1,57 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id                      Int           @default(autoincrement()) @id
+  twitchId                String        @unique
+  name                    String        @unique
+  displayName             String        @unique
+  fullName                String?
+  description             String
+  country                 String?
+  isLive                  Boolean       @default(false)
+
+  topics                  String[]
+
+  type                    String?
+  broadcasterType         String
+  creationDate            DateTime
+  profilePictureUrl       String        @unique
+  views                   Int
+
+  lastOnline              DateTime?
+  latestStreamTitle       String?
+  latestStreamStartedAt   DateTime?
+
+  // TODO: Create Links model
+  homepage                String?
+  youtube                 String?
+  twitter                 String?
+  github                  String?
+  discord                 String?
+  insatgram               String?
+
+  createdAt               DateTime      @default(now())
+  updatedAt               DateTime      @updatedAt
+}
+
+// model Stream {
+//   userId
+//   title
+//   type
+//   gameName
+//   gameId
+//   viewerCount
+//   startedAt
+//   language
+//   isMature
+// }

@@ -3,13 +3,29 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev:dev": "next dev",
+    "dev:update": "while true; do wget -q --spider 'http://localhost:3000/api/updateUsers/?force=1'; sleep 300; done",
+    "dev": "concurrently \"npm run dev:dev\" \"npm run dev:update\"",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "update:users": "node util/update_users.mjs"
   },
   "dependencies": {
+    "@prisma/client": "^2.23.0",
+    "babel-plugin-superjson-next": "^0.3.0",
+    "date-fns": "^2.21.3",
+    "dotenv": "^10.0.0",
+    "lodash": "^4.17.21",
     "next": "10.2.2",
+    "pluralize": "^8.0.0",
     "react": "17.0.2",
-    "react-dom": "17.0.2"
+    "react-dom": "17.0.2",
+    "superjson": "^1.7.4",
+    "twitch": "^4.5.5",
+    "twitch-auth": "^4.5.5"
+  },
+  "devDependencies": {
+    "concurrently": "^6.1.0",
+    "prisma": "^2.23.0"
   }
 }

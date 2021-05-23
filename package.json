@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev:dev": "next dev",
-    "dev:update": "while true; do wget -q --spider 'http://localhost:3000/api/updateUsers/?force=1'; sleep 300; done",
+    "dev:update": "while true; do wget -q --spider 'http://localhost:3000/api/updateUsers/?force=1'; sleep 290; done",
     "dev": "concurrently \"npm run dev:dev\" \"npm run dev:update\"",
     "build": "next build",
     "start": "next start",
@@ -25,7 +25,11 @@
     "twitch-auth": "^4.5.5"
   },
   "devDependencies": {
+    "autoprefixer": "^10.2.5",
     "concurrently": "^6.1.0",
-    "prisma": "^2.23.0"
+    "postcss": "^8.3.0",
+    "prisma": "^2.23.0",
+    "tailwindcss": "^2.1.2",
+    "tailwindcss-font-inter": "^2.0.5"
   }
 }

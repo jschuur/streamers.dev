@@ -31,6 +31,7 @@ model User {
   lastOnline              DateTime?
   latestStreamTitle       String?
   latestStreamStartedAt   DateTime?
+  latestStreamViewers     Int?
 
   // TODO: Create Links model
   homepage                String?

@@ -8,10 +8,12 @@
     "dev": "concurrently \"npm run dev:dev\" \"npm run dev:update\"",
     "build": "next build",
     "start": "next start",
-    "update:users": "node util/update_users.mjs",
-    "migrate:prod": "dotenv -e .env.production.local -- prisma migrate deploy"
+    "update:users": "babel-node util/updateAllUsers.js",
+    "update:users:prod": "dotenv -e .env.production babel-node util/updateAllUsers.js",
+    "migrate:prod": "dotenv -e .env.production -- prisma migrate deploy"
   },
   "dependencies": {
+    "@babel/core": "^7.14.3",
     "@prisma/client": "^2.23.0",
     "babel-plugin-superjson-next": "^0.3.0",
     "date-fns": "^2.21.3",
@@ -26,6 +28,7 @@
     "twitch-auth": "^4.5.5"
   },
   "devDependencies": {
+    "@babel/node": "^7.14.2",
     "autoprefixer": "^10.2.5",
     "concurrently": "^6.1.0",
     "dotenv-cli": "^4.0.0",

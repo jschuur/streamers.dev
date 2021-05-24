@@ -1,5 +1,5 @@
 import React from 'react';
-import sortBy from 'lodash/sortby';
+import { sortBy } from 'lodash';
 
 import UserListEntry from './UserListEntry';
 

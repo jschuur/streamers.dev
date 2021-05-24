@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body {
-  @apply font-inter
+  @apply bg-blue-50
 }
 
 a {

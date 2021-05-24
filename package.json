@@ -3,11 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev:dev": "next dev",
-    "dev:update": "while true; do wget -q --spider 'http://localhost:3000/api/updateUsers/?force=1'; sleep 290; done",
-    "dev": "concurrently \"npm run dev:dev\" \"npm run dev:update\"",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "dev:update": "concurrently \"npm run dev\" \"npm run dev:update:users\"",
+    "dev:update:users": "while true; do wget -q --spider 'http://localhost:3000/api/updateUsers/?force=1'; sleep 290; done",
     "update:users": "babel-node util/updateAllUsers.js",
     "update:users:prod": "dotenv -e .env.production babel-node util/updateAllUsers.js",
     "migrate:prod": "dotenv -e .env.production -- prisma migrate deploy"

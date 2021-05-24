@@ -3,6 +3,8 @@ import pluralize from 'pluralize';
 import UserList from '../components/UserList';
 
 import { getUsers } from '../lib/twitch';
+import { TWITCH_USER_FIELDS } from '../lib/config.js';
+import { min, map } from 'lodash';
 
 export default function Home({ users }) {
   return (
@@ -17,28 +19,15 @@ export default function Home({ users }) {
         <a href='https://twitter.com/StreamersDev'>@StreamersDev</a>
         <br />
         Currently using a curated list of {pluralize('Twitch users', users.length, true)}
+        <br />
+        Last updated: {min(map(users, 'updatedAt')).toGMTString()}
       </footer>
     </>
   );
 }
 
 export async function getServerSideProps() {
-  const fields = [
-    'twitchId',
-    'name',
-    'displayName',
-    'fullName',
-    'isLive',
-    'latestStreamTitle',
-    'latestStreamStartedAt',
-    'latestStreamViewers',
-    'profilePictureUrl',
-    'description',
-    'broadcasterType',
-    'country',
-  ];
-
-  const users = await getUsers({ fields });
+  const users = await getUsers({ fields: TWITCH_USER_FIELDS });
 
   return { props: { users } };
 }

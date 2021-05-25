@@ -39,7 +39,7 @@ model User {
   twitter                 String?
   github                  String?
   discord                 String?
-  insatgram               String?
+  instagram               String?
 
   createdAt               DateTime      @default(now())
   updatedAt               DateTime      @updatedAt

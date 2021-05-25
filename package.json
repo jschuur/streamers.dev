@@ -10,7 +10,9 @@
     "dev:update:users": "while true; do wget -q --spider 'http://localhost:3000/api/updateUsers/?force=1'; sleep 290; done",
     "update:users": "babel-node util/updateAllUsers.js",
     "update:users:prod": "dotenv -e .env.production babel-node util/updateAllUsers.js",
-    "migrate:prod": "dotenv -e .env.production -- prisma migrate deploy"
+    "migrate": "prisma migrate dev",
+    "migrate:prod": "dotenv -e .env.production -- prisma migrate deploy",
+    "db:dump": "pg_dump streamersdev > dbdump.sql"
   },
   "dependencies": {
     "@babel/core": "^7.14.3",

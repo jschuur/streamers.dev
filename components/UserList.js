@@ -45,7 +45,7 @@ export default function UserList({ users }) {
               </thead>
               <tbody className='bg-white divide-y divide-gray-200'>
                 {userList.map((user, index) => (
-                  <UserListEntry user={user} userIndex={index} />
+                  <UserListEntry key={user.twitchId} user={user} userIndex={index} />
                 ))}
               </tbody>
             </table>

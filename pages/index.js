@@ -1,3 +1,4 @@
+import Head from 'next/head';
 import pluralize from 'pluralize';
 
 import UserList from '../components/UserList';
@@ -9,6 +10,11 @@ import { min, map } from 'lodash';
 export default function Home({ users }) {
   return (
     <>
+      <Head>
+        <title>streamers.dev - A directory of live coding streamers</title>
+        <meta name="description" content="A directory of live coding streamers"></meta>
+      </Head>
+
       <h1 className='text-center text-3xl mt-5'>Streamers.dev</h1>
       <div className='mx-auto px-7 py-5'>
         <UserList users={users} />

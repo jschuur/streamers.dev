@@ -1,11 +1,12 @@
 import Head from 'next/head';
+import { min, map } from 'lodash';
 import pluralize from 'pluralize';
 
 import UserList from '../components/UserList';
 
-import { getUsers } from '../lib/twitch';
-import { TWITCH_USER_FIELDS } from '../lib/config.js';
-import { min, map } from 'lodash';
+import { getUsers } from '../lib/db';
+
+import { TWITCH_USER_FIELDS } from '../lib/config';
 
 export default function Home({ users }) {
   return (

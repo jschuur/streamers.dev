@@ -5,6 +5,8 @@ import pluralize from 'pluralize';
 
 import UserList from '../components/UserList';
 
+import { NEXT_PUBLIC_USER_AUTOREFRESH_SECONDS } from '../lib/config';
+
 export default function Home() {
   const [users, setUsers] = useState([]);
   const [loadingError, setLoadingError] = useState(null);
@@ -19,6 +21,13 @@ export default function Home() {
     };
 
     loadUsers();
+
+    const refreshRate =
+      process.env.NEXT_PUBLIC_USER_AUTOREFRESH_SECONDS || NEXT_PUBLIC_USER_AUTOREFRESH_SECONDS;
+    if (refreshRate) {
+      console.log(`Refreshing user list every ${refreshRate} seconds`);
+      setInterval(loadUsers, refreshRate * 1000);
+    }
   }, []);
 
   return (

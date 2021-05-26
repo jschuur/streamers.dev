@@ -1,5 +1,6 @@
 import { parseISO, intervalToDuration, formatDuration } from 'date-fns';
 import pluralize from 'pluralize';
+import SocialButtons from './SocialButtons';
 
 export default function UserListEntry({ user, userIndex }) {
   return (
@@ -14,7 +15,8 @@ export default function UserListEntry({ user, userIndex }) {
           <div className='ml-4'>
             <div className='text-sm font-medium text-gray-900'>
               <a href={'https://twitch.tv/' + user.displayName}>{user.displayName}</a>{' '}
-              {user.fullName && <span className='text-gray-500'>({user.fullName})</span>}
+              {user.fullName && <span className='text-gray-500'>({user.fullName})</span>} <br />
+              <SocialButtons user={user} />
             </div>
             <div className='text-sm text-gray-500'></div>
           </div>

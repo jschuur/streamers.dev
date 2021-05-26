@@ -1,4 +1,4 @@
-import { intervalToDuration, formatDuration } from 'date-fns';
+import { parseISO, intervalToDuration, formatDuration } from 'date-fns';
 import pluralize from 'pluralize';
 
 export default function UserListEntry({ user, userIndex }) {
@@ -25,7 +25,7 @@ export default function UserListEntry({ user, userIndex }) {
         <div className='text-sm text-gray-500'>
           {user.latestStreamViewers} {pluralize('viewers', user.latestStreamViewers)}, live for{' '}
           {formatDuration(
-            intervalToDuration({ start: user.latestStreamStartedAt, end: new Date() })
+            intervalToDuration({ start: parseISO(user.latestStreamStartedAt), end: new Date() })
           )}
         </div>
       </td>

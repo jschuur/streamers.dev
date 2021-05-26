@@ -5,7 +5,7 @@ import pluralize from 'pluralize';
 
 import UserList from '../components/UserList';
 
-import { NEXT_PUBLIC_USER_AUTOREFRESH_SECONDS } from '../lib/config';
+import { USER_AUTOREFRESH_SECONDS } from '../lib/config';
 
 export default function Home() {
   const [users, setUsers] = useState([]);
@@ -23,7 +23,7 @@ export default function Home() {
     loadUsers();
 
     const refreshRate =
-      process.env.NEXT_PUBLIC_USER_AUTOREFRESH_SECONDS || NEXT_PUBLIC_USER_AUTOREFRESH_SECONDS;
+      process.env.NEXT_PUBLIC_USER_AUTOREFRESH_SECONDS || USER_AUTOREFRESH_SECONDS;
     if (refreshRate) {
       console.log(`Refreshing user list every ${refreshRate} seconds`);
       setInterval(loadUsers, refreshRate * 1000);
@@ -38,7 +38,7 @@ export default function Home() {
       </Head>
 
       <h1 className='text-center font-medium text-3xl mt-5'>Streamers.dev</h1>
-      <div className='mx-auto px-7 py-5'>
+      <div className='max-w-6xl mx-auto sm:px-7 py-5'>
         {loadingError ? (
           <>Error: {loadingError}</>
         ) : users.length ? (

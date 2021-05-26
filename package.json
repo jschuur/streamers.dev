@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@babel/core": "^7.14.3",
+    "@fontsource/raleway": "^4.3.0",
     "@prisma/client": "^2.23.0",
     "babel-plugin-superjson-next": "^0.3.0",
     "date-fns": "^2.21.3",
@@ -38,7 +39,6 @@
     "dotenv-cli": "^4.0.0",
     "postcss": "^8.3.0",
     "prisma": "^2.23.0",
-    "tailwindcss": "^2.1.2",
-    "tailwindcss-font-inter": "^2.0.5"
+    "tailwindcss": "^2.1.2"
   }
 }

@@ -2,6 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+@import "@fontsource/raleway";
+@import "@fontsource/raleway/500.css";
+
+body {
+  font-family: 'Raleway', sans-serif;
+}
+
 body {
   @apply bg-blue-50
 }

@@ -10,5 +10,5 @@ module.exports = {
       textColor: ['visited'],
     },
   },
-  plugins: [require('tailwindcss-font-inter')()],
+  plugins: [],
 };

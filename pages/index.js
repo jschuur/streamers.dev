@@ -37,21 +37,28 @@ export default function Home() {
         <meta name='description' content='A directory of live coding streamers'></meta>
       </Head>
 
-      <h1 className='text-center text-3xl mt-5'>Streamers.dev</h1>
+      <h1 className='text-center font-medium text-3xl mt-5'>Streamers.dev</h1>
       <div className='mx-auto px-7 py-5'>
-        { loadingError ? <>Error: { loadingError }</> :
-          users.length ? <UserList users={users} /> : <div>Loading...</div> }
+        {loadingError ? (
+          <>Error: {loadingError}</>
+        ) : users.length ? (
+          <UserList users={users} />
+        ) : (
+          <div>Loading...</div>
+        )}
       </div>
       <footer className='text-right text-xs text-gray-400 px-7'>
         <a href='https://trello.com/b/a9k1kC65'>Work in progress</a> by{' '}
         <a href='https://twitter.com/joostschuur/'>Joost Schuur</a>,{' '}
         <a href='https://twitter.com/StreamersDev'>@StreamersDev</a>
-        { users.length && <>
-          <br />
-          Currently using a curated list of { pluralize('Twitch users', users.length, true) }
-          <br />
-          {/* Last updated: {new Date(min(map(users, 'updatedAt'))).toGMTString()} */}
-        </>}
+        {users.length && (
+          <>
+            <br />
+            Currently using a curated list of {pluralize('Twitch users', users.length, true)}
+            <br />
+            {/* Last updated: {new Date(min(map(users, 'updatedAt'))).toGMTString()} */}
+          </>
+        )}
       </footer>
     </>
   );

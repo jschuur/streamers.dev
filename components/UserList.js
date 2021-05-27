@@ -26,12 +26,15 @@ export default function UserList({ users }) {
                   </th>
                   <th
                     scope='col'
-                    className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'
+                    width='140px'
+                    className=' text-left text-xs font-medium text-gray-500 uppercase tracking-wider px-6 py-3 hidden md:table-cell'
                   >
                     Stream
                   </th>
+                  <th scope='col' className='px-6 py-3'></th>
                   <th
                     scope='col'
+                    width='120px'
                     className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell'
                   >
                     Links

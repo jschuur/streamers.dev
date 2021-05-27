@@ -4,6 +4,7 @@ import { min, map } from 'lodash';
 import pluralize from 'pluralize';
 
 import UserList from '../components/UserList';
+import Footer from '../components/Footer';
 
 import { USER_AUTOREFRESH_SECONDS } from '../lib/config';
 
@@ -33,11 +34,12 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>streamers.dev - A directory of live coding streamers</title>
+        <title>streamers.dev - a directory of live coding streamers</title>
         <meta name='description' content='A directory of live coding streamers'></meta>
       </Head>
 
-      <h1 className='text-center font-medium text-3xl mt-5'>Streamers.dev</h1>
+      <h1 className='text-center font-medium text-3xl mt-5'>streamers.dev</h1>
+      <h2 className='text-center text-xl'>a curated directory of live coding streamers</h2>
       <div className='max-w-6xl mx-auto sm:px-7 py-5'>
         {loadingError ? (
           <>Error: {loadingError}</>
@@ -46,20 +48,8 @@ export default function Home() {
         ) : (
           <div>Loading...</div>
         )}
+        <Footer />
       </div>
-      <footer className='text-right text-xs text-gray-400 px-7'>
-        <a href='https://trello.com/b/a9k1kC65'>Work in progress</a> by{' '}
-        <a href='https://twitter.com/joostschuur/'>Joost Schuur</a>,{' '}
-        <a href='https://twitter.com/StreamersDev'>@StreamersDev</a>
-        {users.length && (
-          <>
-            <br />
-            Currently using a curated list of {pluralize('Twitch users', users.length, true)}
-            <br />
-            {/* Last updated: {new Date(min(map(users, 'updatedAt'))).toGMTString()} */}
-          </>
-        )}
-      </footer>
     </>
   );
 }

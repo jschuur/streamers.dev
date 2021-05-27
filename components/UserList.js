@@ -4,6 +4,7 @@ import { sortBy } from 'lodash';
 import UserListEntry from './UserListEntry';
 
 export default function UserList({ users }) {
+  const totalUsers = users.length;
   const userList = sortBy(
     users.filter((user) => user.isLive),
     'latestStreamViewers'
@@ -21,7 +22,7 @@ export default function UserList({ users }) {
                     scope='col'
                     className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'
                   >
-                    Channel
+                    Channel ({userList.length} of {totalUsers} live)
                   </th>
                   <th
                     scope='col'

@@ -32,6 +32,8 @@ model User {
   latestStreamTitle       String?
   latestStreamStartedAt   DateTime?
   latestStreamViewers     Int?
+  latestStreamLanguage    String?
+  latestStreamGameName    String?
 
   // TODO: Create Links model
   homepage                String?
@@ -54,5 +56,4 @@ model User {
 //   viewerCount
 //   startedAt
 //   language
-//   isMature
 // }

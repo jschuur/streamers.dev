@@ -31,7 +31,12 @@ export default function UserList({ users }) {
                   >
                     Stream
                   </th>
-                  <th scope='col' className='px-6 py-3'></th>
+                  <th
+                    scope='col'
+                    className='text-left text-xs font-medium text-gray-500 uppercase tracking-wider px-6 py-3'
+                  >
+                    <span className='md:hidden'>Stream</span>
+                  </th>
                   <th
                     scope='col'
                     width='120px'

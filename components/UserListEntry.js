@@ -27,11 +27,14 @@ export default function UserListEntry({ user, userIndex }) {
                 alt={`Avatar for ${user.displayName}`}
               />
             </TwitchLink>
+            <div className='text-center text-xs sm:text-base mt-1'>
+              {user.country && <>{getUnicodeFlagIcon(user.country.toUpperCase())}</>}
+              {user.country2 && <>{' '}{getUnicodeFlagIcon(user.country2.toUpperCase())}</>}
+            </div>
           </div>
           <div className='ml-4'>
             <div className='text-gray-900'>
-              <TwitchLink username={user.name}>{user.displayName}</TwitchLink>{' '}
-              {user.country && <>{getUnicodeFlagIcon(user.country.toUpperCase())}</>}
+              <TwitchLink username={user.name}>{user.displayName}</TwitchLink>
               <br />
               <div className='text-xs md:text-sm text-gray-500 mt-1'>
                 {user.fullName && <>{user.fullName}</>}
@@ -42,7 +45,7 @@ export default function UserListEntry({ user, userIndex }) {
         </div>
       </td>
       <td className='px-2 py-2 align-top hidden md:table-cell'>
-              <TwitchLink username={user.name}>
+        <TwitchLink username={user.name}>
           <VideoThumbnail username={user.name} width={200} height={120} />
         </TwitchLink>
       </td>
@@ -50,7 +53,7 @@ export default function UserListEntry({ user, userIndex }) {
         className='py-2 px-2 align-top cursor-pointer'
         onClick={() => (window.location.href = `https://twitch.tv/${user.name}`)}
       >
-        {user.latestStreamLanguage && (
+        {user.latestStreamLanguage && user.latestStreamLanguage !== 'en' && (
           <GreenBadge>{by639_1[user.latestStreamLanguage].name}</GreenBadge>
         )}
         {user.latestStreamGameName && user.latestStreamGameName !== 'Science & Technology' && (

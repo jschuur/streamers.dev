@@ -18,6 +18,7 @@ model User {
   fullName                String?
   description             String
   country                 String?
+  country2                String?
   isLive                  Boolean       @default(false)
 
   topics                  String[]

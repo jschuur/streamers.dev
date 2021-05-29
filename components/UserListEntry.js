@@ -15,6 +15,7 @@ export default function UserListEntry({ user, userIndex }) {
   const startDate = parseISO(user.latestStreamStartedAt),
     now = new Date();
 
+    console.log(user.broadcasterType);
   return (
     <tr className={userIndex % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
       <td className='px-2 py-2 align-top'>
@@ -22,7 +23,11 @@ export default function UserListEntry({ user, userIndex }) {
           <div className='flex-shrink-0 h-10 w-10 align-center'>
             <TwitchLink username={user.name}>
               <img
-                className='h-10 w-10 rounded-full'
+                className={`h-10 w-10 rounded-full ${
+                  user.broadcasterType === 'partner'
+                    ? 'border-purple-600 border-[3px]'
+                    : user.broadcasterType === 'affiliate' && 'border-blue-600 border-[3px]'
+                }`}
                 src={user.profilePictureUrl}
                 alt={`Avatar for ${user.displayName}`}
               />

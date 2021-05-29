@@ -13,7 +13,9 @@ import { disconnectDB } from '../lib/db.js';
   console.log(`Running ${argv.fullDetails ? 'full details' : 'status'} update`);
 
   try {
-    const userCount = await (argv.fullDetails ? updateAllUserDetails() : updateAllUserStatuses());
+    const userCount = await (argv.fullDetails
+      ? updateAllUserDetails({ updateAll: true })
+      : updateAllUserStatuses({ updateAll: true }));
   } catch ({ message }) {
     console.error(`Problem updating all users: ${message}`);
   }

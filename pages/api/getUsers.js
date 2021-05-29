@@ -6,7 +6,7 @@ export default async (req, res) => {
     const users = await getUsers({ options: req.query });
 
     // Add in updated status info in case user data is outdated
-    await updateUserStatuses({ users });
+    await updateUserStatuses({ users, updateAll: false });
 
     res.status(200).json({ users });
   } catch ({ message }) {

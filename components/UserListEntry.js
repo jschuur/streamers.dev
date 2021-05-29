@@ -27,9 +27,9 @@ export default function UserListEntry({ user, userIndex }) {
                 alt={`Avatar for ${user.displayName}`}
               />
             </TwitchLink>
-            <div className='text-center text-xs sm:text-base mt-1'>
+            <div className='text-center text-xs md:text-base mt-1'>
               {user.country && <>{getUnicodeFlagIcon(user.country.toUpperCase())}</>}
-              {user.country2 && <>{' '}{getUnicodeFlagIcon(user.country2.toUpperCase())}</>}
+              {user.country2 && <>{getUnicodeFlagIcon(user.country2.toUpperCase())}</>}
             </div>
           </div>
           <div className='ml-4'>

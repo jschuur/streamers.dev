@@ -1,20 +1,45 @@
-import React from 'react';
+import { useState } from 'react';
 import { sortBy } from 'lodash';
 
 import UserListEntry from './UserListEntry';
 
 export default function UserList({ users }) {
+  const [isCoding, setIsCoding] = useState(true);
+  const [isEnglish, setIsEnglish] = useState(false);
+
   const totalUsers = users.length;
-  const userList = sortBy(
+
+  let userList = sortBy(
     users.filter((user) => user.isLive),
     'latestStreamViewers'
   ).reverse();
+
+  if (isCoding)
+    userList = userList.filter((user) => user.latestStreamGameName === 'Science & Technology');
+  if (isEnglish)
+    userList = userList.filter((user) => user.latestStreamLanguage === 'en');
 
   return (
     <div className='flex flex-col'>
       <div className='-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8'>
         <div className='py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8'>
           <div className='shadow overflow-hidden border-b border-gray-200 sm:rounded-lg'>
+            <div className='text-right'>
+              <button
+                onClick={() => setIsEnglish(!isEnglish)}
+                type='button'
+                className='m-1 inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-indigo-600 hover:bg-indigo-700'
+              >
+                Language: {isEnglish ? 'English' : 'Any'}
+              </button>
+              <button
+                onClick={() => setIsCoding(!isCoding)}
+                type='button'
+                className='m-1 inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-indigo-600 hover:bg-indigo-700'
+              >
+                In: {isCoding ? 'Science & Tech' : 'Anywhere'}
+              </button>
+            </div>
             <table className='min-w-full divide-y divide-gray-200'>
               <thead className='bg-gray-50'>
                 <tr>

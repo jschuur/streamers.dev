@@ -11,13 +11,13 @@ export default function ChannelBadges({
   return (
     <>
       {latestStreamLanguage && latestStreamLanguage !== 'en' && (
-        <GreenBadge>🗣 {by639_1[latestStreamLanguage].name}</GreenBadge>
+        <GreenBadge key={1}>🗣 {by639_1[latestStreamLanguage].name}</GreenBadge>
       )}
       {latestStreamGameName && latestStreamGameName !== 'Science & Technology' && (
-        <RedBadge>In: {latestStreamGameName}</RedBadge>
+        <RedBadge key={2}>In: {latestStreamGameName}</RedBadge>
       )}
       {channelType && channelType !== 'USER' && (
-        <YellowBadge>{capitalize(channelType.toLowerCase())}</YellowBadge>
+        <YellowBadge key={3}>{capitalize(channelType.toLowerCase())}</YellowBadge>
       )}
       {teams && teams.map((team) => <PurpleBadge>Team: {team}</PurpleBadge>)}
     </>

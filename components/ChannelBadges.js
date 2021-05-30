@@ -4,20 +4,22 @@ import { by639_1 } from 'iso-language-codes';
 import { RedBadge, GreenBadge, YellowBadge, PurpleBadge } from './Badge';
 
 export default function ChannelBadges({
-  user: { latestStreamLanguage, latestStreamGameName, channelType, team },
+  user: { displayName, latestStreamLanguage, latestStreamGameName, channelType, team },
 }) {
+  const teams = team ? team.split(',') : undefined;
+
   return (
     <>
       {latestStreamLanguage && latestStreamLanguage !== 'en' && (
-        <GreenBadge>{by639_1[latestStreamLanguage].name}</GreenBadge>
+        <GreenBadge>🗣 {by639_1[latestStreamLanguage].name}</GreenBadge>
       )}
       {latestStreamGameName && latestStreamGameName !== 'Science & Technology' && (
-        <RedBadge>{latestStreamGameName}</RedBadge>
+        <RedBadge>In: {latestStreamGameName}</RedBadge>
       )}
       {channelType && channelType !== 'USER' && (
         <YellowBadge>{capitalize(channelType.toLowerCase())}</YellowBadge>
       )}
-      {team && <PurpleBadge>{team}</PurpleBadge>}
+      {teams && teams.map((team) => <PurpleBadge>Team: {team}</PurpleBadge>)}
     </>
   );
 }

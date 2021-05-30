@@ -10,6 +10,8 @@
     "dev:update": "concurrently \"npm run dev\" \"npm run dev:update:users\"",
     "dev:update:users": "while true; do wget -q --spider 'http://localhost:3000/api/updateUsers/?force=1'; sleep 290; done",
     "update:users": "babel-node util/updateAllUsers.js",
+    "update:snapshots": "babel-node util/generateSnapshots.js",
+    "update:snapshots:prod": "dotenv -e .env.production babel-node util/generateSnapshots.js",
     "update:users:full": "babel-node util/updateAllUsers.js --fullDetails",
     "update:users:prod": "dotenv -e .env.production babel-node util/updateAllUsers.js",
     "update:users:prod:full": "dotenv -e .env.production babel-node util/updateAllUsers.js -- --fullDetails",

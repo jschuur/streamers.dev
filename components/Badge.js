@@ -23,3 +23,19 @@ export function BlueBadge({ color, children }) {
     </span>
   );
 }
+
+export function YellowBadge({ color, children }) {
+  return (
+    <span className='inline-flex items-center px-1.5 py-0.25 rounded text-xs font-medium tracking-wider bg-yellow-100 text-yellow-800 mr-1'>
+      {children}
+    </span>
+  );
+}
+
+export function PurpleBadge({ color, children }) {
+  return (
+    <span className='inline-flex items-center px-1.5 py-0.25 rounded text-xs font-medium tracking-wider bg-purple-100 text-purple-800 mr-1'>
+      {children}
+    </span>
+  );
+}

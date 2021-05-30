@@ -11,11 +11,11 @@ export default async (req, res) => {
   }
 
   try {
-    const { name } = req.query;
+    const { name, backlog } = req.query;
 
-    await addNewUser(name);
+    await addNewUser({ name, backlog });
 
-    res.status(200).send({ message: `User ${name} added` });
+    res.status(200).send({ message: `User ${name} added${backlog ? ' (backlogged)' : ''}` });
   } catch ({ message }) {
     res.status(500).json({ message });
   }

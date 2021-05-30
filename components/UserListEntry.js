@@ -1,11 +1,10 @@
 import { parseISO, intervalToDuration, differenceInMinutes } from 'date-fns';
 import pluralize from 'pluralize';
-import getUnicodeFlagIcon from 'country-flag-icons/unicode';
-import { by639_1 } from 'iso-language-codes';
 
 import SocialButtons from './SocialButtons';
 import VideoThumbnail from './VideoThumbnail';
-import { RedBadge, GreenBadge } from './Badge';
+import CountryFlags from './CountryFlags';
+import ChannelBadges from './ChannelBadges';
 
 import { formatDurationShort, TwitchLink } from '../lib/util';
 
@@ -16,7 +15,15 @@ export default function UserListEntry({ user, userIndex }) {
     now = new Date();
 
   return (
-    <tr className={userIndex % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+    <tr
+      className={
+        (user.channelType === 'BRAND'
+          ? 'bg-purple-100'
+          : userIndex % 2 === 0
+          ? 'bg-white'
+          : 'bg-gray-50')
+      }
+    >
       <td className='px-2 py-2 align-top'>
         <div className='flex items-start'>
           <div className='flex-shrink-0 h-10 w-10 align-center'>
@@ -31,10 +38,7 @@ export default function UserListEntry({ user, userIndex }) {
                 alt={`Avatar for ${user.displayName}`}
               />
             </TwitchLink>
-            <div className='text-center text-xs md:text-base mt-1'>
-              {user.country && <>{getUnicodeFlagIcon(user.country.toUpperCase())}</>}
-              {user.country2 && <>{getUnicodeFlagIcon(user.country2.toUpperCase())}</>}
-            </div>
+            <CountryFlags user={user} />
           </div>
           <div className='ml-4'>
             <div className='text-gray-900'>
@@ -57,12 +61,7 @@ export default function UserListEntry({ user, userIndex }) {
         className='py-2 px-2 align-top cursor-pointer'
         onClick={() => (window.location.href = `https://twitch.tv/${user.name}`)}
       >
-        {user.latestStreamLanguage && user.latestStreamLanguage !== 'en' && (
-          <GreenBadge>{by639_1[user.latestStreamLanguage].name}</GreenBadge>
-        )}
-        {user.latestStreamGameName && user.latestStreamGameName !== 'Science & Technology' && (
-          <RedBadge>{user.latestStreamGameName}</RedBadge>
-        )}
+        <ChannelBadges user={user} />
         <div className='text-sm text-gray-900 break-words md:break-normal mt-1'>
           {user.latestStreamTitle}
         </div>

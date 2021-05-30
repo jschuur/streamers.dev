@@ -8,6 +8,7 @@ const match = url.match(/https?:\/\/(?:www\.)?twitch.tv\/([\w]*)\/?/i);
 if (match) {
   const username = match[1];
 
+  // fetch(`${SITE_URL}/api/addUser?name=${username}&backlog=1`)
   fetch(`${SITE_URL}/api/addUser?name=${username}`)
     .then((res) => res.json())
     .then((data) => window.alert(data.message));

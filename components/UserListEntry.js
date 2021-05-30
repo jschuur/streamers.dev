@@ -15,7 +15,6 @@ export default function UserListEntry({ user, userIndex }) {
   const startDate = parseISO(user.latestStreamStartedAt),
     now = new Date();
 
-    console.log(user.broadcasterType);
   return (
     <tr className={userIndex % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
       <td className='px-2 py-2 align-top'>

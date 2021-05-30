@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
-import { min, map } from 'lodash';
+import { differenceInMinutes } from 'date-fns';
+import { minBy, map } from 'lodash';
 import pluralize from 'pluralize';
 
 import UserList from '../components/UserList';
@@ -12,16 +13,17 @@ export default function Home() {
   const [users, setUsers] = useState([]);
   const [loadingError, setLoadingError] = useState(null);
 
-  useEffect(() => {
-    const loadUsers = async () => {
-      const response = await fetch('/api/getUsers');
+  useEffect(async () => {
+    const loadUsers = async ({ refresh = true } = {}) => {
+      const response = await fetch(`/api/getUsers${refresh ? '?refresh=1' : ''}`);
       const data = await response.json();
 
-      if (data.error) setLoadingError(data.error)
+      if (data.error) setLoadingError(data.error);
       else setUsers(data.users);
     };
 
-    loadUsers();
+    // The first refresh always uses DB only data. Later one can sprinkle in Twitch API data
+    await loadUsers({ refresh: false });
 
     const refreshRate =
       process.env.NEXT_PUBLIC_USER_AUTOREFRESH_SECONDS || USER_AUTOREFRESH_SECONDS;

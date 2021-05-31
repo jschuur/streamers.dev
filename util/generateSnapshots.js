@@ -21,6 +21,8 @@ async function saveTrackedUserCount() {
   result = await prisma.user.aggregate({
     _count: {
       name: true,
+      isHidden: false,
+      isPaused: false,
     },
   });
   const userCount = result._count.name;
@@ -51,6 +53,8 @@ async function saveConcurrentViewerCount() {
     },
     where: {
       isLive: true,
+      isHidden: false,
+      isPaused: false,
     },
   });
   const viewerCount = result._sum.latestStreamViewers;

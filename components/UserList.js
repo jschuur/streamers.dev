@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { sortBy } from 'lodash';
+import { sortBy, sumBy } from 'lodash';
+import pluralize from 'pluralize';
 
 import UserListEntry from './UserListEntry';
 
@@ -18,6 +19,8 @@ export default function UserList({ users }) {
     userList = userList.filter((user) => user.latestStreamGameName === 'Science & Technology');
   if (isEnglish)
     userList = userList.filter((user) => user.latestStreamLanguage === 'en');
+
+  const totalViewers = sumBy(userList, 'latestStreamViewers');
 
   return (
     <div className='flex flex-col'>
@@ -47,7 +50,7 @@ export default function UserList({ users }) {
                     scope='col'
                     className='px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider'
                   >
-                    Channel <br />({userList.length} of {totalUsers} live)
+                    Channel <br />({userList.length} with {pluralize('viewer', totalViewers, true)})
                   </th>
                   <th
                     scope='col'

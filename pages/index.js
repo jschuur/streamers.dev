@@ -52,7 +52,7 @@ export default function Home() {
         ) : (
           <div>Loading...</div>
         )}
-        <Footer />
+        <Footer users={users} />
       </div>
     </>
   );

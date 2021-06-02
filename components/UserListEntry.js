@@ -17,11 +17,11 @@ export default function UserListEntry({ user, userIndex }) {
   return (
     <tr
       className={
-        (user.channelType === 'BRAND'
+        user.channelType === 'BRAND'
           ? 'bg-purple-100'
           : userIndex % 2 === 0
           ? 'bg-white'
-          : 'bg-gray-50')
+          : 'bg-gray-50'
       }
     >
       <td className='px-2 py-2 align-top'>
@@ -72,8 +72,11 @@ export default function UserListEntry({ user, userIndex }) {
               : 'text-gray-400'
           }`}
         >
-          {user.latestStreamViewers} {pluralize('viewers', user.latestStreamViewers)}, live for{' '}
-          {formatDurationShort(intervalToDuration({ start: startDate, end: now }))}
+          {user.latestStreamViewers > 9 && (
+            <>
+              {pluralize('viewers', user.latestStreamViewers, true)}, {' '}
+            </>)}live for{' '}
+              {formatDurationShort(intervalToDuration({ start: startDate, end: now }))}
         </div>
       </td>
       <td className='px-2 py-2 align-top hidden sm:table-cell'>

@@ -78,6 +78,7 @@ model Queue {
   viewers                 Int?
   title                   String?
   language                String?
+  tag                     String?
   status                  QueueStatus   @default(PENDING)
   createdAt               DateTime      @default(now())
   updatedAt               DateTime      @updatedAt

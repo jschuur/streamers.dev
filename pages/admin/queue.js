@@ -1,39 +1,71 @@
-import { pick, sortBy } from 'lodash';
-import { PrismaClient } from '@prisma/client';
+import { useEffect, useState } from 'react';
 
-const prisma = new PrismaClient();
-
-export default function Queue({ queue }) {
+function ActionLink({ url, action }) {
   return (
-    <div>
-      <h1 className='text-2xl p-1'>Queues</h1>
+    <>
+      [
+      <a target='_new' href={url}>
+        {action}
+      </a>
+      ]{' '}
+    </>
+  );
+}
+function TagQueue({ tagName, queue }) {
+  const tagChannels = queue.filter(({ tag }) => tag === tagName);
 
-      <h2 className='text-xl p-1'>Web Development</h2>
+  return (
+    <>
+      <h2 className='text-xl mt-2 mb-1'>
+        {tagName} ({tagChannels.length})
+      </h2>
 
-      <ul>
-        {queue &&
-          queue.map((channel) => (
-            <li>
-              <a href={`https://twitch.tv/${channel.name}`}>{channel.name}</a> ({channel.language}{' '}
-              {channel.views}: {channel.title})
-            </li>
-          ))}
+      <ul className='mx-2'>
+        {tagChannels.map((channel) => (
+          <li key={channel.id} >
+            <a href={`https://twitch.tv/${channel.name}`}>{channel.name}</a> ({channel.language}{' '}
+            {channel.views}: {channel.title}){' '}
+            <ActionLink url={ '/api/updateQueue?id=' + channel.id + '&status=ADDED'} action='add' />
+            <ActionLink url={ '/api/updateQueue?id=' + channel.id + '&status=ADDED&backlog=1'} action='backlog' />
+            <ActionLink url={ '/api/updateQueue?id=' + channel.id + '&status=PAUSED'} action='paused' />
+            <ActionLink url={ '/api/updateQueue?id=' + channel.id + '&status=WONTADD'} action="won't add" />
+          </li>
+        ))}
       </ul>
-    </div>
+    </>
   );
 }
 
-export async function getServerSideProps() {
-  const result = await prisma.queue.findMany({
-    where: {
-      status: 'PENDING',
-    },
-  });
+// Simple queue of potential channels to add
+export default function Queue() {
+  const [queue, setQueue] = useState([]);
 
-  const queue = sortBy(
-    result.map((channel) => pick(channel, ['name', 'title', 'language', 'views', 'viewers'])),
-    'views'
-  ).reverse();
+  useEffect(() => {
+    const loadQueue = async () => {
+      const response = await fetch('/api/getQueue');
+      const data = await response.json();
 
-  return { props: { queue } };
+      if (data.error) setLoadingError(data.error);
+      else setQueue(data.queue);
+    };
+
+    loadQueue();
+  }, []);
+
+  return (
+    <div className='container mx-auto px-10'>
+      <h1 className='text-2xl pt-2'>Queues</h1>
+
+      {!queue ? (
+        'Loading...'
+      ) : (
+        <>
+          <TagQueue tagName='Web Development' queue={queue} />
+          <TagQueue tagName='Software Development' queue={queue} />
+          <TagQueue tagName='Programming' queue={queue} />
+          <TagQueue tagName='Game Development' queue={queue} />
+        </>
+      )}
+    </div>
+  );
 }

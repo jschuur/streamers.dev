@@ -1,20 +1,24 @@
 import consoleStamp from 'console-stamp';
+import { differenceInSeconds } from 'date-fns';
 import { map, keyBy } from 'lodash';
 import pluralize from 'pluralize';
 import { PrismaClient } from '@prisma/client';
 
 import { twitchGetStreamsAll, twitchGetUsersByIds } from '../lib/twitch_api';
-import { SCIENCE_AND_TECHNOLOGY_GAME_ID, WEB_DEVELOPMENT_TAG_ID } from '../lib/config';
+import { gameIds, tagIds } from '../lib/config';
+import { FaChessKnight } from 'react-icons/fa';
 
 const prisma = new PrismaClient(process.env.DEBUG ? { log: ['query'] } : {});
 consoleStamp(console, { format: ':date(yyyy-mm-dd HH:MM:ss.l).gray :label(7)' });
 
-async function getActiveWebDevStreams() {
+async function getActiveStreams(tagName) {
+  const tagId = tagIds[tagName];
+
   return (
     await twitchGetStreamsAll({
-      game: SCIENCE_AND_TECHNOLOGY_GAME_ID,
+      game: gameIds['Science & Technology'],
     })
-  ).filter(({ tagIds }) => tagIds.includes(WEB_DEVELOPMENT_TAG_ID));
+  ).filter(({ tagIds }) => tagIds.includes(tagId));
 }
 
 async function identifyNewChannels(streams) {
@@ -33,12 +37,13 @@ async function identifyNewChannels(streams) {
   return streams.filter((stream) => !existingChannels[stream.userId]);
 }
 
-async function saveNewChannels(streams) {
+async function saveNewChannels({ streams, tagName }) {
   const result = await twitchGetUsersByIds(map(streams, 'userId'));
   const twitchUsers = keyBy(result, 'id');
+  let newQueuedCount = 0;
 
   for (const stream of streams) {
-    await prisma.queue.upsert({
+    const result = await prisma.queue.upsert({
       where: {
         twitchId: stream.userId,
       },
@@ -48,26 +53,49 @@ async function saveNewChannels(streams) {
         name: stream.userName,
         title: stream.title,
         language: stream.language,
+        tag: tagName,
         views: twitchUsers[stream.userId].views,
         viewers: stream.viewers,
       },
-      select: { name: true, twitchId: true },
+      select: { name: true, createdAt: true },
     });
+
+    // Dumb Prisma workaround to check if a record was added
+    if (differenceInSeconds(new Date(), result.createdAt) < 10) {
+      console.log(`Queued https://www.twitch.tv/${result.name}`);
+      newQueuedCount++;
+    }
   }
+
+  if (newQueuedCount > 0)
+    console.log(`Queued ${pluralize('new channels', newQueuedCount, true)} from ${tagName} search`);
+  else
+    console.log('No new channels needed to be queued');
+}
+
+async function findChannels(tagName) {
+  console.log(`Getting current ${tagName} streams`);
+
+  const liveStreams = await getActiveStreams(tagName);
+  console.log(`Found ${pluralize(`${tagName} stream`, liveStreams.length, true)}`);
+
+  if (liveStreams.length === 0) return;
+
+  const newChannels = await identifyNewChannels(liveStreams);
+  console.log(`Identified ${pluralize('untracked channel', newChannels.length, true)}`);
+
+  if (newChannels.length === 0) return;
+
+  await saveNewChannels({ streams: newChannels, tagName });
 }
 
 (async () => {
   console.time('Time spent');
 
-  console.log('Getting current Science & Technology streams');
-
-  const webDevStreams = await getActiveWebDevStreams();
-  console.log(`Found ${pluralize('Web Development stream', webDevStreams.length, true)}`);
-
-  const newChannels = await identifyNewChannels(webDevStreams);
-  console.log(`Identified ${pluralize('untracked channel', newChannels.length, true)}`);
-
-  await saveNewChannels(newChannels);
+  await findChannels('Web Development');
+  await findChannels('Software Development');
+  await findChannels('Programming');
+  await findChannels('Game Development');
 
   console.log('Disconnecting...');
   await prisma.$disconnect();

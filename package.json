@@ -15,6 +15,8 @@
     "update:users:full": "babel-node util/updateAllUsers.js --fullDetails",
     "update:users:prod": "dotenv -e .env.production babel-node util/updateAllUsers.js",
     "update:users:prod:full": "dotenv -e .env.production babel-node util/updateAllUsers.js -- --fullDetails",
+    "find:channels": "babel-node util/findChannels.js",
+    "find:channels:prod": "dotenv -e .env.production babel-node util/findChannels.js",
     "studio": "prisma studio",
     "migrate:prod": "dotenv -e .env.production -- prisma migrate deploy",
     "db:dump": "pg_dump streamersdev > dbdump.sql"
@@ -22,7 +24,7 @@
   "dependencies": {
     "@babel/core": "^7.14.3",
     "@fontsource/raleway": "^4.4.0",
-    "@prisma/client": "^2.23.0",
+    "@prisma/client": "^2.24.0",
     "babel-plugin-superjson-next": "^0.3.0",
     "console-stamp": "^3.0.2",
     "country-flag-icons": "^1.2.10",
@@ -46,7 +48,7 @@
     "concurrently": "^6.1.0",
     "dotenv-cli": "^4.0.0",
     "postcss": "^8.3.0",
-    "prisma": "^2.23.0",
+    "prisma": "^2.24.0",
     "tailwindcss": "^2.1.2"
   }
 }

@@ -27,7 +27,7 @@ model User {
   broadcasterType         String
   channelType             ChannelType   @default(USER)
   creationDate            DateTime
-  profilePictureUrl       String        @unique
+  profilePictureUrl       String
   views                   Int
 
   lastOnline              DateTime?
@@ -70,6 +70,25 @@ enum SnapshotType {
   TRACKEDUSERS
 }
 
+model Queue {
+  id                      Int           @default(autoincrement()) @id
+  twitchId                String        @unique
+  name                    String
+  views                   Int?
+  viewers                 Int?
+  title                   String?
+  language                String?
+  status                  QueueStatus   @default(PENDING)
+  createdAt               DateTime      @default(now())
+  updatedAt               DateTime      @updatedAt
+}
+
+enum QueueStatus {
+  PENDING
+  ADDED
+  PAUSED
+  WONTADD
+}
 // model Stream {
 //   userId
 //   title

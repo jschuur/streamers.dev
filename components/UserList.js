@@ -16,7 +16,9 @@ export default function UserList({ users }) {
   ).reverse();
 
   if (isCoding)
-    userList = userList.filter((user) => user.latestStreamGameName === 'Science & Technology');
+    userList = userList.filter(
+      (user) => user.latestStreamGameName === 'Science & Technology' || user.alwaysCoding
+    );
   if (isEnglish)
     userList = userList.filter((user) => user.latestStreamLanguage === 'en');
 

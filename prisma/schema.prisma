@@ -20,6 +20,7 @@ model User {
   isLive                  Boolean       @default(false)
   isHidden                Boolean       @default(false)
   isPaused                Boolean       @default(false)
+  alwaysCoding            Boolean       @default(false)
 
   topics                  String[]
 

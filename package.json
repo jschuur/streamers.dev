@@ -19,7 +19,10 @@
     "find:channels:prod": "dotenv -e .env.production babel-node util/findChannels.js",
     "studio": "prisma studio",
     "migrate:prod": "dotenv -e .env.production -- prisma migrate deploy",
-    "db:dump": "pg_dump streamersdev > dbdump.sql"
+    "db:dump:local": "pg_dump -d streamersdev -Fc -f tmp/dbdump_local_`date +\"%Y-%m-%d_%H:%M:%S\"`.dump",
+    "db:dump:prod": "dotenv -e .env.production -- pg_dump -Fc -f tmp/dbdump_prod_latest.dump",
+    "db:import:prod": "pg_restore --no-acl --no-owner --clean -d streamersdev tmp/dbdump_prod_latest.dump",
+    "db:pull": "npm run db:dump:prod && npm run db:import:prod"
   },
   "dependencies": {
     "@babel/core": "^7.14.3",

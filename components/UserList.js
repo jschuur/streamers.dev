@@ -4,15 +4,22 @@ import pluralize from 'pluralize';
 
 import UserListEntry from './UserListEntry';
 
+const sortFields = [
+  { fieldName: 'latestStreamViewers', label: 'Stream viewers (most)' },
+  { fieldName: 'latestStreamStartedAt', label: 'Stream age (latest)' },
+  { fieldName: 'creationDate', label: 'Channel age (youngest)' },
+];
+
 export default function UserList({ users }) {
   const [isCoding, setIsCoding] = useState(true);
   const [isEnglish, setIsEnglish] = useState(false);
+  const [sortField, setSortField] = useState(0);
 
   const totalUsers = users.length;
 
   let userList = sortBy(
     users.filter((user) => user.isLive),
-    'latestStreamViewers'
+    sortFields[sortField].fieldName
   ).reverse();
 
   if (isCoding)
@@ -30,6 +37,18 @@ export default function UserList({ users }) {
         <div className='py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8'>
           <div className='shadow overflow-hidden border-b border-gray-200 sm:rounded-lg'>
             <div className='text-right'>
+              <button
+                onClick={() => {
+                  let newSortField = sortField + 1;
+                  if (newSortField >= sortFields.length) newSortField = 0;
+
+                  setSortField(newSortField);
+                }}
+                type='button'
+                className='m-1 inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-blue-300 hover:bg-blue-400'
+              >
+                Sort: {sortFields[sortField].label}
+              </button>
               <button
                 onClick={() => setIsEnglish(!isEnglish)}
                 type='button'

@@ -62,7 +62,7 @@ export default function UserListEntry({ user, userIndex }) {
         onClick={() => (window.location.href = `https://twitch.tv/${user.name}`)}
       >
         <ChannelBadges user={user} />
-        <div className='text-sm text-gray-900 break-words md:break-normal mt-1'>
+        <div className='text-sm text-gray-900 break-all md:break-normal mt-1'>
           {user.latestStreamTitle}
         </div>
         <div

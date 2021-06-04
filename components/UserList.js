@@ -5,9 +5,21 @@ import pluralize from 'pluralize';
 import UserListEntry from './UserListEntry';
 
 const sortFields = [
-  { fieldName: 'latestStreamViewers', label: 'Stream viewers (most)' },
-  { fieldName: 'latestStreamStartedAt', label: 'Stream age (latest)' },
-  { fieldName: 'creationDate', label: 'Channel age (youngest)' },
+  {
+    fieldName: 'latestStreamViewers',
+    labelShort: 'stream viewers',
+    labelLong: 'Stream viewers (most)',
+  },
+  {
+    fieldName: 'latestStreamStartedAt',
+    labelShort: 'stream age',
+    labelLong: 'Stream age (latest)',
+  },
+  {
+    fieldName: 'creationDate',
+    labelShort: 'channel age',
+    labelLong: 'Channel age (youngest)',
+  },
 ];
 
 export default function UserList({ users }) {
@@ -47,14 +59,17 @@ export default function UserList({ users }) {
                 type='button'
                 className='m-1 inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-blue-300 hover:bg-blue-400'
               >
-                Sort: {sortFields[sortField].label}
+                <span className='inline sm:hidden'>By {sortFields[sortField].labelShort}</span>
+                <span className='hidden sm:inline'>Sort: {sortFields[sortField].labelLong}</span>
               </button>
               <button
                 onClick={() => setIsEnglish(!isEnglish)}
                 type='button'
                 className='m-1 inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-indigo-600 hover:bg-indigo-700'
               >
-                Language: {isEnglish ? 'English' : 'Any'}
+                <span className='inline sm:hidden'>Lang</span>
+
+                <span className='hidden sm:inline'>Language</span>: {isEnglish ? 'English' : 'Any'}
               </button>
               <button
                 onClick={() => setIsCoding(!isCoding)}

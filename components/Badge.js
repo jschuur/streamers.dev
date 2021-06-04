@@ -39,3 +39,11 @@ export function PurpleBadge({ color, children }) {
     </span>
   );
 }
+
+export function GrayBadge({ color, children }) {
+  return (
+    <span className='inline-flex items-center px-1.5 py-0.25 rounded text-xs font-medium tracking-wider bg-gray-100 text-gray-800 mr-1'>
+      {children}
+    </span>
+  );
+}

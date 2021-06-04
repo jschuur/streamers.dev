@@ -1,10 +1,20 @@
+import { differenceInDays, parseISO } from 'date-fns';
 import { capitalize } from 'lodash';
 import { by639_1 } from 'iso-language-codes';
 
-import { RedBadge, GreenBadge, YellowBadge, PurpleBadge } from './Badge';
+import { RedBadge, GreenBadge, YellowBadge, PurpleBadge, GrayBadge } from './Badge';
+
+import { NEW_STREAMER_AGE_DAYS } from '../lib/config';
 
 export default function ChannelBadges({
-  user: { displayName, latestStreamLanguage, latestStreamGameName, channelType, team },
+  user: {
+    displayName,
+    latestStreamLanguage,
+    latestStreamGameName,
+    channelType,
+    team,
+    creationDate,
+  },
 }) {
   const teams = team ? team.split(',') : undefined;
 
@@ -19,7 +29,10 @@ export default function ChannelBadges({
       {channelType && channelType !== 'USER' && (
         <YellowBadge key={3}>{capitalize(channelType.toLowerCase())}</YellowBadge>
       )}
-      {teams && teams.map((team) => <PurpleBadge>Team: {team}</PurpleBadge>)}
+      {teams && teams.map((team) => <PurpleBadge key={4}>Team: {team}</PurpleBadge>)}
+      {differenceInDays(new Date(), parseISO(creationDate)) <= NEW_STREAMER_AGE_DAYS && (
+        <GrayBadge>New Streamer</GrayBadge>
+      )}
     </>
   );
 }

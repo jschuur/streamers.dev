@@ -8,7 +8,7 @@ import ChannelBadges from './ChannelBadges';
 
 import { formatDurationShort, TwitchLink } from '../lib/util';
 
-import { STREAM_RECENT_MINUTES } from '../lib/config';
+import { STREAM_RECENT_MINUTES, MIN_VISIBLE_VIEWER_COUNT } from '../lib/config';
 
 export default function UserListEntry({ user, userIndex }) {
   const startDate = parseISO(user.latestStreamStartedAt),
@@ -72,11 +72,10 @@ export default function UserListEntry({ user, userIndex }) {
               : 'text-gray-400'
           }`}
         >
-          {user.latestStreamViewers > 9 && (
-            <>
-              {pluralize('viewers', user.latestStreamViewers, true)}, {' '}
-            </>)}live for{' '}
-              {formatDurationShort(intervalToDuration({ start: startDate, end: now }))}
+          {user.latestStreamViewers >= MIN_VISIBLE_VIEWER_COUNT && (
+            <>{pluralize('viewers', user.latestStreamViewers, true)}, </>
+          )}
+          live for {formatDurationShort(intervalToDuration({ start: startDate, end: now }))}
         </div>
       </td>
       <td className='px-2 py-2 align-top hidden sm:table-cell'>

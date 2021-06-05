@@ -1,7 +1,6 @@
 import consoleStamp from 'console-stamp';
-import { PrismaClient } from '@prisma/client';
 
-const prisma = new PrismaClient(process.env.DEBUG ? { log: ['query'] } : {});
+import prisma from '../lib/prisma';;
 consoleStamp(console, { format: ':date(yyyy-mm-dd HH:MM:ss.l).gray :label(7)' });
 
 const now = new Date();

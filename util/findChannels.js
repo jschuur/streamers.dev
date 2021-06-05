@@ -2,13 +2,11 @@ import consoleStamp from 'console-stamp';
 import { differenceInSeconds } from 'date-fns';
 import { map, keyBy } from 'lodash';
 import pluralize from 'pluralize';
-import { PrismaClient } from '@prisma/client';
 
 import { twitchGetStreamsAll, twitchGetUsersByIds } from '../lib/twitch_api';
 import { gameIds, tagIds } from '../lib/config';
-import { FaChessKnight } from 'react-icons/fa';
+import prisma from '../lib/prisma';
 
-const prisma = new PrismaClient(process.env.DEBUG ? { log: ['query'] } : {});
 consoleStamp(console, { format: ':date(yyyy-mm-dd HH:MM:ss.l).gray :label(7)' });
 
 async function getActiveStreams(tagName) {

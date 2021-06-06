@@ -60,7 +60,7 @@ enum ChannelType {
 model Snapshot {
   id                      Int           @default(autoincrement()) @id
   type                    SnapshotType
-  value                   Int
+  value                   Float
   timeStamp               DateTime
 
   @@unique([type, timeStamp])
@@ -68,7 +68,14 @@ model Snapshot {
 
 enum SnapshotType {
   PEAKVIEWERS
-  TRACKEDUSERS
+  PEAKVIEWERS_CODING
+  PEAKVIEWERS_NONCODING
+  PEAKPERCENTAGE_VIEWERS_NONCODING
+  PEAKCHANNELS
+  PEAKCHANNELS_CODING
+  PEAKCHANNELS_NONCODING
+  PEAKPERCENTAGE_CHANNELS_NONCODING
+  TRACKEDCHANNELS
 }
 
 model Queue {

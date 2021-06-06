@@ -8,73 +8,112 @@ now.setMinutes(0);
 now.setSeconds(0);
 now.setMilliseconds(0);
 
-// TODO: Dry these two up
-async function saveTrackedUserCount() {
-  const timeType = { timeStamp: now, type: 'TRACKEDUSERS' };
+const FILTER_LIVE_CHANNEL = { isLive: true };
+const FILTER_LIVE_CODING_CHANNEL = { isLive: true, OR: [{ latestStreamGameName: { equals: 'Science & Technology' } }, { alwaysCoding: { equals: true } },], };
+const FILTER_LIVE_NON_CODING_CHANNEL = {
+  isLive: true,
+  latestStreamGameName: { not: 'Science & Technology' },
+  alwaysCoding: false,
+};
 
-  // Get last viewer count for this hour
-  let result = await prisma.snapshot.findFirst({ where: timeType });
-  const recentUserCount = result?.value;
+async function getRecentSnapshotValue({ type }) {
+  const result = await prisma.snapshot.findFirst({ where: { timeStamp: now, type } });
 
-  // Get current user count
-  result = await prisma.user.aggregate({
-    _count: {
-      name: true,
-      isHidden: false,
-      isPaused: false,
-    },
-  });
-  const userCount = result._count.name;
-
-  // Save new snapshot if higher
-  if (!recentUserCount || !(userCount <= recentUserCount)) {
-    await prisma.snapshot.upsert({
-      where: { type_timeStamp: timeType },
-      update: { ...timeType, value: userCount },
-      create: { ...timeType, value: userCount },
-    });
-  }
-
-  console.log(`Tracker users: ${userCount}`);
+  return result?.value;
 }
 
-async function saveConcurrentViewerCount() {
-  const timeType = { timeStamp: now, type: 'PEAKVIEWERS' };
+async function upsertSnapshotValue({ type, value }) {
+  await prisma.snapshot.upsert({
+    where: { type_timeStamp: { timeStamp: now, type } },
+    update: { value },
+    create: { timeStamp: now, type, value},
+  });
+}
 
-  // Get last viewer count for this hour
-  let result = await prisma.snapshot.findFirst({ where: timeType });
-  const recentViewCount = result?.value;
-
-  // Get current viewer count
-  result = await prisma.user.aggregate({
-    _sum: {
-      latestStreamViewers: true,
-    },
+async function getCurrentCount({ filter = {}, sumBy }) {
+  const options = {
     where: {
-      isLive: true,
       isHidden: false,
       isPaused: false,
+      ...filter,
     },
-  });
-  const viewerCount = result._sum.latestStreamViewers;
+  };
 
-  // Save new snapshot if higher
-  if (!recentViewCount || !(viewerCount <= recentViewCount)) {
-    await prisma.snapshot.upsert({
-      where: { type_timeStamp: timeType },
-      update: { ...timeType, value: viewerCount },
-      create: { ...timeType, value: viewerCount },
+  if (sumBy === 'viewers') options['_sum'] = { latestStreamViewers: true }
+  else options['_count'] = { name: true };
+
+  const result = await prisma.user.aggregate(options);
+
+  return (sumBy === 'viewers' ? (result?._sum.latestStreamViewers || 0) : (result?._count.name || 0));
+}
+
+async function saveMaxSnapshotValue({ type, filter, current, sumBy }) {
+  const recentValue = await getRecentSnapshotValue({ type });
+  const currentValue = (typeof current  !== 'undefined') ? current : (await getCurrentCount({ filter, sumBy }));
+
+  if (!recentValue || (currentValue > recentValue)) {
+    console.log(`New ${type}: ${currentValue}`);
+
+    await upsertSnapshotValue({
+      timeStamp: now,
+      type,
+      value: currentValue,
     });
   }
 
-  console.log(`Viewer count: ${viewerCount}`);
+  return currentValue;
+}
+
+async function saveTrackedChannelCountSnapshot() {
+  console.log('Checking recent tracked channel count');
+
+  await saveMaxSnapshotValue({
+    type: 'TRACKEDCHANNELS',
+    current: await getCurrentCount({ sumBy: 'channels' }),
+  });
+}
+
+async function saveLiveCountSnapshots({ sumBy }) {
+  console.log(`Checking recent ${sumBy} counts`);
+
+  // Get last viewer counts for this hour
+  const currentTotal = await saveMaxSnapshotValue({
+    sumBy,
+    type: `PEAK${sumBy.toUpperCase()}`,
+    filter: FILTER_LIVE_CHANNEL,
+  });
+
+  await saveMaxSnapshotValue({
+    sumBy,
+    type: `PEAK${sumBy.toUpperCase()}_CODING`,
+    filter: FILTER_LIVE_CODING_CHANNEL,
+  });
+
+  const currentNonCoding = await saveMaxSnapshotValue({
+    sumBy,
+    type: `PEAK${sumBy.toUpperCase()}_NONCODING`,
+    filter: FILTER_LIVE_NON_CODING_CHANNEL,
+  });
+
+  if (currentTotal)
+    await saveMaxSnapshotValue({
+      type: `PEAKPERCENTAGE_${sumBy.toUpperCase()}_NONCODING`,
+      current: parseFloat((currentNonCoding / currentTotal).toFixed(4)),
+    });
 }
 
 (async () => {
   console.time('Time spent');
 
-  await saveConcurrentViewerCount();
-  await saveTrackedUserCount();
+  try {
+    await saveTrackedChannelCountSnapshot();
+    await saveLiveCountSnapshots({ sumBy: 'viewers' });
+    await saveLiveCountSnapshots({ sumBy: 'channels' });
+
+    // TODO: Save by language
+  } catch ({ message }) {
+    console.error(`Error: ${message}`);;
+  }
 
   console.log('Disconnecting...');
   await prisma.$disconnect();

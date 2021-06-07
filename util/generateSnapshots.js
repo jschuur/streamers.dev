@@ -42,7 +42,7 @@ async function getCurrentCount({ filter = {}, sumBy }) {
   if (sumBy === 'viewers') options['_sum'] = { latestStreamViewers: true }
   else options['_count'] = { name: true };
 
-  const result = await prisma.user.aggregate(options);
+  const result = await prisma.channel.aggregate(options);
 
   return (sumBy === 'viewers' ? (result?._sum.latestStreamViewers || 0) : (result?._count.name || 0));
 }

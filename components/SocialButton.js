@@ -8,8 +8,8 @@ import {
   FaHome,
 } from 'react-icons/fa';
 
-function SocialLink({ network, user, children }) {
-  let link = user[network];
+function SocialLink({ network, channel, children }) {
+  let link = channel[network];
 
   if (!link) return null;
 
@@ -20,57 +20,57 @@ function SocialLink({ network, user, children }) {
   return <a href={link}>{children}</a>;
 }
 
-function SocialButton({ network, user, children }) {
+function SocialButton({ network, channel, children }) {
   return (
-    <SocialLink network={network} user={user}>
+    <SocialLink network={network} channel={channel}>
       {children}
     </SocialLink>
   );
 }
 
-export function TwitterButton({ user }) {
+export function TwitterButton({ channel }) {
   return (
-    <SocialButton network={'twitter'} user={user}>
+    <SocialButton network={'twitter'} channel={channel}>
       <FaTwitterSquare size={'1.5rem'} />
     </SocialButton>
   );
 }
 
-export function GitHubButton({ user }) {
+export function GitHubButton({ channel }) {
   return (
-    <SocialButton network={'github'} user={user}>
+    <SocialButton network={'github'} channel={channel}>
       <FaGithub size={'1.5rem'} />
     </SocialButton>
   );
 }
 
-export function YouTubeButton({ user }) {
+export function YouTubeButton({ channel }) {
   return (
-    <SocialButton network={'youtube'} user={user}>
+    <SocialButton network={'youtube'} channel={channel}>
       <FaYoutube size={'1.5rem'} />
     </SocialButton>
   );
 }
 
-export function InstagramButton({ user }) {
+export function InstagramButton({ channel }) {
   return (
-    <SocialButton network={'instagram'} user={user}>
+    <SocialButton network={'instagram'} channel={channel}>
       <FaInstagram size={'1.5rem'} />
     </SocialButton>
   );
 }
 
-export function DiscordButton({ user }) {
+export function DiscordButton({ channel }) {
   return (
-    <SocialButton network={'discord'} user={user}>
+    <SocialButton network={'discord'} channel={channel}>
       <FaDiscord size={'1.5rem'} />
     </SocialButton>
   );
 }
 
-export function HomepageButton({ user }) {
+export function HomepageButton({ channel }) {
   return (
-    <SocialButton network={'homepage'} user={user}>
+    <SocialButton network={'homepage'} channel={channel}>
       <FaHome size={'1.5rem'} />
     </SocialButton>
   );

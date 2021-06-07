@@ -1,4 +1,4 @@
-import { addNewUser } from '../../lib/lib';
+import { addNewChannel } from '../../lib/lib';
 
 export default async (req, res) => {
   res.setHeader('Access-Control-Allow-Credentials', true);
@@ -13,9 +13,9 @@ export default async (req, res) => {
   try {
     const { name, backlog } = req.query;
 
-    await addNewUser({ name, backlog });
+    await addNewChannel({ name, backlog });
 
-    res.status(200).send({ message: `User ${name} added${backlog ? ' (backlogged)' : ''}` });
+    res.status(200).send({ message: `Channel ${name} added${backlog ? ' (backlogged)' : ''}` });
   } catch ({ message }) {
     res.status(500).json({ message });
   }

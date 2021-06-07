@@ -4,32 +4,32 @@ import { differenceInMinutes } from 'date-fns';
 import { minBy, map } from 'lodash';
 import pluralize from 'pluralize';
 
-import UserList from '../components/UserList';
+import ChannelList from '../components/ChannelList';
 import Footer from '../components/Footer';
 
-import { USER_AUTOREFRESH_SECONDS } from '../lib/config';
+import { CHANNEL_AUTOREFRESH_SECONDS } from '../lib/config';
 
 export default function Home() {
-  const [users, setUsers] = useState([]);
+  const [channels, setChannels] = useState([]);
   const [loadingError, setLoadingError] = useState(null);
 
   useEffect(async () => {
-    const loadUsers = async ({ refresh = true } = {}) => {
-      const response = await fetch(`/api/getUsers${refresh ? '?refresh=1' : ''}`);
+    const loadChannels = async ({ refresh = true } = {}) => {
+      const response = await fetch(`/api/getChannels${refresh ? '?refresh=1' : ''}`);
       const data = await response.json();
 
       if (data.error) setLoadingError(data.error);
-      else setUsers(data.users);
+      else setChannels(data.channels);
     };
 
     // The first refresh always uses DB only data. Later one can sprinkle in Twitch API data
-    await loadUsers({ refresh: false });
+    await loadChannels({ refresh: false });
 
     const refreshRate =
-      process.env.NEXT_PUBLIC_USER_AUTOREFRESH_SECONDS || USER_AUTOREFRESH_SECONDS;
+      process.env.NEXT_PUBLIC_CHANNEL_AUTOREFRESH_SECONDS || CHANNEL_AUTOREFRESH_SECONDS;
     if (refreshRate) {
-      console.log(`Refreshing user list every ${refreshRate} seconds`);
-      setInterval(loadUsers, refreshRate * 1000);
+      console.log(`Refreshing channel list every ${refreshRate} seconds`);
+      setInterval(loadChannels, refreshRate * 1000);
     }
   }, []);
 
@@ -47,12 +47,12 @@ export default function Home() {
       <div className='max-w-6xl mx-auto sm:px-7 py-5'>
         {loadingError ? (
           <>Error: {loadingError}</>
-        ) : users.length ? (
-          <UserList users={users} />
+        ) : channels.length ? (
+          <ChannelList channels={channels} />
         ) : (
           <div>Loading...</div>
         )}
-        <Footer users={users} />
+        <Footer channels={channels} />
       </div>
     </>
   );

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { sortBy, sumBy } from 'lodash';
 import pluralize from 'pluralize';
 
-import UserListEntry from './UserListEntry';
+import ChannelListEntry from './ChannelListEntry';
 
 const sortFields = [
   {
@@ -22,26 +22,24 @@ const sortFields = [
   },
 ];
 
-export default function UserList({ users }) {
+export default function ChannelList({ channels }) {
   const [isCoding, setIsCoding] = useState(true);
   const [isEnglish, setIsEnglish] = useState(false);
   const [sortField, setSortField] = useState(0);
 
-  const totalUsers = users.length;
-
-  let userList = sortBy(
-    users.filter((user) => user.isLive),
+  let channelList = sortBy(
+    channels.filter((channel) => channel.isLive),
     sortFields[sortField].fieldName
   ).reverse();
 
   if (isCoding)
-    userList = userList.filter(
-      (user) => user.latestStreamGameName === 'Science & Technology' || user.alwaysCoding
+    channelList = channelList.filter(
+      (channel) => channel.latestStreamGameName === 'Science & Technology' || channel.alwaysCoding
     );
   if (isEnglish)
-    userList = userList.filter((user) => user.latestStreamLanguage === 'en');
+    channelList = channelList.filter((channel) => channel.latestStreamLanguage === 'en');
 
-  const totalViewers = sumBy(userList, 'latestStreamViewers');
+  const totalViewers = sumBy(channelList, 'latestStreamViewers');
 
   return (
     <div className='flex flex-col'>
@@ -68,7 +66,6 @@ export default function UserList({ users }) {
                 className='m-1 inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-indigo-600 hover:bg-indigo-700'
               >
                 <span className='inline sm:hidden'>Lang</span>
-
                 <span className='hidden sm:inline'>Language</span>: {isEnglish ? 'English' : 'Any'}
               </button>
               <button
@@ -86,7 +83,8 @@ export default function UserList({ users }) {
                     scope='col'
                     className='px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider'
                   >
-                    Channel <br />({userList.length} with {pluralize('viewer', totalViewers, true)})
+                    Channel <br />({channelList.length} with{' '}
+                    {pluralize('viewer', totalViewers, true)})
                   </th>
                   <th
                     scope='col'
@@ -111,8 +109,8 @@ export default function UserList({ users }) {
                 </tr>
               </thead>
               <tbody className='bg-white divide-y divide-gray-200'>
-                {userList.map((user, index) => (
-                  <UserListEntry key={user.twitchId} user={user} userIndex={index} />
+                {channelList.map((channel, index) => (
+                  <ChannelListEntry key={channel.twitchId} channel={channel} channelIndex={index} />
                 ))}
               </tbody>
             </table>

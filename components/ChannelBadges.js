@@ -7,7 +7,7 @@ import { RedBadge, GreenBadge, YellowBadge, PurpleBadge, GrayBadge } from './Bad
 import { NEW_STREAMER_AGE_DAYS } from '../lib/config';
 
 export default function ChannelBadges({
-  user: {
+  channel: {
     displayName,
     latestStreamLanguage,
     latestStreamGameName,

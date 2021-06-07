@@ -7,7 +7,7 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model User {
+model Channel {
   id                      Int           @default(autoincrement()) @id
   twitchId                String        @unique
   name                    String        @unique

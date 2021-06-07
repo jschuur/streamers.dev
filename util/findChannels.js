@@ -20,7 +20,7 @@ async function getActiveStreams(tagName) {
 }
 
 async function identifyNewChannels(streams) {
-  const result = await prisma.user.findMany({
+  const result = await prisma.channel.findMany({
     select: {
       twitchId: true,
     },

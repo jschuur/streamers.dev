@@ -8,7 +8,7 @@ const argv = minimist(process.argv.slice(2), {
   default: { includePaused: false },
 });
 
-import { updateAllUserDetails, updateAllUserStatuses } from '../lib/lib.js';
+import { updateAllChannelDetails, updateAllChannelStatuses } from '../lib/lib.js';
 import { disconnectDB } from '../lib/db.js';
 
 (async () => {
@@ -19,11 +19,11 @@ import { disconnectDB } from '../lib/db.js';
     const { fullDetails, includePaused } = argv;
     let options = { updateAll: true, includePaused };
 
-    const userCount = await (fullDetails
-      ? updateAllUserDetails(options)
-      : updateAllUserStatuses(options));
+    const channelCount = await (fullDetails
+      ? updateAllChannelDetails(options)
+      : updateAllChannelStatuses(options));
   } catch ({ message }) {
-    console.error(`Problem updating all users: ${message}`);
+    console.error(`Problem updating all channels: ${message}`);
   }
 
   console.log('Disconnecting...');

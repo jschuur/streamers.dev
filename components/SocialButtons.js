@@ -9,15 +9,15 @@ import {
   HomepageButton,
 } from './SocialButton';
 
-export default function SocialButtons({ user }) {
+export default function SocialButtons({ channel }) {
   return (
     <div className='grid grid-cols-3 auto-cols-min gap-y-2 gap-x-3 mr-2'>
-      <TwitterButton user={user} />
-      <GitHubButton user={user} />
-      <YouTubeButton user={user} />
-      <DiscordButton user={user} />
-      <HomepageButton user={user} />
-      <InstagramButton user={user} />
+      <TwitterButton channel={channel} />
+      <GitHubButton channel={channel} />
+      <YouTubeButton channel={channel} />
+      <DiscordButton channel={channel} />
+      <HomepageButton channel={channel} />
+      <InstagramButton channel={channel} />
     </div>
   );
 }

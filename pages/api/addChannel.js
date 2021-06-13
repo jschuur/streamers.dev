@@ -1,9 +1,10 @@
 import { getSession } from 'next-auth/client';
+import { withSentry } from '@sentry/nextjs';
 
 import { addNewChannel } from '../../lib/lib';
 import { adminAuthorised } from '../../lib/util';
 
-export default async (req, res) => {
+const handler = async (req, res) => {
   const session = await getSession({ req });
 
   res.setHeader('Access-Control-Allow-Credentials', true);
@@ -34,3 +35,5 @@ export default async (req, res) => {
     res.status(500).json({ error: message });
   }
 };
+
+export default withSentry(handler);

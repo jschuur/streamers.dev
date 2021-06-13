@@ -29,6 +29,7 @@
     "@fontsource/raleway": "^4.4.5",
     "@next-auth/prisma-adapter": "^0.4.4-canary.64",
     "@prisma/client": "^2.24.1",
+    "@sentry/nextjs": "^6.6.0",
     "babel-plugin-superjson-next": "^0.3.0",
     "console-stamp": "^3.0.2",
     "country-flag-icons": "^1.2.10",

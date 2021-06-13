@@ -1,7 +1,9 @@
+import { withSentry } from '@sentry/nextjs';
+
 import { getChannels } from '../../lib/db';
 import { updateChannelStatuses } from '../../lib/twitch';
 
-export default async (req, res) => {
+const handler = async (req, res) => {
   try {
     const { refresh, includeOffline } = req.query;
     const channels = await getChannels();
@@ -17,3 +19,5 @@ export default async (req, res) => {
     res.status(500).json({ error: message });
   }
 };
+
+export default withSentry(handler);

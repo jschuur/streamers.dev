@@ -2,7 +2,7 @@ import { useSession, signIn, signOut } from 'next-auth/client';
 
 import { adminAuthorised } from '../lib/util';
 
-export default function Footer({ channels }) {
+export default function Footer({ trackedChannelCount }) {
   const [session, loading] = useSession();
 
   return (
@@ -11,11 +11,15 @@ export default function Footer({ channels }) {
       <a href='https://twitter.com/joostschuur/'>Joost Schuur</a>.{' '}
       <a href='https://twitter.com/StreamersDev'>@StreamersDev</a>
       <br />
-      Currently tracking{' '}
-      <a href='https://docs.google.com/spreadsheets/d/1dbE0RjLvyGle1-9nJh9FmRCp3LBmv21sA2brtQccIQE/edit#gid=958169034'>
-        {channels && channels.length}
-      </a>{' '}
-      channels.
+      {trackedChannelCount && (
+        <>
+          Currently tracking{' '}
+          <a href='https://docs.google.com/spreadsheets/d/1dbE0RjLvyGle1-9nJh9FmRCp3LBmv21sA2brtQccIQE/edit#gid=958169034'>
+            {trackedChannelCount}
+          </a>{' '}
+          channels.{' '}
+        </>
+      )}
       {session ? (
         <>
           <br />

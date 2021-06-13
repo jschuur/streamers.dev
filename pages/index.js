@@ -11,6 +11,7 @@ import { CHANNEL_AUTOREFRESH_SECONDS } from '../lib/config';
 
 export default function Home() {
   const [channels, setChannels] = useState([]);
+  const [trackedChannelCount, setTrackedChannelCount] = useState(null);
   const [loadingError, setLoadingError] = useState(null);
 
   useEffect(async () => {
@@ -19,7 +20,10 @@ export default function Home() {
       const data = await response.json();
 
       if (data.error) setLoadingError(data.error);
-      else setChannels(data.channels);
+      else {
+        setChannels(data.channels);
+        setTrackedChannelCount(data.trackedChannelCount);
+      }
     };
 
     // The first refresh always uses DB only data. Later one can sprinkle in Twitch API data
@@ -52,7 +56,7 @@ export default function Home() {
         ) : (
           <div>Loading...</div>
         )}
-        <Footer channels={channels} />
+        <Footer trackedChannelCount={trackedChannelCount} />
       </div>
     </>
   );

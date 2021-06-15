@@ -2,6 +2,7 @@ import consoleStamp from 'console-stamp';
 import { differenceInSeconds } from 'date-fns';
 import { map, keyBy } from 'lodash';
 import pluralize from 'pluralize';
+import 'dotenv/config';
 
 import { twitchGetStreamsAll, twitchGetUsersByIds } from '../lib/twitch_api';
 import { gameIds, tagIds } from '../lib/config';

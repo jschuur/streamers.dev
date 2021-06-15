@@ -1,6 +1,7 @@
 import consoleStamp from 'console-stamp';
 import minimist from 'minimist';
 import pluralize from 'pluralize';
+import 'dotenv/config';
 
 consoleStamp(console, { format: ':date(yyyy-mm-dd HH:MM:ss.l).gray :label(7)' });
 const argv = minimist(process.argv.slice(2), {

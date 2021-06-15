@@ -1,43 +1,23 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { sortBy, sumBy } from 'lodash';
 import pluralize from 'pluralize';
 
 import ChannelListEntry from './ChannelListEntry';
-
-const sortFields = [
-  {
-    fieldName: 'latestStreamViewers',
-    labelShort: 'stream viewers',
-    labelLong: 'Stream viewers (most)',
-  },
-  {
-    fieldName: 'latestStreamStartedAt',
-    labelShort: 'stream age',
-    labelLong: 'Stream age (latest)',
-  },
-  {
-    fieldName: 'creationDate',
-    labelShort: 'channel age',
-    labelLong: 'Channel age (youngest)',
-  },
-];
+import ChannelListControls, { sortFields, languageFilterOptions, categoryFilterOptions } from './ChannelListControls';
+import { HomePageContext } from '../lib/stores';
 
 export default function ChannelList({ channels }) {
-  const [isCoding, setIsCoding] = useState(true);
-  const [isEnglish, setIsEnglish] = useState(false);
-  const [sortField, setSortField] = useState(0);
+  const { languageFilter, categoryFilter, sortField } = useContext(HomePageContext);
 
   let channelList = sortBy(
     channels.filter((channel) => channel.isLive),
     sortFields[sortField].fieldName
   ).reverse();
 
-  if (isCoding)
-    channelList = channelList.filter(
-      (channel) => channel.latestStreamGameName === 'Science & Technology' || channel.alwaysCoding
-    );
-  if (isEnglish)
-    channelList = channelList.filter((channel) => channel.latestStreamLanguage === 'en');
+  if (categoryFilterOptions[categoryFilter].filter)
+    channelList = channelList.filter(categoryFilterOptions[categoryFilter].filter);
+  if (languageFilterOptions[languageFilter].filter)
+    channelList = channelList.filter(languageFilterOptions[languageFilter].filter);
 
   const totalViewers = sumBy(channelList, 'latestStreamViewers');
 
@@ -46,36 +26,7 @@ export default function ChannelList({ channels }) {
       <div className='-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8'>
         <div className='py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8'>
           <div className='shadow overflow-hidden border-b border-gray-200 sm:rounded-lg'>
-            <div className='text-right'>
-              <button
-                onClick={() => {
-                  let newSortField = sortField + 1;
-                  if (newSortField >= sortFields.length) newSortField = 0;
-
-                  setSortField(newSortField);
-                }}
-                type='button'
-                className='m-1 inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-blue-300 hover:bg-blue-400'
-              >
-                <span className='inline sm:hidden'>By {sortFields[sortField].labelShort}</span>
-                <span className='hidden sm:inline'>Sort: {sortFields[sortField].labelLong}</span>
-              </button>
-              <button
-                onClick={() => setIsEnglish(!isEnglish)}
-                type='button'
-                className='m-1 inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-indigo-600 hover:bg-indigo-700'
-              >
-                <span className='inline sm:hidden'>Lang</span>
-                <span className='hidden sm:inline'>Language</span>: {isEnglish ? 'English' : 'Any'}
-              </button>
-              <button
-                onClick={() => setIsCoding(!isCoding)}
-                type='button'
-                className='m-1 inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-indigo-600 hover:bg-indigo-700'
-              >
-                In: {isCoding ? 'Science & Tech' : 'Anywhere'}
-              </button>
-            </div>
+            <ChannelListControls />
             <table className='min-w-full divide-y divide-gray-200'>
               <thead className='bg-gray-50'>
                 <tr>

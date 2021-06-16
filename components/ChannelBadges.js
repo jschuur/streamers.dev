@@ -2,7 +2,7 @@ import { differenceInDays, parseISO } from 'date-fns';
 import { capitalize } from 'lodash';
 import { by639_1 } from 'iso-language-codes';
 
-import { RedBadge, GreenBadge, YellowBadge, PurpleBadge, GrayBadge } from './Badge';
+import Badge from './Badge';
 
 import { NEW_STREAMER_AGE_DAYS } from '../lib/config';
 
@@ -21,17 +21,30 @@ export default function ChannelBadges({
   return (
     <>
       {latestStreamLanguage && latestStreamLanguage !== 'en' && (
-        <GreenBadge key={1}>🗣 {by639_1[latestStreamLanguage].name}</GreenBadge>
+        <Badge key={1} color='green'>
+          🗣 {by639_1[latestStreamLanguage].name}
+        </Badge>
       )}
       {latestStreamGameName && latestStreamGameName !== 'Science & Technology' && (
-        <RedBadge key={2}>In: {latestStreamGameName}</RedBadge>
+        <Badge key={2} color='red'>
+          In: {latestStreamGameName}
+        </Badge>
       )}
       {channelType && channelType !== 'USER' && (
-        <YellowBadge key={3}>{capitalize(channelType.toLowerCase())}</YellowBadge>
+        <Badge key={3} color='yellow'>
+          {capitalize(channelType.toLowerCase())}
+        </Badge>
       )}
-      {teams && teams.map((team) => <PurpleBadge key={4}>Team: {team}</PurpleBadge>)}
+      {teams &&
+        teams.map((team) => (
+          <Badge key={4} color='purple'>
+            Team: {team}
+          </Badge>
+        ))}
       {differenceInDays(new Date(), parseISO(creationDate)) <= NEW_STREAMER_AGE_DAYS && (
-        <GrayBadge>New Streamer</GrayBadge>
+        <Badge key={4} color='gray'>
+          New Streamer
+        </Badge>
       )}
     </>
   );

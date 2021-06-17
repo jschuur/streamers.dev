@@ -1,53 +1,7 @@
 import { useContext } from 'react';
 import { HomePageContext } from '../lib/stores';
 
-export const sortFields = [
-  {
-    fieldName: 'latestStreamViewers',
-    labelShort: 'stream viewers',
-    labelLong: 'Stream viewers (most)',
-  },
-  {
-    fieldName: 'latestStreamStartedAt',
-    labelShort: 'stream age',
-    labelLong: 'Stream age (latest)',
-  },
-  {
-    fieldName: 'creationDate',
-    labelShort: 'channel age',
-    labelLong: 'Channel age (youngest)',
-  },
-];
-
-export const languageFilterOptions = [
-  {
-    label: 'All',
-  },
-  {
-    label: 'English',
-    filter: (channel) => channel.latestStreamLanguage === 'en',
-  },
-  {
-    label: 'Not English',
-    filter: (channel) => channel.latestStreamLanguage !== 'en',
-  },
-];
-
-export const categoryFilterOptions = [
-  {
-    label: 'Coding',
-    filter: (channel) =>
-      channel.latestStreamGameName === 'Science & Technology' || channel.alwaysCoding,
-  },
-  {
-    label: 'Not Coding',
-    filter: (channel) =>
-      channel.latestStreamGameName !== 'Science & Technology' && !channel.alwaysCoding,
-  },
-  {
-    label: 'Any',
-  },
-];
+import { sortFields, languageFilterOptions, categoryFilterOptions } from '../lib/useChannelList';
 
 export default function ChannelListControls() {
   const {

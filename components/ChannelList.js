@@ -13,13 +13,13 @@ export default function ChannelList({ channels }) {
     <div className='flex flex-col'>
       <div className='-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8'>
         <div className='py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8'>
-          <div className='shadow overflow-hidden border-b border-gray-200 sm:rounded-lg'>
+          <div className='shadow overflow-hidden border-b border-gray-200 dark:border-gray-500 sm:rounded-lg'>
             <ChannelListControls />
             {loadingError ? (
               <>Error: {loadingError}</>
             ) : visibleChannels.length ? (
               <table className='min-w-full divide-y-0 divide-gray-200'>
-                <thead className='bg-gray-50'>
+                <thead className='bg-gray-50 dark:bg-gray-700'>
                   <tr>
                     <th
                       scope='col'
@@ -61,7 +61,7 @@ export default function ChannelList({ channels }) {
                 </tbody>
               </table>
             ) : (
-              <div>Loading...</div>
+              <div className='m-2'>Loading...</div>
             )}
           </div>
         </div>

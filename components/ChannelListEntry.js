@@ -18,10 +18,10 @@ export default function ChannelListEntry({ channel, channelIndex }) {
     <tr
       className={
         channel.channelType === 'BRAND'
-          ? 'bg-purple-100'
+          ? 'bg-purple-100 dark:bg-indigo-800'
           : channelIndex % 2 === 0
-          ? 'bg-white'
-          : 'bg-gray-50'
+          ? 'bg-white dark:bg-gray-600'
+          : 'bg-gray-50 dark:bg-gray-700'
       }
     >
       <td className='px-2 py-2 align-top'>
@@ -41,14 +41,12 @@ export default function ChannelListEntry({ channel, channelIndex }) {
             <CountryFlags channel={channel} />
           </div>
           <div className='ml-4'>
-            <div className='text-gray-900'>
+            <div className='text-gray-700'>
               <TwitchLink username={channel.name}>{channel.displayName}</TwitchLink>
-              <br />
-              <div className='text-xs md:text-sm text-gray-500 mt-1'>
-                {channel.fullName && <>{channel.fullName}</>}
-              </div>
             </div>
-            <div className='text-sm text-gray-500'></div>
+            <div className='text-sm text-gray-500 font-light dark:text-gray-300 mt-1'>
+              {channel.fullName && <>{channel.fullName}</>}
+            </div>
           </div>
         </div>
       </td>
@@ -62,7 +60,7 @@ export default function ChannelListEntry({ channel, channelIndex }) {
         onClick={() => (window.location.href = `https://twitch.tv/${channel.name}`)}
       >
         <ChannelBadges channel={channel} />
-        <div className='text-sm text-gray-900 break-all md:break-normal mt-1'>
+        <div className='text-sm text-gray-900 dark:text-gray-300 break-all md:break-normal mt-1'>
           {channel.latestStreamTitle}
         </div>
         <div

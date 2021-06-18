@@ -7,16 +7,8 @@ export default function UpdateSpinner() {
   const { isUpdating } = useContext(AdminContext);
 
   return (
-    <div style={{ position: 'relative' }}>
-      <div
-        style={{
-          position: 'fixed',
-          top: '0px',
-          left: '0px',
-          marginTop: '5px',
-          marginLeft: '5px',
-        }}
-      >
+    <div className='relative'>
+      <div className='fixed top-0 left-0 mt-1 ml-2'>
         {isUpdating > 0 && <Loader type='Bars' color='#000000' height={24} width={24} />}
       </div>
     </div>

@@ -4,15 +4,12 @@
 
 @import "@fontsource/raleway";
 @import "@fontsource/raleway/500.css";
+@import "@fontsource/raleway/300.css";
 
 body {
   font-family: 'Raleway', sans-serif;
 }
 
-body {
-  @apply bg-blue-50
-}
-
 a {
-    @apply underline text-blue-400 hover:text-blue-600 visited:text-purple-400
+  @apply no-underline text-blue-400 hover:text-blue-400 visited:text-blue-400
 }

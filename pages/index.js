@@ -2,6 +2,7 @@ import Head from 'next/head';
 
 import ChannelList from '../components/ChannelList';
 import Footer from '../components/Footer';
+import ThemeChanger from '../components/ThemeChanger';
 
 import { HomePageProvider } from '../lib/stores';
 
@@ -14,6 +15,7 @@ export default function Home() {
       </Head>
 
       <HomePageProvider>
+        <ThemeChanger />
         <h1 className='text-center font-medium text-2xl sm:text-3xl mt-5'>streamers.dev</h1>
         <h2 className='text-center text-lg sm:text-xl'>
           a curated directory of live coding streamers

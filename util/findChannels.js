@@ -40,13 +40,20 @@ async function saveNewChannels({ streams, tagName }) {
   const result = await twitchGetUsersByIds(map(streams, 'userId'));
   const twitchUsers = keyBy(result, 'id');
   let newQueuedCount = 0;
+  const now = new Date();
 
   for (const stream of streams) {
     const result = await prisma.queue.upsert({
       where: {
         twitchId: stream.userId,
       },
-      update: {},
+      update: {
+        updatedAt: now,
+        title: stream.title,
+        language: stream.language,
+        views: twitchUsers[stream.userId].views,
+        viewers: stream.viewers,
+      },
       create: {
         twitchId: stream.userId,
         name: stream.userName,
@@ -68,8 +75,7 @@ async function saveNewChannels({ streams, tagName }) {
 
   if (newQueuedCount > 0)
     console.log(`Queued ${pluralize('new channels', newQueuedCount, true)} from ${tagName} search`);
-  else
-    console.log('No new channels needed to be queued');
+  else console.log('No new channels needed to be queued');
 }
 
 async function findChannels(tagName) {
@@ -95,6 +101,13 @@ async function findChannels(tagName) {
   await findChannels('Software Development');
   await findChannels('Programming');
   await findChannels('Game Development');
+  await findChannels('Desktop Development');
+  await findChannels('Mobile Development');
+  await findChannels('JavaScript');
+  await findChannels('Python');
+  await findChannels('Rust');
+  await findChannels('PHP');
+  await findChannels('C++');
 
   console.log('Disconnecting...');
   await prisma.$disconnect();

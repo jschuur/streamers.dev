@@ -11,35 +11,35 @@ export default function Footer() {
 
   if (trackedChannelCount) {
     extraFooter.push(
-      <>
+      <span key={1}>
         <br />
         Currently tracking{' '}
         <a href='https://docs.google.com/spreadsheets/d/1dbE0RjLvyGle1-9nJh9FmRCp3LBmv21sA2brtQccIQE/edit#gid=958169034'>
           {trackedChannelCount}
         </a>{' '}
         channels.{' '}
-      </>
+      </span>
     );
   }
 
   if (session && adminAuthorised({ session })) {
     extraFooter.push(
-      <>
+      <span key={2}>
         <br />
         <a href='/admin'>Admin</a>. Logged in as {session.user.name} (
         <a className='cursor-pointer' onClick={signOut}>
           logout
         </a>
         )
-      </>
+      </span>
     );
   } else {
     extraFooter.push(
-      <>
+      <span key={3}>
         <a className='cursor-pointer' onClick={() => signIn('twitch')}>
           login
         </a>
-      </>
+      </span>
     );
   }
 

@@ -2,7 +2,9 @@ import { getQueue } from '../../lib/db';
 
 export default async (req, res) => {
   try {
-    const queue = await getQueue();
+    const { days, filterField } = req.query;
+
+    const queue = await getQueue({ days, filterField });
 
     res.status(200).json({ queue });
   } catch ({ message }) {

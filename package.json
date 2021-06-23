@@ -30,6 +30,7 @@
     "@next-auth/prisma-adapter": "^0.4.4-canary.64",
     "@prisma/client": "^2.25.0",
     "@sentry/nextjs": "^6.7.1",
+    "aws-sdk": "^2.932.0",
     "console-stamp": "^3.0.2",
     "country-flag-icons": "^1.2.10",
     "date-fns": "^2.22.1",

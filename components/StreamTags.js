@@ -1,44 +1,42 @@
 import sortBy from 'lodash.sortby';
 import Link from 'next/link';
+import pluralize from 'pluralize';
 import { useContext } from 'react';
 
 import { HomePageContext } from '../lib/stores';
 
+import Badge from './Badge';
+
 function StreamTagsEntry({ name, count }) {
   const { tagFilter, setTagFilter } = useContext(HomePageContext);
+	let onClick, color;
 
-  return name === tagFilter ? (
-    <span>
+	if (name !== tagFilter) {
+		onClick = () => { setTagFilter(name) };
+		color = 'blue';
+	}
+
+  return (
+    <Badge color={color} onClick={onClick}>
       {name} ({count})
-    </span>
-  ) : (
-    <button
-      className={`text-blue-500 dark:text-blue-300 1{
-        name === tagFilter ? 'font-bold' : 'font-base'
-      }`}
-      onClick={() => {
-        setTagFilter(name);
-      }}
-    >
-      {name} ({count})
-    </button>
+    </Badge>
   );
 }
 
 function StreamTagsAllEntry() {
-  const { tagFilter, setTagFilter } = useContext(HomePageContext);
+  const { tagFilter, setTagFilter, streamTags } = useContext(HomePageContext);
+  const liveTopics = pluralize('Live Topic', streamTags.length, true);
+	let onClick, color = 'gray';
+
+	if (tagFilter) {
+		onClick = () => setTagFilter(null);
+		color = 'purple';
+	}
 
   return (
-    <span className='mr-2'>
-      {tagFilter ? (
-        <button className='text-blue-400 font-medium' onClick={() => setTagFilter(null)}>
-          Live Topics
-        </button>
-      ) : (
-        'Live Topics'
-      )}{' '}
-      >
-    </span>
+    <Badge color={color} onClick={onClick}>
+      {liveTopics}
+    </Badge>
   );
 }
 export default function StreamTags() {
@@ -53,9 +51,8 @@ export default function StreamTags() {
   return (
     <div className='py-2 px-4 text-sm sm:text-base text-black font-medium dark:text-white'>
       <StreamTagsAllEntry />
-      {streamTags
-        .map(({ name, count }) => <StreamTagsEntry key={name} name={name} count={count} />)
-        .reduce((acc, tag) => [acc, ` ${String.fromCharCode(8226)} `, tag])}
+			{streamTags
+				.map(({ name, count }) => <StreamTagsEntry key={name} name={name} count={count} />)}
     </div>
   );
 }

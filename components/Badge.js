@@ -1,9 +1,12 @@
 import React from 'react';
 
-export default function Badge({ color, children }) {
+export default function Badge({ color, children, onClick }) {
   return (
     <span
-      className={`inline-flex items-center px-1.5 py-0.25 rounded text-xs font-medium tracking-wider bg-${color}-100 text-${color}-800 mr-1`}
+      onClick={onClick}
+      className={`inline-flex items-center px-2.5 py-0.5 m-1 rounded text-xs font-medium tracking-wider ${color ? `bg-${color}-100 text-${color}-800` : ''} mr-1 ${
+        onClick ? 'cursor-pointer' : ''
+      }`}
     >
       {children}
     </span>

@@ -1,6 +1,8 @@
 import { useContext } from 'react';
 import { HomePageContext } from '../lib/stores';
 
+import StreamTags from './StreamTags';
+
 import { sortFields, languageFilterOptions, categoryFilterOptions } from '../lib/useChannelList';
 
 export default function ChannelListControls() {
@@ -41,6 +43,9 @@ export default function ChannelListControls() {
         <span className='hidden sm:inline'>Category</span>:{' '}
         {categoryFilterOptions[categoryFilter].label}
       </button>
+      <div className='text-left'>
+        <StreamTags />
+      </div>
     </div>
   );
 }

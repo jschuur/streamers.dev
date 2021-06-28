@@ -31,7 +31,6 @@ async function saveToS3(data) {
     ContentType: 'text/json',
   };
 
-  console.log(process.env.AWS_BUCKET);
   try {
     const res = await s3.upload(params).promise();
 

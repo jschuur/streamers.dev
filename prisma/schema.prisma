@@ -37,6 +37,7 @@ model Channel {
   latestStreamViewers     Int?
   latestStreamLanguage    String?
   latestStreamGameName    String?
+  latestStreamTags        String[]
 
   // TODO: Create Links model
   homepage                String?
@@ -98,6 +99,13 @@ enum QueueStatus {
   PAUSED
   WONTADD
 }
+
+model Keyword {
+  id                      Int           @unique @default(autoincrement()) @id
+  tag                     String
+  keywords                String[]
+}
+
 // model Stream {
 //   userId
 //   title

@@ -109,6 +109,15 @@ async function findChannels(tagName) {
   await findChannels('PHP');
   await findChannels('C++');
 
+  console.log(`Marking 'PENDING' queue items that exist as channels as 'ADDED'`);
+  await prisma.$queryRaw(`
+    UPDATE "Queue"
+    SET status = 'ADDED'
+    WHERE "twitchId" IN
+      (SELECT "Channel"."twitchId" FROM "Channel")
+      AND status = 'PENDING';
+  `);
+
   console.log('Disconnecting...');
   await prisma.$disconnect();
 

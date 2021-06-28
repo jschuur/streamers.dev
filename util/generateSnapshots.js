@@ -1,6 +1,9 @@
 import consoleStamp from 'console-stamp';
 
 import prisma from '../lib/prisma';;
+
+import { CODING_GAMENAMES } from '../lib/config';
+
 consoleStamp(console, { format: ':date(yyyy-mm-dd HH:MM:ss.l).gray :label(7)' });
 
 const now = new Date();
@@ -9,10 +12,13 @@ now.setSeconds(0);
 now.setMilliseconds(0);
 
 const FILTER_LIVE_CHANNEL = { isLive: true };
-const FILTER_LIVE_CODING_CHANNEL = { isLive: true, OR: [{ latestStreamGameName: { equals: 'Science & Technology' } }, { alwaysCoding: { equals: true } },], };
+const FILTER_LIVE_CODING_CHANNEL = {
+  isLive: true,
+  OR: [{ latestStreamGameName: { in: CODING_GAMENAMES } }, { alwaysCoding: { equals: true } }],
+};
 const FILTER_LIVE_NON_CODING_CHANNEL = {
   isLive: true,
-  latestStreamGameName: { not: 'Science & Technology' },
+  latestStreamGameName: { not: { in: CODING_GAMENAMES } },
   alwaysCoding: false,
 };
 

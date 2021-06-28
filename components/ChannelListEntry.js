@@ -57,7 +57,7 @@ export default function ChannelListEntry({ channel, channelIndex }) {
       </td>
       <td
         className='py-2 px-2 align-top cursor-pointer'
-        onClick={() => (window.location.href = `https://twitch.tv/${channel.name}`)}
+        onClick={() => window.open(`https://twitch.tv/${channel.name}`, '_new')}
       >
         <ChannelBadges channel={channel} />
         <div className='text-sm text-gray-900 dark:text-gray-300 break-all md:break-normal mt-1'>

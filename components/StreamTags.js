@@ -13,7 +13,9 @@ function StreamTagsEntry({ name, count }) {
     </span>
   ) : (
     <button
-      className={`text-blue-400 ${name === tagFilter ? 'font-bold' : 'font-base'}`}
+      className={`text-blue-500 dark:text-blue-300 1{
+        name === tagFilter ? 'font-bold' : 'font-base'
+      }`}
       onClick={() => {
         setTagFilter(name);
       }}

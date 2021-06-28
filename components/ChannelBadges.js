@@ -22,7 +22,7 @@ export default function ChannelBadges({
     <>
       {latestStreamLanguage && latestStreamLanguage !== 'en' && (
         <Badge key={1} color='green'>
-          🗣 {by639_1[latestStreamLanguage].name}
+          🗣 {by639_1[latestStreamLanguage]?.name || latestStreamLanguage}
         </Badge>
       )}
       {latestStreamGameName && latestStreamGameName !== 'Science & Technology' && (

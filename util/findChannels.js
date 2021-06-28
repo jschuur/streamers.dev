@@ -1,5 +1,4 @@
 import consoleStamp from 'console-stamp';
-import { differenceInSeconds } from 'date-fns';
 import { map, keyBy } from 'lodash';
 import pluralize from 'pluralize';
 import 'dotenv/config';
@@ -15,7 +14,7 @@ async function getActiveStreams(tagName) {
 
   return (
     await twitchGetStreamsAll({
-      game: gameIds['Science & Technology'],
+      game: [gameIds['Science & Technology'], gameIds['BASIC Programming']],
     })
   ).filter(({ tagIds }) => tagIds.includes(tagId));
 }
@@ -42,6 +41,18 @@ async function saveNewChannels({ streams, tagName }) {
   let newQueuedCount = 0;
   const now = new Date();
 
+  // Need this to recognise newly queued entries later
+  const lastQueueItem = await prisma.queue.findFirst({
+    orderBy: {
+      id: 'desc',
+    },
+    select: {
+      id: true,
+    },
+    take: 1,
+  });
+  const lastQueueItemId = lastQueueItem?.id || 0;
+
   for (const stream of streams) {
     const result = await prisma.queue.upsert({
       where: {
@@ -63,11 +74,11 @@ async function saveNewChannels({ streams, tagName }) {
         views: twitchUsers[stream.userId].views,
         viewers: stream.viewers,
       },
-      select: { name: true, createdAt: true },
+      select: { id: true, name: true, createdAt: true },
     });
 
     // Dumb Prisma workaround to check if a record was added
-    if (differenceInSeconds(new Date(), result.createdAt) < 10) {
+    if (result.id > lastQueueItemId) {
       console.log(`Queued https://www.twitch.tv/${result.name}`);
       newQueuedCount++;
     }

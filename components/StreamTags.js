@@ -1,7 +1,7 @@
 import sortBy from 'lodash.sortby';
 import Link from 'next/link';
 import pluralize from 'pluralize';
-import { useContext } from 'react';
+import { useContext, useState, useEffect } from 'react';
 
 import { HomePageContext } from '../lib/stores';
 
@@ -24,21 +24,32 @@ function StreamTagsEntry({ name, count }) {
 }
 
 function StreamTagsAllEntry() {
-  const { tagFilter, setTagFilter, streamTags } = useContext(HomePageContext);
-  const liveTopics = pluralize('Live Topic', streamTags.length, true);
-	let onClick, color = 'gray';
+  const liveTopicsCount = () => pluralize('Live Topic', streamTags.length, true);
 
-	if (tagFilter) {
-		onClick = () => setTagFilter(null);
-		color = 'purple';
-	}
+  const { tagFilter, setTagFilter, streamTags, sortTopics, setSortTopics } =
+    useContext(HomePageContext);
+  const [liveTopics, setLiveTopics] = useState(liveTopicsCount);
+  let onClick, color;
+
+  useEffect(() => {
+    setLiveTopics(() => liveTopicsCount());
+  }, [streamTags]);
+
+  if (tagFilter) {
+    onClick = () => setTagFilter(null);
+    color = 'purple';
+  } else {
+    onClick = () => setSortTopics((index) => (index + 1) % 2);
+    color = 'green';
+  }
 
   return (
     <Badge color={color} onClick={onClick}>
-      {liveTopics}
+      {liveTopics} ({sortTopics === 0 ? 'by streams' : 'by name'})
     </Badge>
   );
 }
+
 export default function StreamTags() {
   const { streamTags, setTagFilter, categoryFilter } = useContext(HomePageContext);
 
@@ -56,3 +67,5 @@ export default function StreamTags() {
     </div>
   );
 }
+
+

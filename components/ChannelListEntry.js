@@ -8,7 +8,12 @@ import ChannelBadges from './ChannelBadges';
 
 import { formatDurationShort, TwitchLink } from '../lib/util';
 
-import { STREAM_RECENT_MINUTES, MIN_VISIBLE_VIEWER_COUNT } from '../lib/config';
+import {
+  STREAM_RECENT_MINUTES,
+  MIN_VISIBLE_VIEWER_COUNT,
+  THUMBNAIL_WIDTH,
+  THUMBNAIL_HEIGHT,
+} from '../lib/config';
 
 export default function ChannelListEntry({ channel, channelIndex }) {
   const startDate = parseISO(channel.latestStreamStartedAt),
@@ -52,7 +57,11 @@ export default function ChannelListEntry({ channel, channelIndex }) {
       </td>
       <td className='px-2 py-2 align-top hidden md:table-cell'>
         <TwitchLink username={channel.name}>
-          <VideoThumbnail username={channel.name} width={200} height={120} />
+          <VideoThumbnail
+            username={channel.name}
+            width={THUMBNAIL_WIDTH}
+            height={THUMBNAIL_HEIGHT}
+          />
         </TwitchLink>
       </td>
       <td

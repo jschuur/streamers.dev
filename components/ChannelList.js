@@ -6,6 +6,8 @@ import ChannelListControls from './ChannelListControls';
 import { HomePageContext } from '../lib/stores';
 import { useChannelList } from '../lib/useChannelList';
 
+import { THUMBNAIL_WIDTH } from '../lib/config';
+
 function VisibleChannelList() {
   const { trackedChannelCount, visibleChannels, channelViewers, loadingError } = useChannelList();
 
@@ -26,7 +28,7 @@ function VisibleChannelList() {
           </th>
           <th
             scope='col'
-            width='160px'
+            width={THUMBNAIL_WIDTH}
             className=' text-left text-xs font-medium text-gray-500 uppercase tracking-wider px-6 py-3 hidden md:table-cell'
           >
             Stream

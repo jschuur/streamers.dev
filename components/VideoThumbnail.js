@@ -4,7 +4,7 @@ export default function VideoThumbnail({ username, width, height }) {
       width={width}
       height={height}
       src={`https://static-cdn.jtvnw.net/previews-ttv/live_user_${username}-${width}x${height}.jpg`}
-      alt={`Channel preview for ${username}`}
+      alt={`Stream preview for ${username}`}
     />
   );
 }

@@ -37,7 +37,7 @@ export default function ChannelBadges({
       )}
       {teams &&
         teams.map((team) => (
-          <Badge key={4} color='purple'>
+          <Badge key={team} color='purple'>
             Team: {team}
           </Badge>
         ))}

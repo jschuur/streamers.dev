@@ -8,7 +8,7 @@ import { XCircleIcon } from '@heroicons/react/solid';
 
 import { AdminContext } from '../../lib/stores';
 import { showToast } from '../../lib/util';
-import { useFetch } from '../../lib/useFetch';
+import useFetch from '../../hooks/useFetch';
 import Button from '../../components/Button';
 import DropDown from '../../components/DropDown';
 

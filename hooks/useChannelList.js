@@ -2,62 +2,10 @@ import { differenceInSeconds, parseISO } from 'date-fns';
 import { sortBy, sumBy } from 'lodash';
 import { useContext, useEffect, useState } from 'react';
 
-import { HomePageContext } from './stores';
-import { isCoding } from '../lib/util';
+import { HomePageContext } from '../lib/stores';
 
-import { CHANNEL_AUTOREFRESH_SECONDS } from '../lib/config';
-
-const refreshRate =
-  process.env.NEXT_PUBLIC_CHANNEL_AUTOREFRESH_SECONDS || CHANNEL_AUTOREFRESH_SECONDS;
-const cachedLiveChannelsURL = `${process.env.NEXT_PUBLIC_CACHED_CHANNELLIST_URL}/live_channels${
-  process.env.NODE_ENV === 'development' ? '_dev' : ''
-}.json`;
-
-export const sortFields = [
-  {
-    fieldName: 'latestStreamViewers',
-    labelShort: 'stream viewers',
-    labelLong: 'Stream viewers (most)',
-  },
-  {
-    fieldName: 'latestStreamStartedAt',
-    labelShort: 'stream age',
-    labelLong: 'Stream age (latest)',
-  },
-  {
-    fieldName: 'creationDate',
-    labelShort: 'channel age',
-    labelLong: 'Channel age (youngest)',
-  },
-];
-
-export const languageFilterOptions = [
-  {
-    label: 'All',
-  },
-  {
-    label: 'English',
-    filter: (channel) => channel.latestStreamLanguage === 'en',
-  },
-  {
-    label: 'Not English',
-    filter: (channel) => channel.latestStreamLanguage !== 'en',
-  },
-];
-
-export const categoryFilterOptions = [
-  {
-    label: 'Coding',
-    filter: isCoding,
-  },
-  {
-    label: 'Not Coding',
-    filter: (channel) => !isCoding(channel),
-  },
-  {
-    label: 'Any',
-  },
-];
+import { sortFields, languageFilterOptions, categoryFilterOptions } from '../lib/options';
+import { CHANNEL_AUTOREFRESH_SECONDS, CACHED_LIVE_CHANNELS_URL } from '../lib/config';
 
 function aggregateStreamTags({ channels, sortTopics }) {
   let tagCounts = {};
@@ -78,7 +26,7 @@ function aggregateStreamTags({ channels, sortTopics }) {
   return sortBy(tagList, sortTopics ? 'name' : 'count').reverse();
 }
 
-export function useChannelList() {
+export default function useChannelList() {
   const {
     languageFilter,
     categoryFilter,
@@ -109,7 +57,7 @@ export function useChannelList() {
         ? `/api/getChannels?refresh=1`
         : fallback
         ? `/api/getChannels`
-        : cachedLiveChannelsURL;
+        : CACHED_LIVE_CHANNELS_URL;
 
       try {
         const response = await fetch(liveChannelsURL);
@@ -135,7 +83,7 @@ export function useChannelList() {
         }
       } catch ({ message }) {
         // Try the API if the cache file URL is broken
-        if (liveChannelsURL === cachedLiveChannelsURL) {
+        if (liveChannelsURL === CACHED_LIVE_CHANNELS_URL) {
           console.log(
             `Error loading cached live channel URL (${message}). Using API fallback for initial page load`
           );
@@ -148,9 +96,9 @@ export function useChannelList() {
     await loadChannels();
 
     // Later channel list refreshes can sprinkle in Twitch API data
-    if (refreshRate) {
-      console.log(`Refreshing channel list every ${refreshRate} seconds`);
-      setInterval(() => loadChannels({ refresh: true }), refreshRate * 1000);
+    if (CHANNEL_AUTOREFRESH_SECONDS) {
+      console.log(`Refreshing channel list every ${CHANNEL_AUTOREFRESH_SECONDS} seconds`);
+      setInterval(() => loadChannels({ refresh: true }), CHANNEL_AUTOREFRESH_SECONDS * 1000);
     }
   }, []);
 
@@ -166,7 +114,11 @@ export function useChannelList() {
       const latestStreamTags = aggregateStreamTags({ channels: channelList, sortTopics });
 
       // If we've filtered down to an empty list, switch back to all tags
-      if (tagFilter && (categoryFilter !== 1) && !latestStreamTags?.find(({ name }) => name === tagFilter)) {
+      if (
+        tagFilter &&
+        categoryFilter !== 1 &&
+        !latestStreamTags?.find(({ name }) => name === tagFilter)
+      ) {
         setTagFilter(null);
       } else {
         setStreamTags((tags) => sortStreamTags({ tags: latestStreamTags, sortTopics }));

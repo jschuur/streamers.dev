@@ -1,12 +1,21 @@
+import { useRouter } from 'next/router';
 import pluralize from 'pluralize';
+import { useEffect, useContext } from 'react';
 
 import ChannelListEntry from './ChannelListEntry';
 import ChannelListControls from './ChannelListControls';
 
 import { HomePageContext } from '../lib/stores';
-import { useChannelList } from '../lib/useChannelList';
-
 import { THUMBNAIL_WIDTH } from '../lib/config';
+import {
+  sortFields,
+  languageFilterOptions,
+  categoryFilterOptions,
+  topicSortOptions,
+} from '../lib/options';
+
+import useChannelList from '../hooks/useChannelList';
+import useTagSlugs from '../hooks/useTagSlugs';
 
 function VisibleChannelList() {
   const { trackedChannelCount, visibleChannels, channelViewers, loadingError } = useChannelList();
@@ -56,7 +65,34 @@ function VisibleChannelList() {
     </table>
   );
 }
-export default function ChannelList({ channels }) {
+export default function ChannelList({ channels, tagSlugs }) {
+  const {
+    setTagSlugs,
+    setTagFilter,
+    setSortField,
+    setCategoryFilter,
+    setLanguageFilter,
+    setSortTopics,
+  } = useContext(HomePageContext);
+  const { tagBySlug } = useTagSlugs();
+  const router = useRouter();
+  const query = router.query;
+
+  // Initialise the status list of tags and slugs loaded at build time
+  useEffect(() => {
+    setTagSlugs(tagSlugs);
+  }, []);
+
+  useEffect(() => {
+    const { topic, lang, cat, csort, tsort } = query;
+
+    if (topic) setTagFilter(tagBySlug(topic));
+    if (lang) setLanguageFilter(languageFilterOptions.findIndex(({ slug }) => slug === lang));
+    if (cat) setCategoryFilter(categoryFilterOptions.findIndex(({ slug }) => slug === cat));
+    if (csort) setSortField(sortFields.findIndex(({ slug }) => slug === csort));
+    if (tsort) setSortTopics(topicSortOptions.findIndex(({  slug  }) => slug === tsort));
+  }, [query]);
+
   return (
     <div className='flex flex-col'>
       <div className='-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8'>

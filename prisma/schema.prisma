@@ -104,6 +104,7 @@ model Keyword {
   id                      Int           @unique @default(autoincrement()) @id
   tag                     String
   keywords                String[]
+  slug                    String?
 }
 
 // model Stream {

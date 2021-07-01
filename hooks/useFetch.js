@@ -1,10 +1,10 @@
 import { useEffect, useContext } from 'react';
 import { useToasts } from 'react-toast-notifications';
 
-import { AdminContext } from './stores';
-import { showToast } from './util';
+import { AdminContext } from '../lib/stores';
+import { showToast } from '../lib/util';
 
-export function useFetch({ url, admin, setter, dependencies = [] }) {
+export default function useFetch({ url, admin, setter, dependencies = [] }) {
   const { addToast } = useToasts();
   const { setIsUpdating } = useContext(AdminContext);
 

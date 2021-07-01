@@ -1,12 +1,14 @@
 import Head from 'next/head';
+import slugify from 'slugify';
 
 import ChannelList from '../components/ChannelList';
 import Footer from '../components/Footer';
 import ThemeChanger from '../components/ThemeChanger';
 
 import { HomePageProvider } from '../lib/stores';
+import { getKeywords } from '../lib/db';
 
-export default function Home() {
+export default function Home({ tagSlugs }) {
   return (
     <>
       <Head>
@@ -21,10 +23,24 @@ export default function Home() {
           a curated directory of live coding streamers
         </h2>
         <div className='max-w-6xl mx-auto sm:px-7 py-5'>
-          <ChannelList />
+          <ChannelList tagSlugs={tagSlugs} />
           <Footer />
         </div>
       </HomePageProvider>
     </>
   );
+}
+
+export async function getStaticProps(context) {
+  const tags = await getKeywords();
+
+  // Slugify handles most slugs, but the keyword list can define overrides
+  const tagSlugs = tags.map(({ tag, slug }) => ({
+    tag,
+    slug: slug || slugify(tag, { lower: true, remove: '.' }),
+  }));
+
+  return {
+    props: { tagSlugs },
+  };
 }

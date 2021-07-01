@@ -1,11 +1,13 @@
-import { useContext } from 'react';
-import { HomePageContext } from '../lib/stores';
+import { useRouter } from 'next/router';
+import { useContext, useEffect } from 'react';
 
 import StreamTags from './StreamTags';
 
-import { sortFields, languageFilterOptions, categoryFilterOptions } from '../lib/useChannelList';
+import { HomePageContext } from '../lib/stores';
+import { sortFields, languageFilterOptions, categoryFilterOptions } from '../lib/options';
+import usePermalinkURI from '../hooks/usePermalinkURI';
 
-export default function ChannelListControls() {
+function SortFilterButtons() {
   const {
     sortField,
     setSortField,
@@ -16,7 +18,7 @@ export default function ChannelListControls() {
   } = useContext(HomePageContext);
 
   return (
-    <div className='text-right'>
+    <>
       <button
         onClick={() => setSortField((index) => (index + 1) % sortFields.length)}
         type='button'
@@ -43,9 +45,34 @@ export default function ChannelListControls() {
         <span className='hidden sm:inline'>Category</span>:{' '}
         {categoryFilterOptions[categoryFilter].label}
       </button>
+    </>
+  );
+}
+
+export default function ChannelListControls() {
+  const {
+    tagFilter,
+    sortField,
+    languageFilter,
+    categoryFilter,
+    sortTopics,
+  } = useContext(HomePageContext);
+  const permalink = usePermalinkURI();
+  const router = useRouter();
+
+  // Centrally change the page URL when the relevant state changes
+  useEffect(() => {
+    router.push(permalink());
+  }, [tagFilter, languageFilter, categoryFilter, sortField, sortTopics]);
+
+  return (
+    <>
+      <div className='text-right'>
+        <SortFilterButtons />
+      </div>
       <div className='text-left'>
         <StreamTags />
       </div>
-    </div>
+    </>
   );
 }

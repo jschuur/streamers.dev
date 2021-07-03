@@ -17,7 +17,11 @@ function SocialLink({ network, channel, children }) {
   else if (network === 'github') link = `https://github.com/${link}`;
   else if (network === 'instagram') link = `https://instagram.com/${link}`;
 
-  return <a href={link}>{children}</a>;
+  return (
+    <a href={link} target='_new'>
+      {children}
+    </a>
+  );
 }
 
 function SocialButton({ network, channel, children }) {

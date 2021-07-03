@@ -11,7 +11,7 @@ import {
 
 export default function SocialButtons({ channel }) {
   return (
-    <div className='grid grid-cols-3 auto-cols-min gap-y-2 gap-x-3 mr-2'>
+    <div className='hidden w-full md:flex gap-3 justify-end pt-2'>
       <TwitterButton channel={channel} />
       <GitHubButton channel={channel} />
       <YouTubeButton channel={channel} />

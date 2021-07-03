@@ -18,51 +18,18 @@ import useChannelList from '../hooks/useChannelList';
 import useTagSlugs from '../hooks/useTagSlugs';
 
 function VisibleChannelList() {
-  const { trackedChannelCount, visibleChannels, channelViewers, loadingError } = useChannelList();
+  const { trackedChannelCount, visibleChannels, loadingError } = useChannelList();
 
   if (loadingError) return <div className='m-2'>Error: {loadingError} </div>;
   if (!visibleChannels) return <div className='m-2'>Loading...</div>;
   if (!visibleChannels.length) return <div className='m-2'>No matching channels</div>;
 
   return (
-    <table className='min-w-full divide-y-0 divide-gray-200'>
-      <thead className='bg-gray-50 dark:bg-gray-700'>
-        <tr>
-          <th
-            scope='col'
-            className='px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider'
-          >
-            Channel <br />({visibleChannels.length} with {pluralize('viewer', channelViewers, true)}
-            )
-          </th>
-          <th
-            scope='col'
-            width={THUMBNAIL_WIDTH}
-            className=' text-left text-xs font-medium text-gray-500 uppercase tracking-wider px-6 py-3 hidden md:table-cell'
-          >
-            Stream
-          </th>
-          <th
-            scope='col'
-            className='text-left text-xs font-medium text-gray-500 uppercase tracking-wider px-6 py-3'
-          >
-            <span className='md:hidden'>Stream</span>
-          </th>
-          <th
-            scope='col'
-            width='120px'
-            className='px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell'
-          >
-            Links
-          </th>
-        </tr>
-      </thead>
-      <tbody className='bg-white divide-y-0 divide-gray-200'>
-        {visibleChannels.map((channel, index) => (
-          <ChannelListEntry key={channel.twitchId} channel={channel} channelIndex={index} />
-        ))}
-      </tbody>
-    </table>
+    <div className='bg-white grid grid-cols-[40%,60%] sm:grid-cols-[220px,147px,1fr] md:grid-cols-[220px,220px,1fr]'>
+      {visibleChannels.map((channel, index) => (
+        <ChannelListEntry key={channel.twitchId} channel={channel} channelIndex={index} />
+      ))}
+    </div>
   );
 }
 export default function ChannelList({ channels, tagSlugs }) {
@@ -90,19 +57,13 @@ export default function ChannelList({ channels, tagSlugs }) {
     if (lang) setLanguageFilter(languageFilterOptions.findIndex(({ slug }) => slug === lang));
     if (cat) setCategoryFilter(categoryFilterOptions.findIndex(({ slug }) => slug === cat));
     if (csort) setSortField(sortFields.findIndex(({ slug }) => slug === csort));
-    if (tsort) setSortTopics(topicSortOptions.findIndex(({  slug  }) => slug === tsort));
+    if (tsort) setSortTopics(topicSortOptions.findIndex(({ slug }) => slug === tsort));
   }, [query]);
 
   return (
-    <div className='flex flex-col'>
-      <div className='-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8'>
-        <div className='py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8'>
-          <div className='shadow overflow-hidden border-b border-gray-200 dark:border-gray-500 sm:rounded-lg'>
-            <ChannelListControls />
-            <VisibleChannelList />
-          </div>
-        </div>
-      </div>
+    <div className='shadow overflow-hidden sm:rounded-lg'>
+      <ChannelListControls />
+      <VisibleChannelList />
     </div>
   );
 }

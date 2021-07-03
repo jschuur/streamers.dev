@@ -26,6 +26,14 @@ function aggregateStreamTags({ channels, sortTopics }) {
   return sortBy(tagList, sortTopics ? 'name' : 'count').reverse();
 }
 
+function visibleChannelViewerCounts({ allChannels, visibleChannels }) {
+  const totalChannelCount = allChannels.length;
+  const visibleChannelCount = visibleChannels.length;
+  const totalViewerCount = sumBy(allChannels, 'latestStreamViewers');
+  const visibleViewerCount = sumBy(visibleChannels, 'latestStreamViewers');
+
+  return { totalChannelCount, visibleChannelCount, totalViewerCount, visibleViewerCount };
+}
 export default function useChannelList() {
   const {
     languageFilter,
@@ -36,11 +44,11 @@ export default function useChannelList() {
     setStreamTags,
     tagFilter,
     setTagFilter,
+    setLiveCounts,
     setTrackedChannelCount,
   } = useContext(HomePageContext);
   const [allChannels, setAllChannels] = useState([]);
   const [visibleChannels, setVisibleChannels] = useState(null);
-  const [channelViewers, setChannelViewers] = useState(0);
   const [loadingError, setLoadingError] = useState(null);
 
   const sortStreamTags = ({ tags, sortTopics }) =>
@@ -104,14 +112,14 @@ export default function useChannelList() {
 
   useEffect(async () => {
     if (allChannels.length) {
-      let channelList = sortBy(allChannels, sortFields[sortField].fieldName).reverse();
+      let visibleChannels = sortBy(allChannels, sortFields[sortField].fieldName).reverse();
 
       if (categoryFilterOptions[categoryFilter].filter)
-        channelList = channelList.filter(categoryFilterOptions[categoryFilter].filter);
+        visibleChannels = visibleChannels.filter(categoryFilterOptions[categoryFilter].filter);
       if (languageFilterOptions[languageFilter].filter)
-        channelList = channelList.filter(languageFilterOptions[languageFilter].filter);
+        visibleChannels = visibleChannels.filter(languageFilterOptions[languageFilter].filter);
 
-      const latestStreamTags = aggregateStreamTags({ channels: channelList, sortTopics });
+      const latestStreamTags = aggregateStreamTags({ channels: visibleChannels, sortTopics });
 
       // If we've filtered down to an empty list, switch back to all tags
       if (
@@ -124,12 +132,12 @@ export default function useChannelList() {
         setStreamTags((tags) => sortStreamTags({ tags: latestStreamTags, sortTopics }));
 
         if (tagFilter)
-          channelList = channelList.filter(({ latestStreamTags }) =>
+          visibleChannels = visibleChannels.filter(({ latestStreamTags }) =>
             latestStreamTags.includes(tagFilter)
           );
 
-        setVisibleChannels(channelList);
-        setChannelViewers(sumBy(channelList, 'latestStreamViewers'));
+        setLiveCounts(visibleChannelViewerCounts({ allChannels, visibleChannels }));
+        setVisibleChannels(visibleChannels);
       }
     }
   }, [allChannels, languageFilter, categoryFilter, sortField, tagFilter]);
@@ -138,5 +146,5 @@ export default function useChannelList() {
     setStreamTags((tags) => sortStreamTags({ tags, sortTopics }));
   }, [sortTopics]);
 
-  return { visibleChannels, channelViewers, loadingError };
+  return { visibleChannels, loadingError };
 }

@@ -22,7 +22,7 @@ export default function Home({ tagSlugs }) {
         <h2 className='text-center text-lg sm:text-xl'>
           a curated directory of live coding streamers
         </h2>
-        <div className='max-w-6xl mx-auto sm:px-7 py-5'>
+        <div className='max-w-5xl mx-auto sm:px-7 py-4 sm:py-5'>
           <ChannelList tagSlugs={tagSlugs} />
           <Footer />
         </div>

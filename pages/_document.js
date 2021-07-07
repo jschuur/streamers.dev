@@ -1,5 +1,6 @@
 import Document, { Html, Head, Main, NextScript } from 'next/document';
 
+import { isDev } from '../lib/util';
 export default class MyDocument extends Document {
   render() {
     return (
@@ -18,7 +19,7 @@ export default class MyDocument extends Document {
             }}
           />
         </Head>
-        <body className='bg-blue-50 dark:bg-gray-800 debug-screens'>
+        <body className={`bg-blue-50 dark:bg-gray-800 ${isDev() && 'debug-screens'}`}>
           <Main />
           <NextScript />
         </body>

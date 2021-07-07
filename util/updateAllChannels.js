@@ -10,8 +10,9 @@ const argv = minimist(process.argv.slice(2), {
   default: { includePaused: false },
 });
 
-import { updateAllChannelDetails, updateAllChannelStatuses } from '../lib/lib.js';
-import { getChannels, disconnectDB } from '../lib/db.js';
+import { updateAllChannelDetails, updateAllChannelStatuses } from '../lib/lib';
+import { getChannels, disconnectDB } from '../lib/db';
+import { isProd } from '../lib/util';
 
 const s3 = new AWS.S3({
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -20,8 +21,7 @@ const s3 = new AWS.S3({
 });
 
 async function saveToS3(data) {
-  const fileName =
-    process.env.NODE_ENV === 'production' ? 'live_channels.json' : 'live_channels_dev.json';
+  const fileName = isProd() ? 'live_channels.json' : 'live_channels_dev.json';
 
   const params = {
     Bucket: process.env.AWS_BUCKET,

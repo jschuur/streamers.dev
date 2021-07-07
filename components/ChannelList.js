@@ -1,6 +1,8 @@
 import { useRouter } from 'next/router';
+import { useTheme } from 'next-themes';
 import pluralize from 'pluralize';
 import { useEffect, useContext } from 'react';
+import Loader from 'react-loader-spinner';
 
 import ChannelListEntry from './ChannelListEntry';
 import ChannelListControls from './ChannelListControls';
@@ -19,9 +21,20 @@ import useTagSlugs from '../hooks/useTagSlugs';
 
 function VisibleChannelList() {
   const { trackedChannelCount, visibleChannels, loadingError } = useChannelList();
+  const { theme } = useTheme();
 
   if (loadingError) return <div className='m-2'>Error: {loadingError} </div>;
-  if (!visibleChannels) return <div className='m-2'>Loading...</div>;
+  if (!visibleChannels)
+    return (
+      <div className='m-2 flex justify-center'>
+        <Loader
+          type='Bars'
+          color={theme === 'dark' ? '#ffffff' : '#000000'}
+          height={24}
+          width={24}
+        />
+      </div>
+    );
   if (!visibleChannels.length) return <div className='m-2'>No matching channels</div>;
 
   return (

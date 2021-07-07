@@ -6,7 +6,7 @@ import VideoThumbnail from './VideoThumbnail';
 import CountryFlags from './CountryFlags';
 import ChannelBadges from './ChannelBadges';
 
-import { formatDurationShort, TwitchLink } from '../lib/util';
+import { formatDurationShort, TwitchLink, profilePictureUrl } from '../lib/util';
 
 import {
   STREAM_RECENT_MINUTES,
@@ -47,7 +47,7 @@ export default function ChannelListEntry({ channel, channelIndex }) {
                       ? 'border-purple-600 border-[3px]'
                       : channel.broadcasterType === 'affiliate' && 'border-blue-600 border-[3px]'
                   }`}
-                  src={channel.profilePictureUrl}
+                  src={profilePictureUrl(channel.profilePictureUrl, 70)}
                   alt={`Avatar for ${channel.displayName}`}
                 />
               </TwitchLink>

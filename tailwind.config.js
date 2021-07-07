@@ -27,5 +27,5 @@ module.exports = {
       textColor: ['visited'],
     },
   },
-  plugins: [],
+  plugins: [require('tailwindcss-debug-screens')],
 };

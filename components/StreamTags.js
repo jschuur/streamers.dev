@@ -20,7 +20,7 @@ function StreamTagsEntry({ name, count }) {
     color = 'blue';
   }
 
-	return (
+  return (
     <Badge color={color} onClick={onClick}>
       {name} ({count})
     </Badge>

@@ -67,12 +67,12 @@ export default function ChannelListControls() {
   }, [tagFilter, languageFilter, categoryFilter, sortField, sortTopics]);
 
   return (
-    <div className="px-2 sm:px-3">
+    <div className='px-2 sm:px-3'>
       <div className='flex flex-col sm:flex-row-reverse justify-between '>
         <SortFilterButtons />
         <ChannelViewerCounts />
       </div>
-      <div className='text-left'>
+      <div>
         <StreamTags />
       </div>
     </div>

@@ -1,22 +1,21 @@
-import sortBy from 'lodash.sortby';
-import Link from 'next/link';
 import pluralize from 'pluralize';
 import { useContext, useState, useEffect } from 'react';
 
-import { HomePageContext } from '../lib/stores';
-import { topicSortOptions } from '../lib/options';
-import useTagSlugs from '../hooks/useTagSlugs';
-
 import Badge from './Badge';
 
+import { HomePageContext } from '../lib/stores';
+import { topicSortOptions } from '../lib/options';
+
+import useFilterNav from '../hooks/useFilterNav';
+
 function StreamTagsEntry({ name, count }) {
-  const { tagFilter, setTagFilter } = useContext(HomePageContext);
-  const { slugByTag } = useTagSlugs();
+  const { topicFilter } = useContext(HomePageContext);
+  const filterNav = useFilterNav();
 
   let onClick, color;
 
-  if (name !== tagFilter) {
-    onClick = () => setTagFilter(name);
+  if (name !== topicFilter) {
+    onClick = () => filterNav({ topicFilter: name });
     color = 'blue';
   }
 
@@ -30,34 +29,35 @@ function StreamTagsEntry({ name, count }) {
 function StreamTagsReset() {
   const liveTopicsCount = () => pluralize('Live Topic', streamTags.length, true);
 
-  const { tagFilter, setTagFilter, streamTags, sortTopics, setSortTopics } =
-    useContext(HomePageContext);
+  const { topicFilter, streamTags, topicSort } = useContext(HomePageContext);
   const [liveTopics, setLiveTopics] = useState(liveTopicsCount);
+  const filterNav = useFilterNav();
   let onClick, color;
 
   useEffect(() => {
     setLiveTopics(() => liveTopicsCount());
   }, [streamTags]);
 
-  if (tagFilter) {
-    onClick = () => setTagFilter(null);
+  if (topicFilter) {
+    onClick = () => filterNav({ topicFilter: null });
     color = 'purple';
   } else {
-    onClick = () => setSortTopics((index) => (index + 1) % topicSortOptions.length);
+    onClick = () => filterNav({ topicSort: (topicSort + 1) % topicSortOptions.length });
     color = 'green';
   }
 
   return (
     <Badge color={color} onClick={onClick}>
-      {liveTopics} ({topicSortOptions[sortTopics].label})
+      {liveTopics} ({topicSortOptions[topicSort].label})
     </Badge>
   );
 }
 
 export default function StreamTags() {
-  const { streamTags, setTagFilter, categoryFilter } = useContext(HomePageContext);
+  const { streamTags, categoryFilter } = useContext(HomePageContext);
 
   if (!streamTags.length) return null;
+
   // Don't use tags for the non-coding section
   if (categoryFilter === 1) return null;
 
@@ -70,5 +70,3 @@ export default function StreamTags() {
     </div>
   );
 }
-
-

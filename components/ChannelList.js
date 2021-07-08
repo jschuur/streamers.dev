@@ -10,7 +10,7 @@ import ChannelListControls from './ChannelListControls';
 import { HomePageContext } from '../lib/stores';
 import { THUMBNAIL_WIDTH } from '../lib/config';
 import {
-  sortFields,
+  channelSortOptions,
   languageFilterOptions,
   categoryFilterOptions,
   topicSortOptions,
@@ -47,31 +47,48 @@ function VisibleChannelList() {
 }
 export default function ChannelList({ channels, tagSlugs }) {
   const {
-    setTagSlugs,
-    setTagFilter,
-    setSortField,
+    topicFilter,
+    setTopicFilter,
+    categoryFilter,
     setCategoryFilter,
+    channelSort,
+    setChannelSort,
+    languageFilter,
     setLanguageFilter,
-    setSortTopics,
+    topicSort,
+    setTopicSort,
   } = useContext(HomePageContext);
+
   const { tagBySlug } = useTagSlugs();
   const router = useRouter();
-  const query = router.query;
+  const { query, isReady } = router;
 
-  // Initialise the status list of tags and slugs loaded at build time
-  useEffect(() => {
-    setTagSlugs(tagSlugs);
-  }, []);
-
-  useEffect(() => {
+  function setStateFromQuery(query) {
     const { topic, lang, cat, csort, tsort } = query;
 
-    if (topic) setTagFilter(tagBySlug(topic));
-    if (lang) setLanguageFilter(languageFilterOptions.findIndex(({ slug }) => slug === lang));
-    if (cat) setCategoryFilter(categoryFilterOptions.findIndex(({ slug }) => slug === cat));
-    if (csort) setSortField(sortFields.findIndex(({ slug }) => slug === csort));
-    if (tsort) setSortTopics(topicSortOptions.findIndex(({ slug }) => slug === tsort));
-  }, [query]);
+    const routeTopic = tagBySlug(topic) || null;
+    if (routeTopic !== topicFilter) setTopicFilter(routeTopic);
+
+    const routeCategory = categoryFilterOptions.findIndex(({ slug }) => slug === cat);
+    if (routeCategory !== categoryFilter) setCategoryFilter(routeCategory >= 0 ? routeCategory : 0);
+
+    const routeLanguage = languageFilterOptions.findIndex(({ slug }) => slug === lang);
+    if (routeLanguage !== languageFilter) setLanguageFilter(routeLanguage >= 0 ? routeLanguage : 0);
+
+    const routeChannelSort = channelSortOptions.findIndex(({ slug }) => slug === csort);
+    if (routeChannelSort !== channelSort)
+      setChannelSort(routeChannelSort >= 0 ? routeChannelSort : 0);
+
+    const routeSortTopic = topicSortOptions.findIndex(({ slug }) => slug === tsort);
+    if (routeSortTopic !== topicSort) setTopicSort(routeSortTopic >= 0 ? routeSortTopic : 0);
+  }
+
+  useEffect(() => {
+    // Skip initial pre-hydration call
+    if (!isReady) return;
+
+    setStateFromQuery(query);
+  }, [query]); // Don't run until tagSlugs have loaded
 
   return (
     <div className='shadow overflow-hidden sm:rounded-lg'>

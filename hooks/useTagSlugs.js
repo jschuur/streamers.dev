@@ -1,11 +1,12 @@
 import { useContext } from 'react';
+
 import { HomePageContext } from '../lib/stores';
 
 export default function useTagSlugs() {
-  const { tagSlugs } = useContext(HomePageContext);
+  const { tagSlugs, setTagSlugs } = useContext(HomePageContext);
 
-  const slugByTag = (str) => tagSlugs.find(({ tag }) => tag === str)?.slug;
-  const tagBySlug = (str) => tagSlugs.find(({ slug }) => slug === str)?.tag;
+  const slugByTag = (str) => tagSlugs.find(({ tag }) => tag === str)?.slug || null;
+  const tagBySlug = (str) => tagSlugs.find(({ slug }) => slug === str)?.tag || null;
 
-  return { slugByTag, tagBySlug };
+  return { setTagSlugs, slugByTag, tagBySlug };
 }

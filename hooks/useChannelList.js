@@ -4,10 +4,10 @@ import { useContext, useEffect, useState } from 'react';
 
 import { HomePageContext } from '../lib/stores';
 
-import { sortFields, languageFilterOptions, categoryFilterOptions } from '../lib/options';
+import { channelSortOptions, languageFilterOptions, categoryFilterOptions } from '../lib/options';
 import { CHANNEL_AUTOREFRESH_SECONDS, CACHED_LIVE_CHANNELS_URL } from '../lib/config';
 
-function aggregateStreamTags({ channels, sortTopics }) {
+function aggregateStreamTags({ channels, topicSort }) {
   let tagCounts = {};
 
   // Count the tags used
@@ -23,7 +23,7 @@ function aggregateStreamTags({ channels, sortTopics }) {
 
   // Sort the list of tags by channel usage
   const tagList = Object.entries(tagCounts).map(([name, count]) => ({ name, count }));
-  return sortBy(tagList, sortTopics ? 'name' : 'count').reverse();
+  return sortBy(tagList, topicSort ? 'name' : 'count').reverse();
 }
 
 function visibleChannelViewerCounts({ allChannels, visibleChannels }) {
@@ -38,12 +38,12 @@ export default function useChannelList() {
   const {
     languageFilter,
     categoryFilter,
-    sortField,
-    sortTopics,
+      channelSort,
+    topicSort,
     streamTags,
     setStreamTags,
-    tagFilter,
-    setTagFilter,
+    topicFilter,
+    setTopicFilter,
     setLiveCounts,
     setTrackedChannelCount,
   } = useContext(HomePageContext);
@@ -51,8 +51,8 @@ export default function useChannelList() {
   const [visibleChannels, setVisibleChannels] = useState(null);
   const [loadingError, setLoadingError] = useState(null);
 
-  const sortStreamTags = ({ tags, sortTopics }) =>
-    sortTopics === 0 ? sortBy(tags, 'count').reverse() : sortBy(tags, 'name');
+  const sortStreamTags = ({ tags, topicSort }) =>
+    topicSort === 0 ? sortBy(tags, 'count').reverse() : sortBy(tags, 'name');
 
   useEffect(async () => {
     const loadChannels = async ({ refresh, fallback } = {}) => {
@@ -112,39 +112,39 @@ export default function useChannelList() {
 
   useEffect(async () => {
     if (allChannels.length) {
-      let visibleChannels = sortBy(allChannels, sortFields[sortField].fieldName).reverse();
+      let visibleChannels = sortBy(allChannels, channelSortOptions[  channelSort].fieldName).reverse();
 
       if (categoryFilterOptions[categoryFilter].filter)
         visibleChannels = visibleChannels.filter(categoryFilterOptions[categoryFilter].filter);
       if (languageFilterOptions[languageFilter].filter)
         visibleChannels = visibleChannels.filter(languageFilterOptions[languageFilter].filter);
 
-      const latestStreamTags = aggregateStreamTags({ channels: visibleChannels, sortTopics });
+      const latestStreamTags = aggregateStreamTags({ channels: visibleChannels, topicSort });
 
       // If we've filtered down to an empty list, switch back to all tags
       if (
-        tagFilter &&
+        topicFilter &&
         categoryFilter !== 1 &&
-        !latestStreamTags?.find(({ name }) => name === tagFilter)
+        !latestStreamTags?.find(({ name }) => name === topicFilter)
       ) {
-        setTagFilter(null);
+        setTopicFilter(null);
       } else {
-        setStreamTags((tags) => sortStreamTags({ tags: latestStreamTags, sortTopics }));
+        setStreamTags((tags) => sortStreamTags({ tags: latestStreamTags, topicSort }));
 
-        if (tagFilter)
+        if (topicFilter)
           visibleChannels = visibleChannels.filter(({ latestStreamTags }) =>
-            latestStreamTags.includes(tagFilter)
+            latestStreamTags.includes(topicFilter)
           );
 
         setLiveCounts(visibleChannelViewerCounts({ allChannels, visibleChannels }));
         setVisibleChannels(visibleChannels);
       }
     }
-  }, [allChannels, languageFilter, categoryFilter, sortField, tagFilter]);
+  }, [allChannels, languageFilter, categoryFilter,   channelSort, topicFilter]);
 
   useEffect(() => {
-    setStreamTags((tags) => sortStreamTags({ tags, sortTopics }));
-  }, [sortTopics]);
+    setStreamTags((tags) => sortStreamTags({ tags, topicSort }));
+  }, [topicSort]);
 
   return { visibleChannels, loadingError };
 }

@@ -36,7 +36,6 @@
     "country-flag-icons": "^1.2.10",
     "date-fns": "^2.22.1",
     "dotenv": "^10.0.0",
-    "emoji-regex": "^9.2.2",
     "iso-language-codes": "^1.1.0",
     "lodash": "^4.17.21",
     "minimist": "^1.2.5",

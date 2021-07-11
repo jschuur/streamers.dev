@@ -88,7 +88,7 @@ export default function ChannelList({ channels, tagSlugs }) {
     if (!isReady) return;
 
     setStateFromQuery(query);
-  }, [query]); // Don't run until tagSlugs have loaded
+  }, [query]);
 
   return (
     <div className='shadow overflow-hidden sm:rounded-lg'>

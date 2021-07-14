@@ -25,7 +25,7 @@ export default function ChannelListEntry({ channel, channelIndex }) {
       ? 'bg-white dark:bg-gray-600'
       : 'bg-gray-100 dark:bg-gray-700';
 
-  const openProfile = () => window.open(`https://twitch.tv/${channel.name}`, '_new');
+  const openProfile = () => window.open(`https://twitch.tv/${channel.name}`, '_blank');
 
   return (
     <>

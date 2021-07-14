@@ -102,7 +102,7 @@ function TagQueue({ tagName }) {
         <div key={channel.id}>
           {dateHeader}
           <li className='group' key={channel.id}>
-            <a target='_new' href={`https://twitch.tv/${channel.name}`}>
+            <a target='_blank' href={`https://twitch.tv/${channel.name}`}>
               {channel.name}
             </a>{' '}
             ({channel.language} {channel.views}: {channel.title}){' '}

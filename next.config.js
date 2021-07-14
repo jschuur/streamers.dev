@@ -1,6 +1,23 @@
+const { PrismaClient } = require('@prisma/client');
 const { withSentryConfig } = require('@sentry/nextjs');
+const slugify = require('slugify');
 
-const moduleExports = {};
+const prisma = new PrismaClient();
+
+const moduleExports = {
+  // handles shorter URLs for topics (e.g. https://streamers.dev/react)
+  redirects: async () => {
+    return (await prisma.keyword.findMany()).map((keyword) => {
+      const slug = keyword.slug || slugify(keyword.tag, { lower: true, remove: '.' });
+
+      return {
+        source: `/${slug}`,
+        destination: `/?filter=${slug}`,
+        permanent: false,
+      };
+    });
+  },
+};
 
 const SentryWebpackPluginOptions = {
   // For all available options, see:

@@ -38,6 +38,7 @@ model Channel {
   latestStreamLanguage    String?
   latestStreamGameName    String?
   latestStreamTags        String[]
+  latestStreamTwitchTags  String[]
 
   // TODO: Create Links model
   homepage                String?

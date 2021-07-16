@@ -1,4 +1,5 @@
 import { useEffect, useContext } from 'react';
+import { useImage } from 'react-image';
 
 import { CountryFlagsRow } from './CountryFlags';
 import { TwitchLink } from '../lib/util';
@@ -6,8 +7,15 @@ import { TwitchLink } from '../lib/util';
 import { profilePictureUrl } from '../lib/util';
 import { HomePageContext } from '../lib/stores';
 
+import { DEFAULT_AVATAR_URL } from '../lib/config';
+
+// TODO: Abstract this and the original in ChannelListEntry into a reusable component
 function OfflineChannelEntry({ channel }) {
   const { name, displayName, fullName, broadcasterType } = channel;
+  const { src: profilePictureSrc } = useImage({
+    srcList: [profilePictureUrl(channel.profilePictureUrl, 70), DEFAULT_AVATAR_URL],
+    useSuspense: false,
+  });
 
   return (
     <div className='w-50 px-2 py-2 align-top' key={name}>
@@ -27,7 +35,7 @@ function OfflineChannelEntry({ channel }) {
                     ? 'border-purple-600 border-[3px]'
                     : broadcasterType === 'affiliate' && 'border-blue-600 border-[3px]'
                 }`}
-                src={profilePictureUrl(channel.profilePictureUrl, 70)}
+                src={profilePictureSrc}
                 alt={`Avatar for ${displayName}`}
               />
             </TwitchLink>

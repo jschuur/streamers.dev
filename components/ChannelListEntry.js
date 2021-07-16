@@ -1,5 +1,6 @@
 import { parseISO, intervalToDuration, differenceInMinutes } from 'date-fns';
 import pluralize from 'pluralize';
+import { useImage } from 'react-image';
 
 import SocialButtons from './SocialButtons';
 import VideoThumbnail from './VideoThumbnail';
@@ -13,6 +14,7 @@ import {
   MIN_VISIBLE_VIEWER_COUNT,
   THUMBNAIL_WIDTH,
   THUMBNAIL_HEIGHT,
+  DEFAULT_AVATAR_URL,
 } from '../lib/config';
 
 export default function ChannelListEntry({ channel, channelIndex = 0 }) {
@@ -25,6 +27,11 @@ export default function ChannelListEntry({ channel, channelIndex = 0 }) {
       ? 'bg-white dark:bg-gray-600'
       : 'bg-gray-100 dark:bg-gray-700';
 
+  // Use a fallback image for channel avatars incase a new one hasn't been picked up yet
+  const { src: profilePictureSrc } = useImage({
+    srcList: [profilePictureUrl(channel.profilePictureUrl, 70), DEFAULT_AVATAR_URL],
+    useSuspense: false,
+  });
   const openProfile = () => window.open(`https://twitch.tv/${channel.name}`, '_blank');
 
   return (
@@ -47,7 +54,7 @@ export default function ChannelListEntry({ channel, channelIndex = 0 }) {
                       ? 'border-purple-600 border-[3px]'
                       : channel.broadcasterType === 'affiliate' && 'border-blue-600 border-[3px]'
                   }`}
-                  src={profilePictureUrl(channel.profilePictureUrl, 70)}
+                  src={profilePictureSrc}
                   alt={`Avatar for ${channel.displayName}`}
                 />
               </TwitchLink>

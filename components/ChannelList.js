@@ -1,3 +1,4 @@
+import { map } from 'lodash';
 import { useRouter } from 'next/router';
 import { useTheme } from 'next-themes';
 import pluralize from 'pluralize';
@@ -6,6 +7,7 @@ import Loader from 'react-loader-spinner';
 
 import ChannelListEntry from './ChannelListEntry';
 import ChannelListControls from './ChannelListControls';
+import OfflineChannels from './OfflineChannels';
 
 import { HomePageContext } from '../lib/stores';
 import { THUMBNAIL_WIDTH } from '../lib/config';
@@ -18,10 +20,12 @@ import {
 
 import useChannelList from '../hooks/useChannelList';
 import useTagSlugs from '../hooks/useTagSlugs';
+import useFilterNav from '../hooks/useFilterNav';
 
 function VisibleChannelList() {
   const { trackedChannelCount, visibleChannels, loadingError } = useChannelList();
   const { theme } = useTheme();
+  const filterNav = useFilterNav();
 
   if (loadingError) return <div className='m-2'>Error: {loadingError} </div>;
   if (!visibleChannels)
@@ -35,7 +39,23 @@ function VisibleChannelList() {
         />
       </div>
     );
-  if (!visibleChannels.length) return <div className='m-2'>No matching channels</div>;
+  if (!visibleChannels.length)
+    return (
+      <div className='m-2'>
+        No matching live channels.{' '}
+        <a className='cursor-pointer' onClick={() => filterNav({ reset: true })}>
+          Reset filters
+        </a>{' '}
+        or{' '}
+        <a
+          className='cursor-pointer'
+          href='https://www.twitch.tv/directory/game/Science%20%26%20Technology?tl=3dc8f084-d886-4264-b20f-8bd5f90562b5'
+        >
+          watch some cute animals
+        </a>{' '}
+        instead.
+      </div>
+    );
 
   return (
     <div className='bg-white grid grid-cols-[40%,60%] sm:grid-cols-[220px,147px,1fr] md:grid-cols-[220px,220px,1fr]'>
@@ -57,9 +77,11 @@ export default function ChannelList({ channels, tagSlugs }) {
     setLanguageFilter,
     topicSort,
     setTopicSort,
+    offlineChannels,
+    setOfflineChannels,
   } = useContext(HomePageContext);
 
-  const { tagBySlug } = useTagSlugs();
+  const { tagBySlug, slugByTag } = useTagSlugs();
   const router = useRouter();
   const { query, isReady } = router;
 
@@ -90,10 +112,32 @@ export default function ChannelList({ channels, tagSlugs }) {
     setStateFromQuery(query);
   }, [query]);
 
+  // Update the offlineChannels list when the topic or language filter changes
+  useEffect(() => {
+    if (!topicFilter) return setOfflineChannels([]);
+
+    const doFetch = async () => {
+      const response = await fetch(
+        `/api/getOfflineChannels?topic=${encodeURIComponent(topicFilter)}&lang=${
+          languageFilterOptions[languageFilter].slug
+        }`
+      );
+      const { channels, error } = await response.json();
+
+      if (error) console.error(`Error fetching offline channels: ${error}`);
+      else setOfflineChannels(channels);
+    };
+
+    doFetch();
+  }, [topicFilter, languageFilter]);
+
   return (
-    <div className='shadow overflow-hidden sm:rounded-lg'>
-      <ChannelListControls />
-      <VisibleChannelList />
-    </div>
+    <>
+      <div className='shadow overflow-hidden sm:rounded-lg'>
+        <ChannelListControls />
+        <VisibleChannelList />
+      </div>
+      <OfflineChannels />
+    </>
   );
 }

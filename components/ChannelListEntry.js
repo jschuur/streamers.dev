@@ -15,7 +15,7 @@ import {
   THUMBNAIL_HEIGHT,
 } from '../lib/config';
 
-export default function ChannelListEntry({ channel, channelIndex }) {
+export default function ChannelListEntry({ channel, channelIndex = 0 }) {
   const startDate = parseISO(channel.latestStreamStartedAt),
     now = new Date();
   const rowColor =
@@ -30,7 +30,7 @@ export default function ChannelListEntry({ channel, channelIndex }) {
   return (
     <>
       {/* Channel profile */}
-      <div className={`px-2 py-2 align-top cursor-pointer ${rowColor}`} onClick={openProfile}>
+      <div className={`px-2 py-2 align-top ${rowColor}`}>
         <div className='flex flex-col mx-2'>
           {/* Channel display name  */}
           <div className='text-base sm:text-lg text-gray-700'>

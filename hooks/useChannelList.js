@@ -121,24 +121,15 @@ export default function useChannelList() {
 
       const latestStreamTags = aggregateStreamTags({ channels: visibleChannels, topicSort });
 
-      // If we've filtered down to an empty list, switch back to all tags
-      if (
-        topicFilter &&
-        categoryFilter !== 1 &&
-        !latestStreamTags?.find(({ name }) => name === topicFilter)
-      ) {
-        setTopicFilter(null);
-      } else {
-        setStreamTags((tags) => sortStreamTags({ tags: latestStreamTags, topicSort }));
+      setStreamTags((tags) => sortStreamTags({ tags: latestStreamTags, topicSort }));
 
-        if (topicFilter)
-          visibleChannels = visibleChannels.filter(({ latestStreamTags }) =>
-            latestStreamTags.includes(topicFilter)
-          );
+      if (topicFilter)
+        visibleChannels = visibleChannels.filter(({ latestStreamTags }) =>
+          latestStreamTags.includes(topicFilter)
+        );
 
-        setLiveCounts(visibleChannelViewerCounts({ allChannels, visibleChannels }));
-        setVisibleChannels(visibleChannels);
-      }
+      setLiveCounts(visibleChannelViewerCounts({ allChannels, visibleChannels }));
+      setVisibleChannels(visibleChannels);
     }
   }, [allChannels, languageFilter, categoryFilter,   channelSort, topicFilter]);
 

@@ -17,9 +17,10 @@ export default function useFilterNav() {
   const { topicFilter, categoryFilter, languageFilter, channelSort, topicSort } =
     useContext(HomePageContext);
 
-  return function filterNav(newConditions) {
+  return function filterNav({ reset, ...newConditions }) {
     //  Merge current filter state with update
-    const conditions = {
+    let conditions = {
+      reset,
       topicFilter,
       categoryFilter,
       languageFilter,
@@ -29,17 +30,22 @@ export default function useFilterNav() {
     };
     let params = {};
 
+    if (reset) {
+      conditions = {
+        topicFilter: null,
+        categoryFilter: 0,
+        languageFilter: 0,
+      };
+    }
+
     // Put together the querystring parameters
-    if (conditions.topicFilter)
-      params.topic = slugByTag(conditions.topicFilter);
-    if (conditions.  channelSort)
-      params.csort = channelSortOptions[conditions.  channelSort].slug;
+    if (conditions.topicFilter) params.topic = slugByTag(conditions.topicFilter);
+    if (conditions.channelSort) params.csort = channelSortOptions[conditions.channelSort].slug;
     if (conditions.languageFilter)
       params.lang = languageFilterOptions[conditions.languageFilter].slug;
     if (conditions.categoryFilter)
       params.cat = categoryFilterOptions[conditions.categoryFilter].slug;
-    if (conditions.topicSort)
-      params.tsort = topicSortOptions[conditions.topicSort].slug;
+    if (conditions.topicSort) params.tsort = topicSortOptions[conditions.topicSort].slug;
 
     // Create the actual querystring
     const querystring = Object.entries(params)

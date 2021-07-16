@@ -30,7 +30,7 @@ function VisibleChannelList() {
   if (loadingError) return <div className='m-2'>Error: {loadingError} </div>;
   if (!visibleChannels)
     return (
-      <div className='m-2 flex justify-center'>
+      <div className='bg-gray-100 dark:bg-gray-700 m-2 flex justify-center'>
         <Loader
           type='Bars'
           color={theme === 'dark' ? '#ffffff' : '#000000'}

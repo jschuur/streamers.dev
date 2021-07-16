@@ -25,7 +25,12 @@ export default function Home({ tagSlugs }) {
       </Head>
 
       <ThemeChanger />
-      <h1 className='text-center font-medium text-2xl sm:text-3xl mt-5'>streamers.dev</h1>
+      <h1
+        onClick={() => (window.location = '/')}
+        className='text-center font-medium text-2xl sm:text-3xl mt-5 cursor-pointer'
+      >
+        streamers.dev
+      </h1>
       <h2 className='text-center text-lg sm:text-xl'>
         a curated directory of live coding streamers
       </h2>

@@ -15,7 +15,7 @@ export default function ChannelViewerCounts() {
   const showRatio = totalChannelCount !== visibleChannelCount;
 
   return (
-    <div className='px-1 pt-0 flex flex-wrap sm:pt-3 text-lg'>
+    <div className='px-1 pt-0 pb-1 sm:pb-2 flex flex-wrap sm:pt-3 text-lg'>
       <span className='mr-3 whitespace-nowrap'>
         {showRatio ? `${numberFormat(visibleChannelCount)} / ` : ''}
         {numberFormat(totalChannelCount)} {pluralize('channel', totalChannelCount, false)}

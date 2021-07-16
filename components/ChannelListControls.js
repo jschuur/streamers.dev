@@ -57,12 +57,12 @@ function SortFilterButtons() {
 
 export default function ChannelListControls() {
   return (
-    <div className='px-2 sm:px-3'>
-      <div className='flex flex-col sm:flex-row-reverse justify-between '>
+    <div>
+      <div className='bg-white dark:bg-gray-600 px-2 sm:px-4 flex flex-col sm:flex-row-reverse justify-between '>
         <SortFilterButtons />
         <ChannelViewerCounts />
       </div>
-      <div>
+      <div className='bg-gray-100 dark:bg-gray-700'>
         <StreamTags />
       </div>
     </div>

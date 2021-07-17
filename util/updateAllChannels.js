@@ -10,7 +10,7 @@ const argv = minimist(process.argv.slice(2), {
   default: { includePaused: false },
 });
 
-import { updateAllChannelDetails, updateAllChannelStatuses } from '../lib/lib';
+import { updateAllChannelDetails, updateAllChannelStatuses } from '../lib/channels';
 import { getChannels, disconnectDB } from '../lib/db';
 import { isProd } from '../lib/util';
 

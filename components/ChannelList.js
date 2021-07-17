@@ -1,4 +1,4 @@
-import { map } from 'lodash';
+import { map, sortBy } from 'lodash';
 import { useRouter } from 'next/router';
 import { useTheme } from 'next-themes';
 import pluralize from 'pluralize';
@@ -125,7 +125,7 @@ export default function ChannelList({ channels, tagSlugs }) {
       const { channels, error } = await response.json();
 
       if (error) console.error(`Error fetching offline channels: ${error}`);
-      else setOfflineChannels(channels);
+      else setOfflineChannels(sortBy(channels, 'lastOnline').reverse());
     };
 
     doFetch();

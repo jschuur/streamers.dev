@@ -35,6 +35,7 @@ model Channel {
   latestStreamTitle       String?
   latestStreamStartedAt   DateTime?
   latestStreamViewers     Int?
+  latestStreamPeakViewers Int?
   latestStreamLanguage    String?
   latestStreamGameName    String?
   latestStreamTags        String[]

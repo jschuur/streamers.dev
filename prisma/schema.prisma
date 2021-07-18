@@ -41,6 +41,8 @@ model Channel {
   latestStreamTags        String[]
   latestStreamTwitchTags  String[]
 
+  allStreamTags           String[]
+
   // TODO: Create Links model
   homepage                String?
   youtube                 String?

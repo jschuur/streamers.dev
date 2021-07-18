@@ -18,7 +18,7 @@ function OfflineChannelEntry({ channel }) {
   });
 
   return (
-    <div className='w-50 px-2 py-2 align-top' key={name}>
+    <div className='w-50 px-2 py-2 align-top'>
       <div className='flex flex-col mx-2'>
         {/* Channel display name  */}
         <div className='text-base sm:text-lg text-gray-700'>
@@ -68,7 +68,7 @@ export default function OfflineChannels() {
       <h2 className='text-lg sm:text-xl'>Recently online channels for '{topicFilter}':</h2>
       <div className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 mx-auto'>
         {offlineChannels.map((channel) => (
-          <OfflineChannelEntry channel={channel} />
+          <OfflineChannelEntry key={channel.name} channel={channel} />
         ))}
       </div>
     </div>

@@ -114,7 +114,9 @@ export default function ChannelList({ channels, tagSlugs }) {
 
   // Update the offlineChannels list when the topic or language filter changes
   useEffect(() => {
-    if (!topicFilter) return setOfflineChannels([]);
+    setOfflineChannels([]);
+
+    if (!topicFilter) return;
 
     const doFetch = async () => {
       const response = await fetch(

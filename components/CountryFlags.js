@@ -19,6 +19,8 @@ export function CountryFlagsRow({ channel: { country, country2 } }) {
   const countries = [country, country2].filter(Boolean);
 
   return countries.map((country) => (
-    <span className='m-1'>{getUnicodeFlagIcon(country.toUpperCase())}</span>
+    <span key={country} className='m-1'>
+      {getUnicodeFlagIcon(country.toUpperCase())}
+    </span>
   ));
 }

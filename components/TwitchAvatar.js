@@ -6,10 +6,15 @@ import { profilePictureUrl } from '../lib/util';
 
 export default function TwitchAvatar({ size = 'small', channel, src }) {
   const { name, displayName, broadcasterType } = channel;
+
+  // Set up a fallback image, in case a new profile images hasn't been picked up yet by the DB
   const { src: profilePictureSrc } = useImage({
     srcList: [profilePictureUrl(channel.profilePictureUrl, 70), DEFAULT_AVATAR_URL],
     useSuspense: false,
   });
+
+  // Don't show broken images
+  if (!profilePictureSrc) return null;
 
   return (
     <TwitchLink username={name}>

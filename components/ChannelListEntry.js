@@ -1,21 +1,21 @@
 import { parseISO, intervalToDuration, differenceInMinutes } from 'date-fns';
 import pluralize from 'pluralize';
-import { useImage } from 'react-image';
 
+import TwitchAvatar from './TwitchAvatar';
 import SocialButtons from './SocialButtons';
 import VideoThumbnail from './VideoThumbnail';
 import CountryFlags from './CountryFlags';
 import ChannelBadges from './ChannelBadges';
 
-import { formatDurationShort, TwitchLink, profilePictureUrl } from '../lib/util';
+import { formatDurationShort, TwitchLink } from '../lib/util';
 
 import {
   STREAM_RECENT_MINUTES,
   MIN_VISIBLE_VIEWER_COUNT,
   THUMBNAIL_WIDTH,
   THUMBNAIL_HEIGHT,
-  DEFAULT_AVATAR_URL,
 } from '../lib/config';
+import TwitchProfile from './TwitchProfile';
 
 export default function ChannelListEntry({ channel, channelIndex = 0 }) {
   const startDate = parseISO(channel.latestStreamStartedAt),
@@ -27,44 +27,13 @@ export default function ChannelListEntry({ channel, channelIndex = 0 }) {
       ? 'bg-white dark:bg-gray-600'
       : 'bg-gray-100 dark:bg-gray-700';
 
-  // Use a fallback image for channel avatars incase a new one hasn't been picked up yet
-  const { src: profilePictureSrc } = useImage({
-    srcList: [profilePictureUrl(channel.profilePictureUrl, 70), DEFAULT_AVATAR_URL],
-    useSuspense: false,
-  });
   const openProfile = () => window.open(`https://twitch.tv/${channel.name}`, '_blank');
 
   return (
     <>
       {/* Channel profile */}
-      <div className={`px-2 py-2 align-top ${rowColor}`}>
-        <div className='flex flex-col mx-2'>
-          {/* Channel display name  */}
-          <div className='text-base sm:text-lg text-gray-700'>
-            <TwitchLink username={channel.name}>{channel.displayName}</TwitchLink>
-          </div>
-
-          {/* Channel full name and avatar */}
-          <div className='flex'>
-            <div className='flex-shrink-0 flex flex-col text-xl md:text-3xl mt-1'>
-              <TwitchLink username={channel.name}>
-                <img
-                  className={`h-10 w-10 rounded-full ${
-                    channel.broadcasterType === 'partner'
-                      ? 'border-purple-600 border-[3px]'
-                      : channel.broadcasterType === 'affiliate' && 'border-blue-600 border-[3px]'
-                  }`}
-                  src={profilePictureSrc}
-                  alt={`Avatar for ${channel.displayName}`}
-                />
-              </TwitchLink>
-              <CountryFlags channel={channel} />
-            </div>
-            <div className='text-base text-gray-500 font-light dark:text-gray-300 ml-3 mt-1'>
-              {channel.fullName && <>{channel.fullName}</>}
-            </div>
-          </div>
-        </div>
+      <div className={`px-2 sm:px-3 py-2 align-top ${rowColor}`}>
+        <TwitchProfile channel={channel} />
       </div>
       {/* Stream thumbnail */}
       <div className={`px-2 py-2 align-top hidden sm:block ${rowColor}`}>

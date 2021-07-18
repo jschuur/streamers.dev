@@ -135,7 +135,7 @@ export default function ChannelList({ channels, tagSlugs }) {
 
   return (
     <>
-      <div className='shadow overflow-hidden sm:rounded-lg'>
+      <div className='shadow-md overflow-hidden sm:rounded-lg'>
         <ChannelListControls />
         <VisibleChannelList />
       </div>

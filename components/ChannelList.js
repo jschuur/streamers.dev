@@ -43,7 +43,7 @@ function VisibleChannelList() {
     return (
       <div className='m-2'>
         No matching live channels.{' '}
-        <a className='cursor-pointer' onClick={() => filterNav({ reset: true })}>
+        <a className='cursor-pointer' onClick={() => filterNav({ reset: 'filter' })}>
           Reset filters
         </a>{' '}
         or{' '}

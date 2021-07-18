@@ -19,24 +19,27 @@ export default function useFilterNav() {
 
   return function filterNav({ reset, ...newConditions }) {
     //  Merge current filter state with update
-    let conditions = {
-      reset,
-      topicFilter,
-      categoryFilter,
-      languageFilter,
-      channelSort,
-      topicSort,
-      ...newConditions,
-    };
+    let conditions = {};
     let params = {};
 
-    if (reset) {
+    if (reset !== 'all')
       conditions = {
+        reset,
+        topicFilter,
+        categoryFilter,
+        languageFilter,
+        channelSort,
+        topicSort,
+        ...newConditions,
+      };
+
+    if (reset === 'filter')
+      conditions = {
+        ...conditions,
         topicFilter: null,
         categoryFilter: 0,
         languageFilter: 0,
       };
-    }
 
     // Put together the querystring parameters
     if (conditions.topicFilter) params.topic = slugByTag(conditions.topicFilter);

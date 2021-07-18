@@ -12,7 +12,7 @@ const moduleExports = {
 
       return {
         source: `/${slug}`,
-        destination: `/?filter=${slug}`,
+        destination: `/?topic=${slug}`,
         permanent: false,
       };
     });

@@ -2,7 +2,7 @@ import dynamic from 'next/dynamic';
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
-export default function BarChart({ data, title, type }) {
+export default function BarChart({ series, title, type }) {
   const options = {
     chart: {
       toolbar: {
@@ -46,14 +46,11 @@ export default function BarChart({ data, title, type }) {
         enabled: false,
       },
     },
-  };
-
-  const series = [
-    {
-      name: 'viewers',
-      data,
+    yaxis: {
+      min: 0,
+      forceNiceScale: true,
     },
-  ];
+  };
 
   return <Chart options={options} series={series} type={type} height={320} />;
 }

@@ -5,23 +5,9 @@ import prisma from '../lib/prisma';
 
 import { isCoding, selectFromFields } from '../lib/util';
 
+import { SNAPSHOT_CHANNEL_FIELDS, SNAPSHOT_VALUE_FIELDS } from '../lib/config';
+
 consoleStamp(console, { format: ':date(yyyy-mm-dd HH:MM:ss.l).gray :label(7)' });
-
-const SNAPSHOT_CHANNEL_FIELDS = [
-  'latestStreamGameName',
-  'latestStreamTags',
-  'latestStreamTwitchTags',
-  'latestStreamViewers',
-  'alwaysCoding',
-];
-
-export const SNAPSHOT_VALUE_FIELDS = [
-  'peakLiveCodingViewers',
-  'peakLiveCodingChannels',
-  'totalLiveViewers',
-  'totalLiveChannels',
-  'trackedChannels',
-];
 
 const now = new Date();
 now.setMinutes(0);

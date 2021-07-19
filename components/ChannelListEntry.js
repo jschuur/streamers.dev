@@ -49,7 +49,7 @@ export default function ChannelListEntry({ channel, channelIndex = 0 }) {
       <div className={`py-2 px-2 align-top  ${rowColor}`}>
         <ChannelBadges channel={channel} />
         <div className='cursor-pointer' onClick={openProfile}>
-          <div className='text-sm sm:text-base text-gray-900 dark:text-gray-300 break-all md:break-normal mt-1'>
+          <div className='text-sm sm:text-base font-light text-gray-900 dark:text-gray-300 break-all md:break-normal mt-1'>
             {channel.latestStreamTitle}
           </div>
           <div

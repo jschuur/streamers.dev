@@ -23,7 +23,9 @@ export default function TwitchProfile({ channel, avatarSize = 'small' }) {
             <CountryFlags channel={channel} />
           </div>
         </div>
-        <div className='sm:text-lg text-gray-500 dark:text-gray-300 mt-1'>{fullName}</div>
+        <div className='sm:text-lg font-light text-gray-500 dark:text-gray-300 mt-1'>
+          {fullName}
+        </div>
       </div>
     </div>
   );

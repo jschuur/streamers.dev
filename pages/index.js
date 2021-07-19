@@ -33,11 +33,11 @@ export default function Home({ tagSlugs }) {
       <ThemeChanger />
       <h1
         onClick={() => filterNav({ reset: 'all' })}
-        className='text-center font-medium text-2xl sm:text-3xl mt-5 cursor-pointer'
+        className='text-center font-medium text-3xl sm:text-5xl mt-5 cursor-pointer'
       >
         streamers.dev
       </h1>
-      <h2 className='text-center text-lg sm:text-xl'>{TAGLINE}</h2>
+      <h2 className='text-center text-xl sm:text-2xl'>{TAGLINE}</h2>
 
       <div className='max-w-5xl mx-auto sm:px-7 py-4 sm:py-5'>
         <ChannelList />

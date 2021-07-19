@@ -62,7 +62,7 @@ export default function StreamTags() {
   if (categoryFilter === 1) return null;
 
   return (
-    <div className='px-1 sm:px-2 py-2 sm:py-3 text-black font-medium dark:text-white'>
+    <div className='px-1 sm:px-2 py-2 sm:py-3 text-black dark:text-white'>
       <StreamTagsReset />
       {streamTags.map(({ name, count }) => (
         <StreamTagsEntry key={name} name={name} count={count} />

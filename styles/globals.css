@@ -2,12 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
-@import "@fontsource/raleway";
-@import "@fontsource/raleway/500.css";
-@import "@fontsource/raleway/300.css";
+@import "@fontsource/inter";
+@import "@fontsource/inter/300.css";
+@import "@fontsource/inter/500.css";
 
 body {
-  font-family: 'Raleway', sans-serif;
+  font-family: 'Inter', sans-serif;
 }
 
 a {

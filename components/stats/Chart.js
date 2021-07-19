@@ -29,7 +29,7 @@ export default function BarChart({ data, title, type }) {
       style: {
         fontSize: '20px',
         fontWeight: 'normal',
-        fontFamily: 'Raleway',
+        fontFamily: 'Inter',
       },
     },
     stroke: {

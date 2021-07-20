@@ -15,9 +15,20 @@ const buildChartData = (data, field) =>
 
 export default function Stats({ peakSnapshots, trackedChannelSnapshots }) {
   const viewerSeries = [
-    { name: 'Total Viewers', data: buildChartData(peakSnapshots, 'totalLiveViewers') },
-    { name: 'Coding Stream Viewers', data: buildChartData(peakSnapshots, 'peakLiveCodingViewers') },
+    { name: 'Live Tracked Viewers', data: buildChartData(peakSnapshots, 'totalLiveViewers') },
+    {
+      name: 'Peak Coding Stream Viewers',
+      data: buildChartData(peakSnapshots, 'peakLiveCodingViewers'),
+    },
   ];
+  const channelSeries = [
+    { name: 'Live Tracked Channels', data: buildChartData(peakSnapshots, 'totalLiveChannels') },
+    {
+      name: 'Peak Coding Stream Channels',
+      data: buildChartData(peakSnapshots, 'peakLiveCodingChannels'),
+    },
+  ];
+
   const trackedChannelSeries = [
     { name: 'Tracked Channels', data: buildChartData(trackedChannelSnapshots, 'trackedChannels') },
   ];
@@ -32,7 +43,8 @@ export default function Stats({ peakSnapshots, trackedChannelSnapshots }) {
       <h1 className='text-center font-medium text-2xl sm:text-3xl mt-5'>Stats</h1>
 
       <div className='max-w-5xl mx-auto sm:px-7 py-4 sm:py-5'>
-        <Chart type='area' title='Viewers' series={viewerSeries} />
+        <Chart type='area' title='Viewers' group='viewer_channels' series={viewerSeries} />
+        <Chart type='area' title='Channels' group='viewer_channels' series={channelSeries} />
         <Chart type='line' title='Tracked Channels' series={trackedChannelSeries} />
       </div>
     </>

@@ -26,10 +26,18 @@ async function getLiveChannels() {
 }
 
 async function getCurrentSnapshot() {
-  return prisma.snapshot.findFirst({
+  const result = await prisma.snapshot.findFirst({
     select: selectFromFields(SNAPSHOT_VALUE_FIELDS),
     where: { timeStamp: now },
   });
+
+  return {
+    trackedChannels: result?.trackedChannels || -1,
+    peakLiveCodingViewers: result?.peakLiveCodingViewers || -1,
+    peakLiveCodingChannels: result?.peakLiveCodingChannels || -1,
+    totalLiveViewers: result?.totalLiveViewers || -1,
+    totalLiveChannels: result?.totalLiveChannels || -1,
+  };
 }
 
 async function getTrackedChannels() {
@@ -51,25 +59,31 @@ async function updateSnapshot() {
 
   const codingChannels = liveChannels.filter((channel) => isCoding(channel));
 
-  // Calculate the current snapshot values
+  // Calculate the current metrics
   const liveCodingChannels = codingChannels.length;
   const liveCodingViewers = sumBy(codingChannels, 'latestStreamViewers');
   const totalLiveChannels = liveChannels.length;
   const totalLiveViewers = sumBy(liveChannels, 'latestStreamViewers');
 
-  const snapshotData = {
-    peakLiveCodingViewers: Math.max(currentSnapshot?.peakLiveCodingViewers || 0, liveCodingViewers),
-    peakLiveCodingChannels: Math.max(
-      currentSnapshot?.peakLiveCodingChannels || 0,
-      liveCodingChannels
-    ),
-    totalLiveViewers: Math.max(currentSnapshot?.totalLiveViewers || 0, totalLiveViewers),
-    totalLiveChannels: Math.max(currentSnapshot?.totalLiveChannels || 0, totalLiveChannels),
-    trackedChannels: Math.max(currentSnapshot?.trackedChannels || 0, trackedChannels),
-  };
+  let snapshotData = {};
 
-  // Update the snapshot if anything changed
-  if (!isEqual(currentSnapshot, snapshotData)) {
+  if (trackedChannels > currentSnapshot.trackedChannels)
+    snapshotData.trackedChannels = trackedChannels;
+
+  // Keep viewer counts when coding channel viewers are highest
+  if (liveCodingViewers > currentSnapshot.peakLiveCodingViewers) {
+    snapshotData.peakLiveCodingViewers = liveCodingViewers;
+    snapshotData.totalLiveViewers = totalLiveViewers;
+  }
+
+  // Keep channel counts when coding channel count is at the highest
+  if (liveCodingChannels > currentSnapshot.peakLiveCodingChannels) {
+    snapshotData.peakLiveCodingChannels = liveCodingChannels;
+    snapshotData.totalLiveChannels = totalLiveChannels;
+  }
+
+  // Save new or update recent snapshot if there are changes
+  if (Object.entries(snapshotData).length) {
     await prisma.snapshot.upsert({
       where: { timeStamp: now },
       update: { ...snapshotData },

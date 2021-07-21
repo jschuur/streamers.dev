@@ -14,12 +14,12 @@ export default function ThemeChanger() {
   if (!mounted) return null;
 
   return (
-    <div className='absolute top-0 right-0 mt-2 mr-2'>
+    <>
       {currentTheme === 'dark' ? (
         <SunIcon className='w-7 h-7' role='button' onClick={() => setTheme('light')} />
       ) : (
         <MoonIcon className='w-7 h-7' role='button' onClick={() => setTheme('dark')} />
       )}
-    </div>
+    </>
   );
 }

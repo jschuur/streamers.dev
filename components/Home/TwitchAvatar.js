@@ -1,8 +1,8 @@
 import { useImage } from 'react-image';
 
-import { TwitchLink } from '../lib/util';
-import { DEFAULT_AVATAR_URL } from '../lib/config';
-import { profilePictureUrl } from '../lib/util';
+import { TwitchLink } from '../../lib/util';
+import { DEFAULT_AVATAR_URL } from '../../lib/config';
+import { profilePictureUrl } from '../../lib/util';
 
 export default function TwitchAvatar({ size = 'small', channel, src }) {
   const { name, displayName, broadcasterType } = channel;

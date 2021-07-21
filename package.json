@@ -62,6 +62,7 @@
     "@babel/node": "^7.14.7",
     "@babel/preset-env": "^7.14.7",
     "autoprefixer": "^10.2.6",
+    "babel-plugin-module-resolver": "^4.1.0",
     "babel-plugin-superjson-next": "^0.3.0",
     "concurrently": "^6.2.0",
     "dotenv-cli": "^4.0.0",

@@ -2,6 +2,8 @@ import dynamic from 'next/dynamic';
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
+import Section from '../Layout/Section';
+
 export default function BarChart({ series, title, type, group }) {
   const options = {
     chart: {
@@ -51,8 +53,17 @@ export default function BarChart({ series, title, type, group }) {
     yaxis: {
       min: 0,
       forceNiceScale: true,
+      labels: {
+        minWidth: 40,
+      },
     },
   };
 
-  return <Chart options={options} series={series} type={type} height={320} />;
+  return (
+    <Section>
+      <div className='py-1'>
+        <Chart options={options} series={series} type={type} height={320} />
+      </div>
+    </Section>
+  );
 }

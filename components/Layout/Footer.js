@@ -1,8 +1,9 @@
+import Link from 'next/link';
 import { useContext } from 'react';
 import { useSession, signIn, signOut } from 'next-auth/client';
 
-import { adminAuthorised } from '../lib/util';
-import { HomePageContext } from '../lib/stores';
+import { adminAuthorised } from '../../lib/util';
+import { HomePageContext } from '../../lib/stores';
 
 export default function Footer() {
   const [session, loading] = useSession();
@@ -14,10 +15,10 @@ export default function Footer() {
       <span key={1}>
         <br />
         Currently tracking{' '}
-        <a href='https://docs.google.com/spreadsheets/d/1dbE0RjLvyGle1-9nJh9FmRCp3LBmv21sA2brtQccIQE/edit#gid=958169034'>
-          {trackedChannelCount}
-        </a>{' '}
-        channels.{' '}
+        <Link href='/stats'>
+          <a>{trackedChannelCount}</a>
+        </Link>{' '}
+        channels.
       </span>
     );
   }
@@ -37,8 +38,10 @@ export default function Footer() {
     extraFooter.push(
       <span key={3}>
         <a className='cursor-pointer' onClick={() => signIn('twitch')}>
-          login
+          {' '}
+          (login
         </a>
+        )
       </span>
     );
   }
@@ -48,8 +51,7 @@ export default function Footer() {
       <a href='https://trello.com/b/a9k1kC65'>Work in progress</a> by{' '}
       <a href='https://twitter.com/joostschuur/'>Joost Schuur</a>.{' '}
       <a href='https://twitter.com/StreamersDev'>@StreamersDev</a>
-      { extraFooter }
-
+      {extraFooter}
     </footer>
   );
 }

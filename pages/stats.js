@@ -1,7 +1,7 @@
 import { subDays } from 'date-fns';
-import Head from 'next/head';
 
-import Chart from '../components/stats/Chart';
+import Layout from '../components/Layout/Layout';
+import Chart from '../components/Stats/Chart';
 
 import prisma from '../lib/prisma';
 import { getSnapshots } from '../lib/db';
@@ -34,20 +34,11 @@ export default function Stats({ peakSnapshots, trackedChannelSnapshots }) {
   ];
 
   return (
-    <>
-      <Head>
-        <title>streamers.dev - Stats</title>
-        <meta name='description' content='Stats on live-coding streamers' />
-      </Head>
-
-      <h1 className='text-center font-medium text-2xl sm:text-3xl mt-5'>Stats</h1>
-
-      <div className='max-w-5xl mx-auto sm:px-7 py-4 sm:py-5'>
-        <Chart type='area' title='Viewers' group='viewer_channels' series={viewerSeries} />
-        <Chart type='area' title='Channels' group='viewer_channels' series={channelSeries} />
-        <Chart type='line' title='Tracked Channels' series={trackedChannelSeries} />
-      </div>
-    </>
+    <Layout page='Stats' description='Stats on live-coding streamers'>
+      <Chart type='area' title='Viewers' group='viewer_channels' series={viewerSeries} />
+      <Chart type='area' title='Channels' group='viewer_channels' series={channelSeries} />
+      <Chart type='line' title='Tracked Channels' series={trackedChannelSeries} />
+    </Layout>
   );
 }
 

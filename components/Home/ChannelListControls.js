@@ -4,9 +4,14 @@ import { useContext, useEffect } from 'react';
 import StreamTags from './StreamTags';
 import ChannelViewerCounts from './ChannelViewerCounts';
 
-import { HomePageContext } from '../lib/stores';
-import { channelSortOptions, languageFilterOptions, categoryFilterOptions } from '../lib/options';
-import useFilterNav from '../hooks/useFilterNav';
+import useFilterNav from '../../hooks/useFilterNav';
+
+import { HomePageContext } from '../../lib/stores';
+import {
+  channelSortOptions,
+  languageFilterOptions,
+  categoryFilterOptions,
+} from '../../lib/options';
 
 function SortFilterButtons() {
   const {

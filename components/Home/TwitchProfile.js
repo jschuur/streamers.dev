@@ -2,7 +2,7 @@ import React from 'react';
 
 import TwitchAvatar from './TwitchAvatar';
 import CountryFlags from './CountryFlags';
-import { TwitchLink } from '../lib/util';
+import { TwitchLink } from '../../lib/util';
 
 export default function TwitchProfile({ channel, avatarSize = 'small' }) {
   const { name, displayName, fullName, broadcasterType } = channel;

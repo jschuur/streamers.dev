@@ -2,9 +2,9 @@ import { differenceInDays, parseISO } from 'date-fns';
 import { capitalize } from 'lodash';
 import { by639_1 } from 'iso-language-codes';
 
-import Badge from './Badge';
+import Badge from '../Badge';
 
-import { NEW_STREAMER_AGE_DAYS } from '../lib/config';
+import { NEW_STREAMER_AGE_DAYS } from '../../lib/config';
 
 export default function ChannelBadges({
   channel: {

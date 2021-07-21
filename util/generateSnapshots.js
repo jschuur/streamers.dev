@@ -1,8 +1,7 @@
 import consoleStamp from 'console-stamp';
-import { sumBy, isEqual } from 'lodash';
+import { sumBy } from 'lodash';
 
 import prisma from '../lib/prisma';
-
 import { isCoding, selectFromFields } from '../lib/util';
 
 import { SNAPSHOT_CHANNEL_FIELDS, SNAPSHOT_VALUE_FIELDS } from '../lib/config';

@@ -1,12 +1,12 @@
 import pluralize from 'pluralize';
 import { useContext, useState, useEffect } from 'react';
 
-import Badge from './Badge';
+import Badge from '../Badge';
 
-import { HomePageContext } from '../lib/stores';
-import { topicSortOptions } from '../lib/options';
+import useFilterNav from '../../hooks/useFilterNav';
 
-import useFilterNav from '../hooks/useFilterNav';
+import { HomePageContext } from '../../lib/stores';
+import { topicSortOptions } from '../../lib/options';
 
 function StreamTagsEntry({ name, count }) {
   const { topicFilter } = useContext(HomePageContext);

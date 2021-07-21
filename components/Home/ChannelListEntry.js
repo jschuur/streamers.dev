@@ -1,21 +1,21 @@
 import { parseISO, intervalToDuration, differenceInMinutes } from 'date-fns';
 import pluralize from 'pluralize';
 
+import TwitchProfile from './TwitchProfile';
 import TwitchAvatar from './TwitchAvatar';
 import SocialButtons from './SocialButtons';
 import VideoThumbnail from './VideoThumbnail';
 import CountryFlags from './CountryFlags';
 import ChannelBadges from './ChannelBadges';
 
-import { formatDurationShort, TwitchLink } from '../lib/util';
+import { formatDurationShort, TwitchLink } from '../../lib/util';
 
 import {
   STREAM_RECENT_MINUTES,
   MIN_VISIBLE_VIEWER_COUNT,
   THUMBNAIL_WIDTH,
   THUMBNAIL_HEIGHT,
-} from '../lib/config';
-import TwitchProfile from './TwitchProfile';
+} from '../../lib/config';
 
 export default function ChannelListEntry({ channel, channelIndex = 0 }) {
   const startDate = parseISO(channel.latestStreamStartedAt),

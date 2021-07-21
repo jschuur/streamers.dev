@@ -1,7 +1,7 @@
 import pluralize from 'pluralize';
 import { useContext } from 'react';
 
-import { HomePageContext } from '../lib/stores';
+import { HomePageContext } from '../../lib/stores';
 
 const numberFormat = new Intl.NumberFormat().format;
 

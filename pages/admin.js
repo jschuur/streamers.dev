@@ -2,12 +2,12 @@ import { useState, createContext } from 'react';
 import { getSession } from 'next-auth/client';
 import { ToastProvider } from 'react-toast-notifications';
 
-import AddChannelForm from '../../components/admin/AddChannelForm';
-import UpdateSpinner from '../../components/admin/UpdateSpinner';
-import ChannelQueues from '../../components/admin/ChannelQueues';
+import AddChannelForm from '../components/Admin/AddChannelForm';
+import UpdateSpinner from '../components/Admin/UpdateSpinner';
+import ChannelQueues from '../components/Admin/ChannelQueues';
 
-import { adminAuthorised } from '../../lib/util';
-import { AdminProvider } from '../../lib/stores';
+import { adminAuthorised } from '../lib/util';
+import { AdminProvider } from '../lib/stores';
 
 export default function AdminIndex() {
   return (

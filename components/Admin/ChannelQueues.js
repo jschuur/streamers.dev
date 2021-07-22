@@ -2,12 +2,15 @@ import { format } from 'date-fns';
 import { uniq, map, sortBy } from 'lodash';
 import router, { useRouter } from 'next/router';
 import { getSession } from 'next-auth/client';
-import { useEffect, useRef, useContext, useState } from 'react';
+import pluralize from 'pluralize';
+import { useEffect, useRef, useContext, useState, useMemo } from 'react';
 import { useToasts } from 'react-toast-notifications';
 import { XCircleIcon } from '@heroicons/react/solid';
 
 import Button from '../Button';
 import DropDown from '../DropDown';
+import Section from '../Layout/Section';
+import Badge from '../Badge';
 
 import useFetch from '../../hooks/useFetch';
 
@@ -58,7 +61,7 @@ function QueueAction({ id, action, status, ...params }) {
   return <Button onClick={() => callUpdate({ id, status })}>{action}</Button>;
 }
 
-function TagQueue({ tagName }) {
+function TagQueue({ tagName, navLinks }) {
   const { queue, queueFilterField, queueSearch } = useContext(AdminContext);
 
   const [allTagChannels, setAllTagChannels] = useState(filterChannelsTag(queue, tagName));
@@ -94,8 +97,13 @@ function TagQueue({ tagName }) {
       if (currDate !== prevDate) {
         prevDate = currDate;
         dateHeader = (
-          <h3 key={currDate} className='text-lg mt-2'>
-            {currDate}
+          <h3 key={currDate} className='text-lg text-header mt-2'>
+            <a
+              className='text-black visited:text-black dark:text-white dark:visited:text-white'
+              href={`#${slugify(tagName)}`}
+            >
+              {currDate}
+            </a>
           </h3>
         );
       }
@@ -108,7 +116,7 @@ function TagQueue({ tagName }) {
               {channel.name}
             </a>{' '}
             ({channel.language} {channel.views}: {channel.title}){' '}
-            <div className='py-3 block sm:hidden group-hover:block'>
+            <div className='py-3 hidden group-hover:block'>
               <Button visit onClick={() => window.open(`https://twitch.tv/${channel.name}`)}>
                 visit {channel.name}
               </Button>
@@ -123,13 +131,15 @@ function TagQueue({ tagName }) {
     });
 
   return (
-    <>
-      <h2 style={{ scrollMarginTop: 75 }} id={slugify(tagName)} className='text-xl mt-2 mb-1'>
-        {tagName} ({tagChannels.length})
-      </h2>
-
+    <Section className='p-2'>
+      <div className='group'>
+        <h2 style={{ scrollMarginTop: 75 }} id={slugify(tagName)} className='text-xl font-header'>
+          {tagName} ({tagChannels.length})
+        </h2>
+        <div className='py-3 hidden group-hover:block'>{navLinks}</div>
+      </div>
       <ul className='mx-2'>{tagQueue}</ul>
-    </>
+    </Section>
   );
 }
 
@@ -169,22 +179,22 @@ function QueueSortControl() {
   );
 }
 
-function QueueTagNavigation() {
-  const { queue, setTagQueue } = useContext(AdminContext);
-
-  if (queue?.length === 0) return null;
+function QueueNavLinks({ queue, home }) {
+  const router = useRouter();
 
   return (
-    <DropDown label={'Navigate'} onChange={(e) => setTagQueue(`#${e.target.value}`)}>
-      <option key={''} value={''}>
-        Top
-      </option>
+    <div>
+      {!home && (
+        <Badge color='green' onClick={() => router.push('#')}>
+          Home
+        </Badge>
+      )}
       {tagList(queue).map((tag) => (
-        <option key={tag} value={slugify(tag)}>
-          {tag}
-        </option>
+        <Badge key={tag} color='blue' onClick={() => router.push(`#${slugify(tag)}`)}>
+          {tag} ({queue.filter((el) => el.tag === tag).length})
+        </Badge>
       ))}
-    </DropDown>
+    </div>
   );
 }
 
@@ -207,7 +217,7 @@ function QueueSearch() {
         id='search'
         ref={searchRef}
         onChange={(e) => setQueueSearch(e.target.value)}
-        className='h-8 w-48 shadow-sm mt-1 pl-2 pr-10 focus:ring-indigo-500 focus:border-indigo-500 block sm:text-sm border-gray-300 rounded-md'
+        className='h-8 w-48 bg-gray-100 border border-gray-200 shadow-sm mt-1 p-2 focus:ring-indigo-500 focus:border-indigo-500 block sm:text-sm rounded-md'
       />
     </div>
   );
@@ -217,6 +227,7 @@ export default function ChannelQueues() {
   const { queue, setQueue, queueDays, tagQueue, queueSearch, queueFilterField } =
     useContext(AdminContext);
   const [queueSearchMatches, setQueueSearchMatches] = useState(null);
+  const navLinks = useMemo(() => <QueueNavLinks queue={queue} />, [queue]);
 
   useFetch({
     url: `/api/getQueue?filterField=${queueFilterField}${
@@ -227,10 +238,6 @@ export default function ChannelQueues() {
   });
 
   useEffect(() => {
-    if (tagQueue) router.push(tagQueue, null, { shallow: true });
-  }, [tagQueue, queueDays, queueFilterField]);
-
-  useEffect(() => {
     setQueueSearchMatches(
       queueSearch?.length ? filterChannelsSearch(queue, queueSearch).length : null
     );
@@ -238,21 +245,27 @@ export default function ChannelQueues() {
 
   return (
     <>
-      <h2 className='text-2xl pt-2'>Queues</h2>
-      {queue && (
-        <div className='px-2 py-1'>
-          {queueSearchMatches !== null && <>{queueSearchMatches} of </>}
-          {queue.length} items listed
-        </div>
-      )}
+      <Section className='p-2'>
+        <h2 className='text-xl font-header'>Queues</h2>
+        {queue && (
+          <>
+            <div className='px-2 py-1'>
+              {queueSearchMatches !== null && <>{queueSearchMatches} of </>}
+              {queue.length} {pluralize('match', queue.length, false)}
+            </div>
+            <QueueNavLinks queue={queue} home />
+          </>
+        )}
 
-      <div className='p-2 bg-blue-50 dark:bg-gray-800 sticky top-0 flex flex-row gap-2'>
-        <QueueSearch />
-        <QueueFilters />
-        <QueueSortControl />
-        <QueueTagNavigation />
-      </div>
-      {!queue ? 'Loading...' : tagList(queue).map((tag) => <TagQueue key={tag} tagName={tag} />)}
+        <div className='p-2 flex flex-row gap-2'>
+          <QueueSearch />
+          <QueueFilters />
+          <QueueSortControl />
+        </div>
+      </Section>
+      {!queue
+        ? 'Loading...'
+        : tagList(queue).map((tag) => <TagQueue key={tag} tagName={tag} navLinks={navLinks} />)}
     </>
   );
 }

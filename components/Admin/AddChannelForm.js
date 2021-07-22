@@ -2,6 +2,8 @@ import { useState, useContext } from 'react';
 import { useToasts } from 'react-toast-notifications';
 import { useForm } from 'react-hook-form';
 
+import Section from '../Layout/Section';
+
 import { AdminContext } from '../../lib/stores';
 import { showToast } from '../../lib/util';
 
@@ -30,14 +32,18 @@ export default function AddChannelForm() {
   }
 
   return (
-    <div>
-      <h2 className='text-2xl pt-2'>Add Channel</h2>
+    <Section className='p-2 pb-4'>
+      <h2 className='text-xl font-header'>Add Channel</h2>
 
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <input type='text' {...register('channelName', { required: true })} />
+      <form className='mx-2 mt-2' onSubmit={handleSubmit(onSubmit)}>
+        <input
+          type='text'
+          className='h-8 w-48 mt-1 p-2 bg-gray-100 border border-gray-200 mr-2 rounded-md shadow-sm'
+          {...register('channelName', { required: true })}
+        />
 
-        <input type='submit' />
+        <input type='submit' className='border border-black px-2' />
       </form>
-    </div>
+    </Section>
   );
 }

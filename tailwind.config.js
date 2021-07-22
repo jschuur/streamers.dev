@@ -20,7 +20,11 @@ module.exports = {
   darkMode: 'class', // or 'media' or 'class'
   mode: 'jit',
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        header: ['Fira Sans Condensed', 'sans-serif'],
+      },
+    },
   },
   variants: {
     extend: {

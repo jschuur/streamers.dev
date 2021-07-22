@@ -25,6 +25,7 @@
     "db:pull": "npm run db:dump:prod && npm run db:import:prod"
   },
   "dependencies": {
+    "@fontsource/fira-sans-condensed": "^4.5.0",
     "@fontsource/inter": "^4.5.0",
     "@heroicons/react": "^1.0.1",
     "@next-auth/prisma-adapter": "^0.5.2",

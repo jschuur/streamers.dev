@@ -14,7 +14,7 @@ export default function OfflineChannels() {
   return (
     <Section>
       <div className='px-1 sm:px-3 py-3'>
-        <h2 className='text-lg sm:text-xl'>Recently online for '{topicFilter}':</h2>
+        <h2 className='font-header text-lg sm:text-xl'>Recently online for '{topicFilter}':</h2>
         <div className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 mx-auto'>
           {offlineChannels.map((channel) => (
             <div key={channel.name} className='w-45 align-top my-1 mx-1 sm:mx-2'>

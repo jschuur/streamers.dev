@@ -2,6 +2,7 @@ import { useState, createContext } from 'react';
 import { getSession } from 'next-auth/client';
 import { ToastProvider } from 'react-toast-notifications';
 
+import Layout from '../components/Layout/Layout';
 import AddChannelForm from '../components/Admin/AddChannelForm';
 import UpdateSpinner from '../components/Admin/UpdateSpinner';
 import ChannelQueues from '../components/Admin/ChannelQueues';
@@ -13,12 +14,11 @@ export default function AdminIndex() {
   return (
     <AdminProvider>
       <ToastProvider>
-        <UpdateSpinner />
-        <div className='container mx-auto px-10'>
-          <h1 className='text-3xl pt-4'>Admin Dashboard</h1>
+        <Layout>
+          <UpdateSpinner />
           <AddChannelForm />
           <ChannelQueues />
-        </div>
+        </Layout>
       </ToastProvider>
     </AdminProvider>
   );

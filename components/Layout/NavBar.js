@@ -28,7 +28,7 @@ export default function NavBar() {
   const [session] = useSession();
 
   return (
-    <div className='flex flex-row place-items-center mb-4 sm:mb-6 sm:px-1 shadow sm:rounded-lg text-lg bg-white dark:bg-gray-600'>
+    <div className='flex flex-row place-items-center mb-4 sm:mb-6 sm:px-1 shadow sm:rounded-lg font-header text-lg bg-white dark:bg-gray-600'>
       <div className='px-2 my-2'>
         <NavLink href='/'>
           <div className='h-8 w-8 relative'>
@@ -39,8 +39,8 @@ export default function NavBar() {
       <div className='flex-grow cursor-pointer'>
         <NavLink href='/'>
           <>
-            <span className='hidden sm:inline'>{TAGLINE}</span>
-            <span className='inline sm:hidden'>streamers.dev</span>
+            <span>streamers.dev</span>
+            <span className='hidden md:inline'>: {TAGLINE}</span>
           </>
         </NavLink>
       </div>

@@ -1,8 +1,11 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { useSession } from 'next-auth/client';
 
 import ThemeChanger from '../ThemeChanger';
+
+import { adminAuthorised, profilePictureUrl } from '../../lib/util';
 
 import { TAGLINE } from '../../lib/config';
 
@@ -22,11 +25,15 @@ function NavLink({ href, children }) {
   );
 }
 export default function NavBar() {
+  const [session] = useSession();
+
   return (
-    <div className='flex flex-row place-items-center mb-4 sm:mb-6 gap-2 sm:px-1 shadow sm:rounded-lg text-lg bg-white dark:bg-gray-600'>
-      <div className='ml-2 h-8 w-8 my-2 relative'>
+    <div className='flex flex-row place-items-center mb-4 sm:mb-6 sm:px-1 shadow sm:rounded-lg text-lg bg-white dark:bg-gray-600'>
+      <div className='px-2 my-2'>
         <NavLink href='/'>
-          <Image src='/images/river-icon.png' layout='fill' />
+          <div className='h-8 w-8 relative'>
+            <Image src='/images/river-icon.png' layout='fill' />
+          </div>
         </NavLink>
       </div>
       <div className='flex-grow cursor-pointer'>
@@ -37,13 +44,24 @@ export default function NavBar() {
           </>
         </NavLink>
       </div>
-      <div className='pr-2'>
+      <div className='pr-4'>
         <NavLink href='/about'>About</NavLink>
       </div>
-      <div className='pr-2'>
+      <div className='pr-4'>
         <NavLink href='/stats'>Stats</NavLink>
       </div>
-      <div className='mb-1'>
+      {session && adminAuthorised({ session }) && (
+        <div className='pr-4'>
+          <Link href='admin'>
+            <img
+              className='h-8 w-8 rounded-full border-2 border-blue-600 cursor-pointer'
+              src={profilePictureUrl(session.user.image, 70)}
+              alt={session.user.name}
+            />
+          </Link>
+        </div>
+      )}
+      <div className='mb-1 pl-2'>
         <ThemeChanger />
       </div>
     </div>

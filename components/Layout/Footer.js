@@ -26,8 +26,8 @@ export default function Footer() {
   if (session && adminAuthorised({ session })) {
     extraFooter.push(
       <span key={2}>
-        <br />
-        <a href='/admin'>Admin</a>. Logged in as {session.user.name} (
+        {' '}
+        (
         <a className='cursor-pointer' onClick={signOut}>
           logout
         </a>

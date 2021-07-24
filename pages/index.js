@@ -20,7 +20,7 @@ export default function Home({ tagSlugs }) {
   return (
     <Layout
       page={TAGLINE}
-      description='Find live-coding channels that use your favorite tech stacks.'
+      description='Discover live-coding channels that use your favorite tech stacks.'
     >
       <ChannelList />
       <OfflineChannels />

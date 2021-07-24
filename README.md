@@ -1,6 +1,6 @@
-# Streamers.dev
+# [Streamers.dev](https://streamers.dev)
 
-A [directory](https://streamers.dev) of live coding streamers, by [Joost Schuur](https://twitter.com/joostschuur).
+Discover live-coding channels that use your favorite tech stacks, by [Joost Schuur](https://twitter.com/joostschuur).
 
 ## Links
 

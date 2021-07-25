@@ -1,3 +1,4 @@
+import { uniq, map } from 'lodash';
 import { withSentry } from '@sentry/nextjs';
 
 import { getChannels } from '../../lib/db';
@@ -14,6 +15,8 @@ const handler = async (req, res) => {
     res.status(200).json({
       channels: parseInt(includeOffline) ? channels : channels.filter((c) => c.isLive),
       trackedChannelCount: channels.length,
+      distinctCountryCount: uniq([...map(channels, 'country'), ...map(channels, 'country2')])
+        .length,
     });
   } catch ({ message }) {
     res.status(500).json({ error: message });

@@ -1,6 +1,6 @@
 # [Streamers.dev](https://streamers.dev)
 
-Discover live-coding channels that use your favorite tech stacks, by [Joost Schuur](https://twitter.com/joostschuur).
+Discover Twitch live-coding channels featuring your favorite tech stacks, by [Joost Schuur](https://twitter.com/joostschuur).
 
 ## Links
 

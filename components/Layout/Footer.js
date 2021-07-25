@@ -7,10 +7,10 @@ import { HomePageContext } from '../../lib/stores';
 
 export default function Footer() {
   const [session, loading] = useSession();
-  const { trackedChannelCount } = useContext(HomePageContext);
+  const { trackedChannelCount, distinctCountryCount } = useContext(HomePageContext);
   let extraFooter = [];
 
-  if (trackedChannelCount) {
+  if (trackedChannelCount && distinctCountryCount) {
     extraFooter.push(
       <span key={1}>
         <br />
@@ -18,7 +18,7 @@ export default function Footer() {
         <Link href='/stats'>
           <a>{trackedChannelCount}</a>
         </Link>{' '}
-        channels.
+        channels and {distinctCountryCount} countries.
       </span>
     );
   }

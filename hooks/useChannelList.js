@@ -38,7 +38,7 @@ export default function useChannelList() {
   const {
     languageFilter,
     categoryFilter,
-      channelSort,
+    channelSort,
     topicSort,
     streamTags,
     setStreamTags,
@@ -46,6 +46,7 @@ export default function useChannelList() {
     setTopicFilter,
     setLiveCounts,
     setTrackedChannelCount,
+    setDistinctCountryCount,
   } = useContext(HomePageContext);
   const [allChannels, setAllChannels] = useState([]);
   const [visibleChannels, setVisibleChannels] = useState(null);
@@ -87,6 +88,7 @@ export default function useChannelList() {
           else {
             setAllChannels(data.channels);
             setTrackedChannelCount(data.trackedChannelCount);
+            setDistinctCountryCount(data.distinctCountryCount);
           }
         }
       } catch ({ message }) {

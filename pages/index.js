@@ -1,3 +1,4 @@
+import { NextSeo } from 'next-seo';
 import slugify from 'slugify';
 import { useEffect, useContext } from 'react';
 
@@ -19,8 +20,8 @@ export default function Home({ tagSlugs }) {
 
   return (
     <Layout
-      page={TAGLINE}
-      description='Discover live-coding channels that use your favorite tech stacks.'
+      description='Discover Twitch live-coding channels featuring your favorite tech stacks.'
+      url='https://streamers.dev'
     >
       <ChannelList />
       <OfflineChannels />

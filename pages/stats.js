@@ -1,4 +1,5 @@
 import { subDays } from 'date-fns';
+import { NextSeo } from 'next-seo';
 
 import Layout from '../components/Layout/Layout';
 import Chart from '../components/Stats/Chart';
@@ -34,7 +35,11 @@ export default function Stats({ peakSnapshots, trackedChannelSnapshots }) {
   ];
 
   return (
-    <Layout page='Stats' description='Stats on live-coding streamers'>
+    <Layout
+      page='Stats'
+      url='https://streamers.dev/stats'
+      description='Stats on live-coding streamers.'
+    >
       <Chart type='area' title='Viewers' group='viewer_channels' series={viewerSeries} />
       <Chart type='area' title='Channels' group='viewer_channels' series={channelSeries} />
       <Chart type='line' title='Tracked Channels' series={trackedChannelSeries} />

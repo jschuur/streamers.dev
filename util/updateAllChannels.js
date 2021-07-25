@@ -1,5 +1,6 @@
-import AWS, { ConnectContactLens } from 'aws-sdk';
+import AWS from 'aws-sdk';
 import consoleStamp from 'console-stamp';
+import { uniq, map } from 'lodash';
 import minimist from 'minimist';
 import pluralize from 'pluralize';
 import 'dotenv/config';
@@ -63,6 +64,8 @@ async function saveToS3(data) {
       await saveToS3({
         channels: liveChannels.filter((c) => c.isLive),
         trackedChannelCount: channels.length,
+        distinctCountryCount: uniq([...map(channels, 'country'), ...map(channels, 'country2')])
+          .length,
         createdAt: new Date(),
       });
     }

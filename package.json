@@ -3,12 +3,15 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev-update:channels": "while true; do npm run update:channels; sleep 600; done",
+    "dev-update:channels:full": "while true; do sleep 1800; npm run update:channels:full; done",
+    "dev-update:snapshots": "while true; do npm run update:snapshots; sleep 1200; done",
+    "dev-next": "next dev",
+    "dev": "concurrently \"npm:dev-*\"",
     "build": "next build",
     "start": "next start",
     "postinstall": "prisma generate",
     "dev:update": "concurrently \"npm run dev\" \"npm run dev:update:channels\"",
-    "dev:update:channels": "while true; do npm run update:channels; sleep 110; done",
     "update:channels": "babel-node util/updateAllChannels.js",
     "update:snapshots": "babel-node util/generateSnapshots.js",
     "update:snapshots:prod": "dotenv -e .env.production babel-node util/generateSnapshots.js",
@@ -46,6 +49,7 @@
     "minimist": "^1.2.5",
     "next": "^11.0.1",
     "next-auth": "^3.27.2",
+    "next-seo": "^4.26.0",
     "next-themes": "^0.0.15",
     "pluralize": "^8.0.0",
     "react": "^17.0.2",
@@ -72,6 +76,7 @@
     "dotenv-cli": "^4.0.0",
     "postcss": "^8.3.5",
     "prisma": "^2.26.0",
+    "prisma-repl": "^1.2.0",
     "tailwindcss": "^2.2.4",
     "tailwindcss-debug-screens": "^2.0.0"
   }

@@ -1,13 +1,12 @@
-import consoleStamp from 'console-stamp';
 import { map, keyBy } from 'lodash';
 import pluralize from 'pluralize';
 import 'dotenv/config';
 
 import { twitchGetStreamsAll, twitchGetUsersByIds } from '../lib/twitch_api';
 import { gameIds, codingTagIds } from '../lib/config';
+import { logTimeStart, logTimeFinished } from '../lib/util';
 import prisma from '../lib/prisma';
-
-consoleStamp(console, { format: ':date(yyyy-mm-dd HH:MM:ss.l).gray :label(7)' });
+import logger from '../lib/logger';
 
 async function getActiveStreams(tagName) {
   const tagId = codingTagIds[tagName];
@@ -79,26 +78,26 @@ async function saveNewChannels({ streams, tagName }) {
 
     // Dumb Prisma workaround to check if a record was added
     if (result.id > lastQueueItemId) {
-      console.log(`Queued https://www.twitch.tv/${result.name}`);
+      logger.info(`Queued https://www.twitch.tv/${result.name}`);
       newQueuedCount++;
     }
   }
 
   if (newQueuedCount > 0)
-    console.log(`Queued ${pluralize('new channels', newQueuedCount, true)} from ${tagName} search`);
-  else console.log('No new channels needed to be queued');
+    logger.info(`Queued ${pluralize('new channels', newQueuedCount, true)} from ${tagName} search`);
+  else logger.info('No new channels needed to be queued');
 }
 
 async function findChannels(tagName) {
-  console.log(`Getting current ${tagName} streams`);
+  logger.info(`Getting current ${tagName} streams`);
 
   const liveStreams = await getActiveStreams(tagName);
-  console.log(`Found ${pluralize(`${tagName} stream`, liveStreams.length, true)}`);
+  logger.info(`Found ${pluralize(`${tagName} stream`, liveStreams.length, true)}`);
 
   if (liveStreams.length === 0) return;
 
   const newChannels = await identifyNewChannels(liveStreams);
-  console.log(`Identified ${pluralize('untracked channel', newChannels.length, true)}`);
+  logger.info(`Identified ${pluralize('untracked channel', newChannels.length, true)}`);
 
   if (newChannels.length === 0) return;
 
@@ -106,7 +105,7 @@ async function findChannels(tagName) {
 }
 
 (async () => {
-  console.time('Time spent');
+  const start = logTimeStart();
 
   await findChannels('Web Development');
   await findChannels('Software Development');
@@ -120,7 +119,7 @@ async function findChannels(tagName) {
   await findChannels('PHP');
   await findChannels('C++');
 
-  console.log(`Marking 'PENDING' queue items that exist as channels as 'ADDED'`);
+  logger.info(`Marking 'PENDING' queue items that exist as channels as 'ADDED'`);
   await prisma.$queryRaw(`
     UPDATE "Queue"
     SET status = 'ADDED'
@@ -129,8 +128,8 @@ async function findChannels(tagName) {
       AND status = 'PENDING';
   `);
 
-  console.log('Disconnecting...');
+  logger.info('Disconnecting...');
   await prisma.$disconnect();
 
-  console.timeEnd('Time spent');
+  logTimeFinished(start, 'findChannels');
 })();

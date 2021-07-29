@@ -1,12 +1,10 @@
-import consoleStamp from 'console-stamp';
 import { sumBy } from 'lodash';
 
 import prisma from '../lib/prisma';
-import { isCoding, selectFromFields } from '../lib/util';
+import { isCoding, selectFromFields, logTimeStart, logTimeFinished } from '../lib/util';
+import logger from '../lib/logger';
 
 import { SNAPSHOT_CHANNEL_FIELDS, SNAPSHOT_VALUE_FIELDS } from '../lib/config';
-
-consoleStamp(console, { format: ':date(yyyy-mm-dd HH:MM:ss.l).gray :label(7)' });
 
 const now = new Date();
 now.setMinutes(0);
@@ -52,6 +50,8 @@ async function getTrackedChannels() {
 }
 
 async function updateSnapshot() {
+  logger.info('Updating snapshot');
+
   const currentSnapshot = await getCurrentSnapshot();
   const liveChannels = await getLiveChannels();
   const trackedChannels = await getTrackedChannels();
@@ -63,6 +63,16 @@ async function updateSnapshot() {
   const liveCodingViewers = sumBy(codingChannels, 'latestStreamViewers');
   const totalLiveChannels = liveChannels.length;
   const totalLiveViewers = sumBy(liveChannels, 'latestStreamViewers');
+
+  logger.verbose(
+    `Latest metrics: ${JSON.stringify({
+      liveCodingViewers,
+      totalLiveViewers,
+      liveCodingChannels,
+      totalLiveChannels,
+      trackedChannels,
+    })}`
+  );
 
   let snapshotData = {};
 
@@ -88,21 +98,21 @@ async function updateSnapshot() {
       update: { ...snapshotData },
       create: { timeStamp: now, ...snapshotData },
     });
-    console.log(`Snapshot updated (${JSON.stringify(snapshotData)})`);
-  } else console.log('No snapshot updated needed');
+    logger.info(`Snapshot updated (${JSON.stringify(snapshotData)})`);
+  } else logger.info('No snapshot updated needed');
 }
 
 (async () => {
-  console.time('Time spent');
+  const start = logTimeStart();
 
   try {
     await updateSnapshot();
   } catch ({ message }) {
-    console.error(`Error: ${message}`);
+    logger.error(`Error: ${message}`);
   }
 
-  console.log('Disconnecting...');
+  logger.info('Disconnecting...');
   await prisma.$disconnect();
 
-  console.timeEnd('Time spent');
+  logTimeFinished(start, 'updateSnapshot');
 })();

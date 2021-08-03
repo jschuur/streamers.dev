@@ -2,6 +2,7 @@ import AWS from 'aws-sdk';
 import { uniq, map } from 'lodash';
 import minimist from 'minimist';
 import pluralize from 'pluralize';
+import prettyMilliseconds from 'pretty-ms';
 import 'dotenv/config';
 
 const argv = minimist(process.argv.slice(2), {
@@ -11,7 +12,7 @@ const argv = minimist(process.argv.slice(2), {
 
 import { updateAllChannelDetails, updateAllChannelStatuses } from '../lib/channels';
 import { getChannels, disconnectDB } from '../lib/db';
-import { isProd, logTimeStart, logTimeFinished } from '../lib/util';
+import { isProd } from '../lib/util';
 import logger from '../lib/logger';
 
 const s3 = new AWS.S3({
@@ -43,7 +44,7 @@ async function saveToS3(data) {
 }
 
 (async () => {
-  const start = logTimeStart();
+  const start = new Date();
 
   logger.info(`Running ${argv.fullDetails ? 'full details' : 'status'} update`);
   logger.info(`Mode: ${process.env.NODE_ENV}`);
@@ -75,5 +76,9 @@ async function saveToS3(data) {
   logger.info('Disconnecting...');
   await disconnectDB();
 
-  logTimeFinished(start, 'updateAllChannels');
+  logger.info(
+    `Time spent (updateSnapshot): ${prettyMilliseconds(new Date() - start, {
+      separateMilliseconds: true,
+    })}`
+  );
 })();

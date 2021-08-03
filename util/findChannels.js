@@ -1,10 +1,10 @@
 import { map, keyBy } from 'lodash';
 import pluralize from 'pluralize';
+import prettyMilliseconds from 'pretty-ms';
 import 'dotenv/config';
 
 import { twitchGetStreamsAll, twitchGetUsersByIds } from '../lib/twitch_api';
 import { gameIds, codingTagIds } from '../lib/config';
-import { logTimeStart, logTimeFinished } from '../lib/util';
 import prisma from '../lib/prisma';
 import logger from '../lib/logger';
 
@@ -105,7 +105,7 @@ async function findChannels(tagName) {
 }
 
 (async () => {
-  const start = logTimeStart();
+  const start = new Date();
 
   await findChannels('Web Development');
   await findChannels('Software Development');
@@ -131,5 +131,9 @@ async function findChannels(tagName) {
   logger.info('Disconnecting...');
   await prisma.$disconnect();
 
-  logTimeFinished(start, 'findChannels');
+  logger.info(
+    `Time spent (updateSnapshot): ${prettyMilliseconds(new Date() - start, {
+      separateMilliseconds: true,
+    })}`
+  );
 })();

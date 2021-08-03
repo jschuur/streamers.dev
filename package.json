@@ -40,6 +40,7 @@
     "apexcharts": "^3.27.2",
     "aws-sdk": "^2.939.0",
     "chart.js": "^3.4.1",
+    "console-stamp": "^3.0.3",
     "country-flag-icons": "^1.2.10",
     "date-fns": "^2.22.1",
     "dotenv": "^10.0.0",
@@ -62,7 +63,7 @@
     "react-toast-notifications": "^2.5.0",
     "slugify": "^1.5.3",
     "superjson": "^1.7.4",
-    "twitch": "^4.6.0",
+    "twitch": "^4.6.4",
     "twitch-auth": "^4.6.0",
     "winston": "^3.3.3",
     "winston-daily-rotate-file": "^4.5.5"

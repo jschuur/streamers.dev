@@ -1,7 +1,8 @@
 import { sumBy } from 'lodash';
+import prettyMilliseconds from 'pretty-ms';
 
 import prisma from '../lib/prisma';
-import { isCoding, selectFromFields, logTimeStart, logTimeFinished } from '../lib/util';
+import { isCoding, selectFromFields } from '../lib/util';
 import logger from '../lib/logger';
 
 import { SNAPSHOT_CHANNEL_FIELDS, SNAPSHOT_VALUE_FIELDS } from '../lib/config';
@@ -103,7 +104,7 @@ async function updateSnapshot() {
 }
 
 (async () => {
-  const start = logTimeStart();
+  const start = new Date();
 
   try {
     await updateSnapshot();
@@ -114,5 +115,9 @@ async function updateSnapshot() {
   logger.info('Disconnecting...');
   await prisma.$disconnect();
 
-  logTimeFinished(start, 'updateSnapshot');
+  logger.info(
+    `Time spent (updateSnapshot): ${prettyMilliseconds(new Date() - start, {
+      separateMilliseconds: true,
+    })}`
+  );
 })();

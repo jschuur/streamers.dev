@@ -1,4 +1,3 @@
-import { format, differenceInDays } from 'date-fns';
 import { useTheme } from 'next-themes';
 import pluralize from 'pluralize';
 import { useState } from 'react';
@@ -8,7 +7,7 @@ import Loader from 'react-loader-spinner';
 import Section from '../Layout/Section';
 import VideoThumbnail from '../Home/VideoThumbnail';
 import PopupMenu from '../PopupMenu';
-import { TwitchLink } from '../../lib/util';
+import { TwitchLink, formatDurationShortNow } from '../../lib/util';
 
 import useFetch from '../../hooks/useFetch';
 
@@ -116,6 +115,14 @@ function PotentialChannelCard({ channel, setChannels }) {
   const { name, title, views, viewers, language, created_at } = channel;
   const now = new Date();
 
+  const channelAge = formatDurationShortNow({
+    start: new Date(created_at),
+    format: ['years', 'months', 'days'],
+    precision: 2,
+  });
+
+  console.log(channelAge);
+
   return (
     <div key={name} className='p-2 group'>
       <div className='relative'>
@@ -125,23 +132,14 @@ function PotentialChannelCard({ channel, setChannels }) {
         <div className='absolute hidden group-hover:block top-0 right-0'>
           <PopupMenu actions={buildChannelActions({ channel, setChannels })} />
         </div>
+        <div className='absolute font-sans text-sm text-white bg-black px-1 hidden group-hover:block bottom-0 right-0'>
+          {numberFormat(viewers)}&middot;{numberFormat(views)}&middot;{language}&middot;
+          {channelAge}
+        </div>
       </div>
       <div className='pt-1 text-base md:text-lg'>{name}</div>
       <div className='font-light text-xs sm:text-sm text-gray-900 dark:text-gray-300 break-all md:break-normal'>
         {title}
-      </div>
-      <div className='pt-1 text-tiny sm:text-xs text-gray-400'>
-        {numberFormat(viewers)} {pluralize('viewers', viewers)}, {numberFormat(views)}{' '}
-        {pluralize('view', views)}, {language},{' '}
-        <span
-          className={
-            differenceInDays(now, new Date(created_at)) <= NEW_STREAMER_AGE_DAYS
-              ? 'text-green-500'
-              : 'text-gray-400'
-          }
-        >
-          {format(new Date(created_at), 'yyyy-MM-dd')}
-        </span>
       </div>
     </div>
   );

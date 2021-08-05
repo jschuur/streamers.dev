@@ -24,9 +24,6 @@ module.exports = {
       fontFamily: {
         header: ['Fira Sans Condensed', 'sans-serif'],
       },
-      fontSize: {
-        tiny: '.625rem',
-      },
     },
   },
   variants: {

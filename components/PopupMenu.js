@@ -8,15 +8,12 @@ function classNames(...classes) {
 
 export default function PopupMenu({ actions }) {
   return (
-    <Menu as='div' className='relative inline-block text-left'>
+    <Menu as='div' className='z-10 relative inline-block text-left'>
       {({ open }) => (
         <>
           <div>
             <Menu.Button className='inline-flex justify-center w-full bg-black'>
-              <DotsVerticalIcon
-                className='h-5 w-5 bg-black text-white my-1 mx-1'
-                aria-hidden='true'
-              />
+              <DotsVerticalIcon className='h-5 w-5 bg-black text-white my-1' aria-hidden='true' />
             </Menu.Button>
           </div>
 
@@ -32,7 +29,7 @@ export default function PopupMenu({ actions }) {
           >
             <Menu.Items
               static
-              className='origin-top-right absolute right-0 mt-2 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none'
+              className='origin-top-right absolute right-0 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none'
             >
               <div className='py-1'>
                 {actions.map(({ label, onClick }) => (

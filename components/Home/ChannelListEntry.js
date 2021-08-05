@@ -1,4 +1,4 @@
-import { parseISO, intervalToDuration, differenceInMinutes } from 'date-fns';
+import { parseISO, differenceInMinutes } from 'date-fns';
 import pluralize from 'pluralize';
 
 import TwitchProfile from './TwitchProfile';
@@ -8,7 +8,7 @@ import VideoThumbnail from './VideoThumbnail';
 import CountryFlags from './CountryFlags';
 import ChannelBadges from './ChannelBadges';
 
-import { formatDurationShort, TwitchLink } from '../../lib/util';
+import { formatDurationShortNow, TwitchLink } from '../../lib/util';
 
 import {
   STREAM_RECENT_MINUTES,
@@ -27,6 +27,10 @@ export default function ChannelListEntry({ channel, channelIndex = 0 }) {
       ? 'bg-white dark:bg-gray-600'
       : 'bg-gray-100 dark:bg-gray-700';
 
+  const streamAge = formatDurationShortNow({
+    start: new Date(startDate),
+    format: ['days', 'hours', 'minutes'],
+  });
   const openProfile = () => window.open(`https://twitch.tv/${channel.name}`, '_blank');
 
   return (
@@ -62,7 +66,7 @@ export default function ChannelListEntry({ channel, channelIndex = 0 }) {
             {channel.latestStreamViewers >= MIN_VISIBLE_VIEWER_COUNT && (
               <>{pluralize('viewers', channel.latestStreamViewers, true)}, </>
             )}
-            live for {formatDurationShort(intervalToDuration({ start: startDate, end: now }))}
+            live for {streamAge}
           </div>
         </div>
         <SocialButtons channel={channel} />

@@ -19,18 +19,24 @@ const handler = async (req, res) => {
   }
 
   try {
-    const { channelName, backlog, secret } = req.body;
+    const { channelName, backlog, secret, twitchId } = req.body;
 
     // Authenticate based on logged in state or bookmarklet secret
     if (!adminAuthorised({ session, secret }))
       return res.status(403).send({ message: 'Access denied' });
 
-    const match = channelName.match(/https?:\/\/(?:www\.)?twitch.tv\/([\w]*)\/?/i);
-    const name = match ? match[1] : channelName;
+    let name;
 
-    await addNewChannel({ name, backlog });
+    if (channelName) {
+      const match = channelName.match(/https?:\/\/(?:www\.)?twitch.tv\/([\w]*)\/?/i);
+      name = match ? match[1] : channelName;
+    }
 
-    res.status(200).send({ message: `Channel ${name} added${backlog ? ' (backlogged)' : ''}` });
+    const response = await addNewChannel({ twitchId, name, backlog });
+
+    res
+      .status(200)
+      .send({ message: `Channel ${response.name} added${backlog ? ' (backlogged)' : ''}` });
   } catch ({ message }) {
     res.status(500).json({ error: message });
   }

@@ -91,6 +91,8 @@ enum QueueStatus {
   ADDED
   PAUSED
   WONTADD
+  GAMEDEV
+  HIDDEN
 }
 
 model Keyword {

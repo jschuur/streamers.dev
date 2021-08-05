@@ -4,12 +4,13 @@ import prettyMilliseconds from 'pretty-ms';
 import 'dotenv/config';
 
 import { twitchGetStreamsAll, twitchGetUsersByIds } from '../lib/twitch_api';
-import { gameIds, codingTagIds } from '../lib/config';
+import { gameIds, codingTagIds, gameCodingTagIds } from '../lib/config';
 import prisma from '../lib/prisma';
 import logger from '../lib/logger';
+import { addOrUpdateQueueItem } from '../lib/db';
 
 async function getActiveStreams(tagName) {
-  const tagId = codingTagIds[tagName];
+  const tagId = codingTagIds[tagName] || gameCodingTagIds[tagName];
 
   return (
     await twitchGetStreamsAll({
@@ -53,27 +54,11 @@ async function saveNewChannels({ streams, tagName }) {
   const lastQueueItemId = lastQueueItem?.id || 0;
 
   for (const stream of streams) {
-    const result = await prisma.queue.upsert({
-      where: {
-        twitchId: stream.userId,
-      },
-      update: {
-        updatedAt: now,
-        title: stream.title,
-        language: stream.language,
-        views: twitchUsers[stream.userId].views,
-        viewers: stream.viewers,
-      },
-      create: {
-        twitchId: stream.userId,
-        name: stream.userName,
-        title: stream.title,
-        language: stream.language,
-        tag: tagName,
-        views: twitchUsers[stream.userId].views,
-        viewers: stream.viewers,
-      },
-      select: { id: true, name: true, createdAt: true },
+    const result = await addOrUpdateQueueItem({
+      twitchId: stream.userId,
+      stream,
+      user: twitchUsers[stream.userId],
+      tagName,
     });
 
     // Dumb Prisma workaround to check if a record was added

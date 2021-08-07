@@ -1,7 +1,7 @@
 import { useTheme } from 'next-themes';
-import Loader from 'react-loader-spinner';
 
 import ChannelListEntry from './ChannelListEntry';
+import Loader from '../Layout/Loader';
 
 import useChannelList from '../../hooks/useChannelList';
 import useFilterNav from '../../hooks/useFilterNav';
@@ -15,15 +15,8 @@ export default function LiveChannels() {
 
   if (!visibleChannels)
     return (
-      <div className='py-2 bg-gray-100 dark:bg-gray-700 flex flex-col place-items-center'>
-        <div className='pb-2'>Loading live channel list...</div>
-
-        <Loader
-          type='Bars'
-          color={theme === 'dark' ? '#ffffff' : '#000000'}
-          height={24}
-          width={24}
-        />
+      <div className='py-2 bg-gray-100 dark:bg-gray-700'>
+        <Loader message='Loading live channel list...' theme={theme} />
       </div>
     );
 

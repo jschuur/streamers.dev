@@ -3,16 +3,14 @@ import { useTheme } from 'next-themes';
 import pluralize from 'pluralize';
 import { useState, useEffect } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
-import Loader from 'react-loader-spinner';
 
 import Section from '../Layout/Section';
+import Loader from '../Layout/Loader';
 import VideoThumbnail from '../Home/VideoThumbnail';
 import PopupMenu from '../PopupMenu';
 import { TwitchLink, formatDurationShortNow } from '../../lib/util';
 
-import useFetch from '../../hooks/useFetch';
-
-import { NEW_STREAMER_AGE_DAYS } from '../../lib/config';
+import { NEW_STREAMER_AGE_DAYS, POTENTIAL_CHANNELS_AUTOREFRESH_SECONDS } from '../../lib/config';
 import { labeledStatement } from '@babel/types';
 
 const numberFormat = new Intl.NumberFormat().format;
@@ -160,20 +158,19 @@ function PotentialChannelList() {
 
   useEffect(() => {
     getPotentialChannels();
+
+    // Update the list every 10 minutes
+    const timer = setInterval(() => {
+      if (isRefreshing) return;
+
+      getPotentialChannels();
+    }, POTENTIAL_CHANNELS_AUTOREFRESH_SECONDS * 1000);
+
+    return () => clearInterval(timer);
   }, []);
 
   if (!channels)
-    return (
-      <div className='flex flex-col place-items-center'>
-        <div className='pb-2'>Finding potential live coding channels...</div>
-        <Loader
-          type='Bars'
-          color={theme === 'dark' ? '#ffffff' : '#000000'}
-          height={24}
-          width={24}
-        />
-      </div>
-    );
+    return <Loader message='Finding potential live coding channels...' theme={theme} />;
 
   return (
     <>

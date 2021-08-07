@@ -1,7 +1,7 @@
 import { NextSeo } from 'next-seo';
 import { useTheme } from 'next-themes';
 import { useState, useEffect } from 'react';
-import Loader from 'react-loader-spinner';
+import Loader from '../components/Layout/Loader';
 
 import Layout from '../components/Layout/Layout';
 import Section from '../components/Layout/Section';
@@ -31,15 +31,7 @@ export function StatsCharts({ peakSnapshots, trackedChannelSnapshots }) {
   if (!statsData)
     return (
       <Section className='p-2'>
-        <div className='flex flex-col place-items-center'>
-          <div className='pb-2'>Loading stats data...</div>
-          <Loader
-            type='Bars'
-            color={theme === 'dark' ? '#ffffff' : '#000000'}
-            height={24}
-            width={24}
-          />
-        </div>
+        <Loader message='Loading stats data...' theme={theme} />
       </Section>
     );
 

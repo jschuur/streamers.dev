@@ -8,6 +8,7 @@
     "dev-update:snapshots": "while true; do npm run update:snapshots; sleep 1200; done",
     "dev-next": "next dev",
     "dev": "concurrently \"npm:dev-*\"",
+    "debug": "NODE_OPTIONS='--inspect' next dev",
     "build": "next build",
     "start": "next start",
     "postinstall": "prisma generate",

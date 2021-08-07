@@ -3,7 +3,7 @@ import { uniq, map, sortBy } from 'lodash';
 import router, { useRouter } from 'next/router';
 import { getSession } from 'next-auth/client';
 import pluralize from 'pluralize';
-import { useEffect, useRef, useContext, useState, useMemo } from 'react';
+import { useEffect, useContext, useState, useMemo } from 'react';
 import { useToasts } from 'react-toast-notifications';
 import { XCircleIcon } from '@heroicons/react/solid';
 
@@ -200,11 +200,6 @@ function QueueNavLinks({ queue, home }) {
 
 function QueueSearch() {
   const { queueSearch, setQueueSearch } = useContext(AdminContext);
-  const searchRef = useRef();
-
-  useEffect(() => {
-    searchRef.current.focus();
-  });
 
   return (
     <div>
@@ -215,7 +210,6 @@ function QueueSearch() {
         type='text'
         name='search'
         id='search'
-        ref={searchRef}
         onChange={(e) => setQueueSearch(e.target.value)}
         className='h-8 w-48 bg-gray-100 border border-gray-200 shadow-sm mt-1 p-2 focus:ring-indigo-500 focus:border-indigo-500 block sm:text-sm rounded-md'
       />

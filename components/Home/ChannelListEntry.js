@@ -15,6 +15,7 @@ import {
   MIN_VISIBLE_VIEWER_COUNT,
   THUMBNAIL_WIDTH,
   THUMBNAIL_HEIGHT,
+  STREAM_TITLE_WORD_LENGTH_BREAK_WORDS,
 } from '../../lib/config';
 
 export default function ChannelListEntry({ channel, channelIndex = 0 }) {
@@ -31,6 +32,12 @@ export default function ChannelListEntry({ channel, channelIndex = 0 }) {
     start: new Date(startDate),
     format: ['days', 'hours', 'minutes'],
   });
+
+  // If a stream title contains a word that is too long, use break-words.
+  const breakWords = channel.latestStreamTitle
+    .split(/\s+/)
+    .some((word) => word.length > STREAM_TITLE_WORD_LENGTH_BREAK_WORDS);
+
   const openProfile = () => window.open(`https://twitch.tv/${channel.name}`, '_blank');
 
   return (
@@ -53,7 +60,11 @@ export default function ChannelListEntry({ channel, channelIndex = 0 }) {
       <div className={`py-2 px-2 align-top  ${rowColor}`}>
         <ChannelBadges channel={channel} />
         <div className='cursor-pointer' onClick={openProfile}>
-          <div className='text-sm sm:text-base font-light text-gray-900 dark:text-gray-300 break-all md:break-normal mt-1'>
+          <div
+            className={`text-sm sm:text-base font-light text-gray-900 dark:text-gray-300 break-words md:${
+              breakWords ? 'break-words' : 'break-normal'
+            } mt-1`}
+          >
             {channel.latestStreamTitle}
           </div>
           <div

@@ -1,64 +1,72 @@
-import { subDays } from 'date-fns';
 import { NextSeo } from 'next-seo';
+import { useTheme } from 'next-themes';
+import { useState, useEffect } from 'react';
+import Loader from 'react-loader-spinner';
 
 import Layout from '../components/Layout/Layout';
+import Section from '../components/Layout/Section';
 import Chart from '../components/Stats/Chart';
 
-import prisma from '../lib/prisma';
-import { getSnapshots } from '../lib/db';
+export function StatsCharts({ peakSnapshots, trackedChannelSnapshots }) {
+  const [statsData, setStatsData] = useState(null);
+  const [error, setError] = useState(null);
+  const { theme } = useTheme();
 
-import { CHART_DAYS_DEFAULT } from '../lib/config';
+  async function getStatsData() {
+    const response = await fetch('/api/getStatsData');
+    const data = await response.json();
 
-const buildChartData = (data, field) =>
-  data
-    .filter((snapshot) => snapshot[field] > 0)
-    .map((snapshot) => ({ x: new Date(snapshot.timeStamp), y: snapshot[field] }));
+    if (data.error) setError(data.channels);
+    else {
+      const { viewerSeries, channelSeries, trackedChannelSeries } = data.stats;
 
-export default function Stats({ peakSnapshots, trackedChannelSnapshots }) {
-  const viewerSeries = [
-    { name: 'Live Tracked Viewers', data: buildChartData(peakSnapshots, 'totalLiveViewers') },
-    {
-      name: 'Peak Coding Stream Viewers',
-      data: buildChartData(peakSnapshots, 'peakLiveCodingViewers'),
-    },
-  ];
-  const channelSeries = [
-    { name: 'Live Tracked Channels', data: buildChartData(peakSnapshots, 'totalLiveChannels') },
-    {
-      name: 'Peak Coding Stream Channels',
-      data: buildChartData(peakSnapshots, 'peakLiveCodingChannels'),
-    },
-  ];
+      setStatsData({ viewerSeries, channelSeries, trackedChannelSeries });
+    }
+  }
 
-  const trackedChannelSeries = [
-    { name: 'Tracked Channels', data: buildChartData(trackedChannelSnapshots, 'trackedChannels') },
-  ];
+  useEffect(() => {
+    getStatsData();
+  }, []);
 
+  if (!statsData)
+    return (
+      <Section className='p-2'>
+        <div className='flex flex-col place-items-center'>
+          <div className='pb-2'>Loading stats data...</div>
+          <Loader
+            type='Bars'
+            color={theme === 'dark' ? '#ffffff' : '#000000'}
+            height={24}
+            width={24}
+          />
+        </div>
+      </Section>
+    );
+
+  if (error) return <Section>Error: {error}</Section>;
+
+  return (
+    <>
+      <Chart type='area' title='Viewers' group='viewer_channels' series={statsData.viewerSeries} />
+      <Chart
+        type='area'
+        title='Channels'
+        group='viewer_channels'
+        series={statsData.channelSeries}
+      />
+      <Chart type='line' title='Tracked Channels' series={statsData.trackedChannelSeries} />
+    </>
+  );
+}
+
+export default function Stats() {
   return (
     <Layout
       page='Stats'
       url='https://streamers.dev/stats'
       description='Stats on live-coding streamers.'
     >
-      <Chart type='area' title='Viewers' group='viewer_channels' series={viewerSeries} />
-      <Chart type='area' title='Channels' group='viewer_channels' series={channelSeries} />
-      <Chart type='line' title='Tracked Channels' series={trackedChannelSeries} />
+      <StatsCharts />
     </Layout>
   );
-}
-
-export async function getServerSideProps(context) {
-  const peakSnapshots = await getSnapshots({
-    startDate: subDays(new Date(), CHART_DAYS_DEFAULT),
-  });
-
-  // Raw query, since I can't figure out max group by day
-  const trackedChannelSnapshots = await prisma.$queryRaw(`
-    SELECT date("timeStamp") as "timeStamp", MAX("trackedChannels") as "trackedChannels"
-    FROM "Snapshot"
-    group by date("timeStamp")
-    ORDER BY date("timeStamp") DESC
-  `);
-
-  return { props: { peakSnapshots, trackedChannelSnapshots } };
 }

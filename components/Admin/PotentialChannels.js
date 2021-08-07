@@ -1,6 +1,7 @@
+import { RefreshIcon } from '@heroicons/react/solid';
 import { useTheme } from 'next-themes';
 import pluralize from 'pluralize';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 import Loader from 'react-loader-spinner';
 
@@ -121,8 +122,6 @@ function PotentialChannelCard({ channel, setChannels }) {
     precision: 2,
   });
 
-  console.log(channelAge);
-
   return (
     <div key={name} className='p-2 group'>
       <div className='relative'>
@@ -147,12 +146,21 @@ function PotentialChannelCard({ channel, setChannels }) {
 
 function PotentialChannelList() {
   const [channels, setChannels] = useState(null);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const { theme } = useTheme();
 
-  useFetch({
-    url: '/api/getPotentialChannels',
-    setter: (data) => setChannels(data.channels),
-  });
+  async function getPotentialChannels() {
+    setIsRefreshing(true);
+    const response = await fetch('/api/getPotentialChannels');
+    const data = await response.json();
+    setIsRefreshing(false);
+
+    if (!data.error) setChannels(data.channels);
+  }
+
+  useEffect(() => {
+    getPotentialChannels();
+  }, []);
 
   if (!channels)
     return (
@@ -169,8 +177,17 @@ function PotentialChannelList() {
 
   return (
     <>
-      <h2 className='font-header text-lg sm:text-xl mb-2'>
-        Currently live, potential channels ({channels?.length || 0})
+      <h2 className='font-header text-lg sm:text-xl mb-2 flex'>
+        <div className='flex-grow'>
+          Currently live, potential channels ({channels?.length || 0})
+        </div>
+        <div onClick={getPotentialChannels}>
+          <RefreshIcon
+            className={`${
+              isRefreshing && 'animate-spin transform rotate-180'
+            } h-5 w-5 mt-2 mr-2 cursor-pointer`}
+          />
+        </div>
       </h2>
 
       <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4'>

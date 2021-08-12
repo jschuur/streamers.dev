@@ -11,7 +11,6 @@ import PopupMenu from '../PopupMenu';
 import { TwitchLink, formatDurationShortNow } from '../../lib/util';
 
 import { NEW_STREAMER_AGE_DAYS, POTENTIAL_CHANNELS_AUTOREFRESH_SECONDS } from '../../lib/config';
-import { labeledStatement } from '@babel/types';
 
 const numberFormat = new Intl.NumberFormat().format;
 

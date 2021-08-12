@@ -1,4 +1,3 @@
-import { sortBy } from 'lodash';
 import { useRouter } from 'next/router';
 import { useEffect, useContext } from 'react';
 
@@ -36,6 +35,7 @@ export default function ChannelList({ channels, tagSlugs }) {
   const router = useRouter();
   const { query, isReady } = router;
 
+  // TODO: Put this in a custom hook (along with the useEffect)?
   function setStateFromQuery(query) {
     const { topic, lang, cat, csort, tsort } = query;
 
@@ -62,27 +62,6 @@ export default function ChannelList({ channels, tagSlugs }) {
 
     setStateFromQuery(query);
   }, [query]);
-
-  // Update the offlineChannels list when the topic or language filter changes
-  useEffect(() => {
-    setOfflineChannels([]);
-
-    if (!topicFilter) return;
-
-    const doFetch = async () => {
-      const response = await fetch(
-        `/api/getOfflineChannels?topic=${encodeURIComponent(topicFilter)}&lang=${
-          languageFilterOptions[languageFilter].slug
-        }`
-      );
-      const { channels, error } = await response.json();
-
-      if (error) console.error(`Error fetching offline channels: ${error}`);
-      else setOfflineChannels(sortBy(channels, 'lastOnline').reverse());
-    };
-
-    doFetch();
-  }, [topicFilter, languageFilter]);
 
   return (
     <Section>

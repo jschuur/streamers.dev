@@ -1,6 +1,5 @@
-import { NextSeo } from 'next-seo';
-import slugify from 'slugify';
 import { useEffect, useContext } from 'react';
+import slugify from 'slugify';
 
 import Layout from '../components/Layout/Layout';
 import ChannelList from '../components/Home/ChannelList';
@@ -10,7 +9,6 @@ import useTagSlugs from '../hooks/useTagSlugs';
 
 import { getKeywords } from '../lib/db';
 import { HomePageContext } from '../lib/stores';
-import { TAGLINE } from '../lib/config';
 
 export default function Home({ tagSlugs }) {
   const { setTagSlugs } = useContext(HomePageContext);

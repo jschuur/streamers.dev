@@ -1,15 +1,23 @@
-import { useEffect, useContext } from 'react';
+import { useContext } from 'react';
 
 import Section from '../Layout/Section';
 import TwitchProfile from './TwitchProfile';
 
+import { useOfflineChannels } from '../../lib/api';
 import { HomePageContext } from '../../lib/stores';
 
 export default function OfflineChannels() {
-  const { offlineChannels, topicFilter, categoryFilter } = useContext(HomePageContext);
+  const { isLoading, error, data: offlineChannels } = useOfflineChannels();
+  const { topicFilter } = useContext(HomePageContext);
 
-  // Skip when there are no channels/topic or when we're in the Non-Coding section
-  if (!offlineChannels?.length || !topicFilter || categoryFilter === 1) return null;
+  if (isLoading || !offlineChannels?.length) return null;
+
+  if (error)
+    return (
+      <Section>
+        <div className='p-2'>Error fetching offline channels: ${error}</div>
+      </Section>
+    );
 
   return (
     <Section>

@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/client';
 
+import PopupMenu from '../PopupMenu';
 import ThemeChanger from '../ThemeChanger';
 
 import { adminAuthorised, profilePictureUrl } from '../../lib/util';
@@ -17,7 +18,7 @@ function NavLink({ href, children }) {
       <a
         className={`${
           pathname === href && href !== '/' && 'border-b-2 border-black dark:border-gray-100'
-        } text-black visited:text-black hover:text-gray-500 dark:visited:text-gray-100 dark:text-gray-300 `}
+        } text-black visited:text-black hover:text-gray-500 dark:visited:text-gray-100 dark:text-gray-300`}
       >
         {children}
       </a>
@@ -26,6 +27,24 @@ function NavLink({ href, children }) {
 }
 export default function NavBar() {
   const [session] = useSession();
+  const adminActions = [
+    {
+      label: 'Live candidates',
+      href: '/admin/live',
+    },
+    {
+      label: 'Recently added',
+      href: '/admin/recent',
+    },
+    {
+      label: 'Channel Queues',
+      href: '/admin#queues',
+    },
+    {
+      label: 'Add Channel',
+      href: '/admin#addChannel',
+    },
+  ];
 
   return (
     <div className='flex flex-row place-items-center mb-4 sm:mb-6 sm:px-1 shadow sm:rounded-lg font-header text-lg bg-white dark:bg-gray-600'>
@@ -51,14 +70,14 @@ export default function NavBar() {
         <NavLink href='/stats'>Stats</NavLink>
       </div>
       {session && adminAuthorised({ session }) && (
-        <div className='pr-4'>
-          <Link href='admin'>
+        <div className='pr-4 h-8'>
+          <PopupMenu actions={adminActions}>
             <img
               className='h-8 w-8 rounded-full border-2 border-blue-600 cursor-pointer'
               src={profilePictureUrl(session.user.image, 70)}
               alt={session.user.name}
             />
-          </Link>
+          </PopupMenu>
         </div>
       )}
       <div className='mb-1 pl-2'>

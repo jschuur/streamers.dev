@@ -32,7 +32,7 @@ export default function AddChannelForm() {
   }
 
   return (
-    <Section className='p-2 pb-4'>
+    <Section className='p-2 pb-4' id='addChannel'>
       <h2 className='text-xl font-header'>Add Channel</h2>
 
       <form className='mx-2 mt-2' onSubmit={handleSubmit(onSubmit)}>

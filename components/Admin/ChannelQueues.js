@@ -239,7 +239,7 @@ export default function ChannelQueues() {
 
   return (
     <>
-      <Section className='p-2'>
+      <Section className='p-2' id='queues'>
         <h2 className='text-xl font-header'>Queues</h2>
         {queue && (
           <>

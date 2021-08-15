@@ -2,6 +2,7 @@ import { Provider } from 'next-auth/client';
 import { ThemeProvider } from 'next-themes';
 
 import { QueryClient, QueryClientProvider } from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools';
 
 import { HomePageProvider } from '../lib/stores';
 
@@ -16,6 +17,7 @@ function MyApp({ Component, pageProps }) {
         <Provider session={pageProps.session}>
           <QueryClientProvider client={queryClient}>
             <Component {...pageProps} />
+            <ReactQueryDevtools />
           </QueryClientProvider>
         </Provider>
       </ThemeProvider>

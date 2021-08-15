@@ -1,4 +1,4 @@
-import { RefreshIcon } from '@heroicons/react/solid';
+import { RefreshIcon, DotsVerticalIcon } from '@heroicons/react/solid';
 import { useTheme } from 'next-themes';
 import pluralize from 'pluralize';
 import { useState, useEffect } from 'react';
@@ -126,7 +126,9 @@ function PotentialChannelCard({ channel, setChannels }) {
           <VideoThumbnail username={name} width={444} height={250} />
         </TwitchLink>
         <div className='absolute hidden group-hover:block top-0 right-0'>
-          <PopupMenu actions={buildChannelActions({ channel, setChannels })} />
+          <PopupMenu actions={buildChannelActions({ channel, setChannels })}>
+            <DotsVerticalIcon className='h-5 w-5 bg-black text-white my-1' aria-hidden='true' />
+          </PopupMenu>
         </div>
         <div className='absolute font-sans text-sm text-white bg-black px-1 hidden group-hover:block bottom-0 right-0'>
           {numberFormat(viewers)}&middot;{numberFormat(views)}&middot;{language}&middot;

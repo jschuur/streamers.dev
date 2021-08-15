@@ -8,7 +8,7 @@ export default function TwitchProfile({ channel, avatarSize = 'small' }) {
   const { name, displayName, fullName, broadcasterType } = channel;
 
   return (
-    <div className='w-45 align-top'>
+    <div className={'w-48 align-top'}>
       <div className='flex flex-col'>
         {/* Channel display name  */}
         <div className='text-base sm:text-lg'>

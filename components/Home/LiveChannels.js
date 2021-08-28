@@ -7,11 +7,11 @@ import useChannelList from '../../hooks/useChannelList';
 import useFilterNav from '../../hooks/useFilterNav';
 
 export default function LiveChannels() {
-  const { trackedChannelCount, visibleChannels, loadingError } = useChannelList();
+  const { visibleChannels, error, isFetching } = useChannelList();
   const { theme } = useTheme();
   const filterNav = useFilterNav();
 
-  if (loadingError) return <div className='py-2'>Error: {loadingError} </div>;
+  if (error) return <div className='py-2'>Error: {error} </div>;
 
   if (!visibleChannels)
     return (
@@ -20,7 +20,7 @@ export default function LiveChannels() {
       </div>
     );
 
-  if (!visibleChannels.length)
+  if (!visibleChannels?.length)
     return (
       <div className='m-2'>
         No matching live channels.{' '}

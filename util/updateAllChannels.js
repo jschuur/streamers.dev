@@ -1,5 +1,6 @@
 import AWS from 'aws-sdk';
-import { uniq, map } from 'lodash';
+import { getMinutes } from 'date-fns';
+import { merge } from 'lodash';
 import minimist from 'minimist';
 import pluralize from 'pluralize';
 import prettyMilliseconds from 'pretty-ms';
@@ -11,7 +12,12 @@ const argv = minimist(process.argv.slice(2), {
 });
 
 import { updateAllChannelDetails, updateAllChannelStatuses } from '../lib/channels';
-import { getChannels, disconnectDB } from '../lib/db';
+import {
+  getChannels,
+  getTrackedChannelCount,
+  getDistinctCountryCount,
+  disconnectDB,
+} from '../lib/db';
 import { isProd } from '../lib/util';
 import logger from '../lib/logger';
 
@@ -43,32 +49,76 @@ async function saveToS3(data) {
   }
 }
 
+async function saveLiveChannelCachedList() {
+  logger.info('Saving live channel JSON to S3...');
+
+  const channels = await getChannels({ isLive: true });
+
+  await saveToS3({
+    channels,
+    trackedChannelCount: await getTrackedChannelCount(),
+    distinctCountryCount: await getDistinctCountryCount(),
+    createdAt: new Date(),
+  });
+}
+
 (async () => {
+  // Definitions for how often to check channels based on their lastOnline time
+  const updateRanges = [
+    {
+      minDaysSinceOnline: 0,
+      maxDaysSinceOnline: 7,
+      minuteMark: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+    },
+    {
+      minDaysSinceOnline: 7,
+      maxDaysSinceOnline: 14,
+      minuteMark: [0, 1, 4, 5],
+    },
+    {
+      minDaysSinceOnline: 14,
+      minuteMark: [2, 3],
+    },
+  ];
+  const { fullDetails, includePaused } = argv;
   const start = new Date();
+  let updateOptions = {
+    updateAll: true,
+    includePaused,
+  };
+
+  // Identify which channels need to be updated
+  const ranges = updateRanges.filter((r) => r.minuteMark.includes(getMinutes(start) % 10));
+
+  if (ranges.length === 0) {
+    logger.warn('No update ranges match this time of day (this should not happen)');
+    process.exit(1);
+  }
 
   logger.info(`Running ${argv.fullDetails ? 'full details' : 'status'} update`);
   logger.info(`Mode: ${process.env.NODE_ENV}`);
 
   try {
-    const { fullDetails, includePaused } = argv;
-    let options = { updateAll: true, includePaused };
+    // Development mode only runs updates every 10 mins, so it's fine to update everything
+    // fullDetails one runs once an hour, so also update everything
+    if (process.env.NODE_ENV === 'production' && !fullDetails) {
+      for (const { minDaysSinceOnline, maxDaysSinceOnline } of ranges) {
+        logger.info(
+          `Updating channel range, min: ${minDaysSinceOnline || 'none'}, max: ${
+            maxDaysSinceOnline || 'none'
+          }`
+        );
 
-    const channels = await (fullDetails
-      ? updateAllChannelDetails(options)
-      : updateAllChannelStatuses(options));
+        merge(updateOptions, { minDaysSinceOnline, maxDaysSinceOnline, now: start });
 
-    if (!fullDetails) {
-      logger.info('Saving live channel JSON to S3...');
-      const liveChannels = await getChannels();
+        await updateAllChannelStatuses(updateOptions);
+      }
+    } else
+      await (fullDetails
+        ? updateAllChannelDetails(updateOptions)
+        : updateAllChannelStatuses(updateOptions));
 
-      await saveToS3({
-        channels: liveChannels.filter((c) => c.isLive),
-        trackedChannelCount: channels.length,
-        distinctCountryCount: uniq([...map(channels, 'country'), ...map(channels, 'country2')])
-          .length,
-        createdAt: new Date(),
-      });
-    }
+    if (!fullDetails) await saveLiveChannelCachedList();
   } catch ({ message }) {
     logger.error(`Problem updating all channels: ${message}`);
   }

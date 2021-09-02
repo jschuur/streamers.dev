@@ -109,9 +109,12 @@ async function saveLiveChannelCachedList() {
           }`
         );
 
-        merge(updateOptions, { minDaysSinceOnline, maxDaysSinceOnline, now: start });
-
-        await updateAllChannelStatuses(updateOptions);
+        await updateAllChannelStatuses({
+          ...updateOptions,
+          minDaysSinceOnline,
+          maxDaysSinceOnline,
+          now: start,
+        });
       }
     } else
       await (fullDetails
@@ -127,7 +130,7 @@ async function saveLiveChannelCachedList() {
   await disconnectDB();
 
   logger.info(
-    `Time spent (updateSnapshot): ${prettyMilliseconds(new Date() - start, {
+    `Time spent (updateAllChannels): ${prettyMilliseconds(new Date() - start, {
       separateMilliseconds: true,
     })}`
   );

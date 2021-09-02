@@ -13,7 +13,7 @@ const handler = async (req, res) => {
     if (parseInt(refresh)) await updateChannelStatuses({ channels, updateAll: false });
 
     res.status(200).json({
-      channels
+      channels,
       trackedChannelCount: await getTrackedChannelCount(),
       distinctCountryCount: await getDistinctCountryCount(),
     });

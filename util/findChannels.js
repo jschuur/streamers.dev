@@ -117,7 +117,7 @@ async function findChannels(tagName) {
   await prisma.$disconnect();
 
   logger.info(
-    `Time spent (updateSnapshot): ${prettyMilliseconds(new Date() - start, {
+    `Time spent (findChannels): ${prettyMilliseconds(new Date() - start, {
       separateMilliseconds: true,
     })}`
   );

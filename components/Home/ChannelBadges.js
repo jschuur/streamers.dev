@@ -25,11 +25,14 @@ export default function ChannelBadges({
           🗣 {by639_1[latestStreamLanguage]?.name || latestStreamLanguage}
         </Badge>
       )}
-      {latestStreamGameName && latestStreamGameName !== 'Science & Technology' && (
-        <Badge key={2} color='red'>
-          In: {latestStreamGameName}
-        </Badge>
-      )}
+      {latestStreamGameName &&
+        !['Science & Technology', 'Software and Game Development'].includes(
+          latestStreamGameName
+        ) && (
+          <Badge key={2} color='red'>
+            In: {latestStreamGameName}
+          </Badge>
+        )}
       {channelType && channelType !== 'USER' && (
         <Badge key={3} color='yellow'>
           {capitalize(channelType.toLowerCase())}

@@ -5,7 +5,7 @@ import Loader from '../components/Layout/Loader';
 
 import Layout from '../components/Layout/Layout';
 import Section from '../components/Layout/Section';
-import Chart from '../components/Stats/Chart';
+import { LineChart, BarChart } from '../components/Stats/Chart';
 
 export function StatsCharts({ peakSnapshots, trackedChannelSnapshots }) {
   const [statsData, setStatsData] = useState(null);
@@ -17,11 +17,7 @@ export function StatsCharts({ peakSnapshots, trackedChannelSnapshots }) {
     const data = await response.json();
 
     if (data.error) setError(data.channels);
-    else {
-      const { viewerSeries, channelSeries, trackedChannelSeries } = data.stats;
-
-      setStatsData({ viewerSeries, channelSeries, trackedChannelSeries });
-    }
+    else setStatsData({ ...data.stats });
   }
 
   useEffect(() => {
@@ -39,14 +35,28 @@ export function StatsCharts({ peakSnapshots, trackedChannelSnapshots }) {
 
   return (
     <>
-      <Chart type='area' title='Viewers' group='viewer_channels' series={statsData.viewerSeries} />
-      <Chart
+      <LineChart
+        type='area'
+        title='Viewers'
+        group='viewer_channels'
+        series={statsData.viewerSeries}
+      />
+      <LineChart
         type='area'
         title='Channels'
         group='viewer_channels'
         series={statsData.channelSeries}
       />
-      <Chart type='line' title='Tracked Channels' series={statsData.trackedChannelSeries} />
+      <BarChart
+        title='Channels by Last Streamed Age'
+        categories={statsData.daysSinceOnlineSeries.categories}
+        data={statsData.daysSinceOnlineSeries.data}
+      />{' '}
+      <LineChart
+        type='line'
+        title='Total Tracked Channels'
+        series={statsData.trackedChannelSeries}
+      />
     </>
   );
 }

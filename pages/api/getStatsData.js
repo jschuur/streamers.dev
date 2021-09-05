@@ -1,6 +1,6 @@
 import { withSentry } from '@sentry/nextjs';
 
-import { getStatsData } from '../../lib/db';
+import { getStatsData } from '../../lib/stats';
 
 const handler = async (req, res) => {
   try {

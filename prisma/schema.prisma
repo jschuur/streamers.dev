@@ -15,8 +15,6 @@ model Channel {
   fullName                String?
   team                    String?
   description             String
-  country                 String?
-  country2                String?
   countries               String[]
   isLive                  Boolean       @default(false)
   isHidden                Boolean       @default(false)

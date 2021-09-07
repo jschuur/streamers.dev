@@ -17,6 +17,7 @@ model Channel {
   description             String
   countries               String[]
   isLive                  Boolean       @default(false)
+  isCoding                Boolean       @default(false)
   isHidden                Boolean       @default(false)
   isPaused                Boolean       @default(false)
   alwaysCoding            Boolean       @default(false)

@@ -2,7 +2,7 @@ import { sumBy } from 'lodash';
 import prettyMilliseconds from 'pretty-ms';
 
 import prisma from '../lib/prisma';
-import { isCoding, selectFromFields } from '../lib/util';
+import { selectFromFields } from '../lib/util';
 import logger from '../lib/logger';
 
 import { SNAPSHOT_CHANNEL_FIELDS, SNAPSHOT_VALUE_FIELDS } from '../lib/config';
@@ -57,7 +57,7 @@ async function updateSnapshot() {
   const liveChannels = await getLiveChannels();
   const trackedChannels = await getTrackedChannels();
 
-  const codingChannels = liveChannels.filter((channel) => isCoding(channel));
+  const codingChannels = liveChannels.filter(({ isCoding }) => isCoding);
 
   // Calculate the current metrics
   const liveCodingChannels = codingChannels.length;

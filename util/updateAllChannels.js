@@ -66,7 +66,6 @@ async function saveLiveChannelCachedList() {
   // Definitions for how often to check channels based on their lastOnline time
   const updateRanges = [
     {
-      minDaysSinceOnline: 0,
       maxDaysSinceOnline: 7,
       minuteMark: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
     },

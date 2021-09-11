@@ -36,8 +36,15 @@ const initialChartOptions = ({ title, group }) => ({
   },
 });
 
-export function LineChart({ series, title, type, group }) {
-  const options = {
+export function LineChart({
+  section = true,
+  series,
+  title,
+  type,
+  group,
+  options: additionalOptions = {},
+}) {
+  const options = merge(initialChartOptions({ title, group }), additionalOptions, {
     tooltip: {
       x: {
         format: 'dd MMM (H TT)',
@@ -61,59 +68,60 @@ export function LineChart({ series, title, type, group }) {
         minWidth: 40,
       },
     },
-  };
+  });
 
-  return (
-    <Section>
-      <div className='py-1'>
-        <Chart
-          options={merge(initialChartOptions({ title, group }), options)}
-          series={series}
-          type={type}
-          height={320}
-        />
-      </div>
-    </Section>
+  const chart = (
+    <div className='py-1'>
+      <Chart options={options} series={series} type={type} height={320} />
+    </div>
   );
+
+  return section ? <Section>{chart}</Section> : chart;
 }
 
-export function BarChart({ data, categories, title, group }) {
-  const options = {
+export function BarChart({
+  section = true,
+  data,
+  categories,
+  title,
+  group,
+  options: additionalOptions,
+}) {
+  const options = merge(initialChartOptions({ title, group }), additionalOptions, {
     xaxis: {
       categories,
     },
-  };
+  });
 
-  return (
-    <Section>
-      <div className='py-1'>
-        <Chart
-          options={merge(initialChartOptions({ title, group }), options)}
-          series={[{ name: title, data }]}
-          type='bar'
-          height={320}
-        />
-      </div>
-    </Section>
+  const chart = (
+    <div className='py-1'>
+      <Chart options={options} series={[{ name: title, data }]} type='bar' height={320} />
+    </div>
   );
+
+  return section ? <Section>{chart}</Section> : chart;
 }
 
-export function PieChart({ series, labels, title, group }) {
-  const options = {
+export function PieChart({
+  section = true,
+  series,
+  labels,
+  title,
+  group,
+  options: additionalOptions,
+}) {
+  const options = merge(initialChartOptions({ title, group }), additionalOptions, {
     labels,
-  };
+    dataLabels: {
+      enabled: true,
+    },
+  });
 
-  console.log({ options });
-  return (
-    <Section>
-      <div className='py-1'>
-        <Chart
-          options={merge(initialChartOptions({ title, group }), options)}
-          series={series}
-          type='pie'
-          height={320}
-        />
-      </div>
-    </Section>
+  const chart = (
+    <div className='py-1'>
+      <Chart options={options} series={series} type='pie' height={480} />
+    </div>
   );
+
+  return section ? <Section>{chart}</Section> : chart;
 }

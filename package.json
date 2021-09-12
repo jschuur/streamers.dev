@@ -14,6 +14,7 @@
     "postinstall": "prisma generate",
     "dev:update": "concurrently \"npm run dev\" \"npm run dev:update:channels\"",
     "update:channels": "babel-node util/updateAllChannels.js",
+    "update:channels:localtest": "babel-node util/updateAllChannels.js --localTest",
     "update:snapshots": "babel-node util/generateSnapshots.js",
     "update:snapshots:prod": "dotenv -e .env.production babel-node util/generateSnapshots.js",
     "update:channels:full": "babel-node util/updateAllChannels.js --fullDetails",

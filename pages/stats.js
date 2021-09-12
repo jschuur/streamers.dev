@@ -74,7 +74,7 @@ export function StatsCharts() {
           <a href='https://help.twitch.tv/s/article/languages-on-twitch?language=en_US#streamlang'>
             language
           </a>{' '}
-          of the streamer being watched, not Twitch tags of the language or the viewer.
+          of the streamer being watched, not Twitch language tags or viewer language preferences.
         </div>
       </Section>
 
@@ -96,10 +96,10 @@ export function StatsCharts() {
           />
         </div>
         <div className='p-3'>
-          Based on both the current location and nationality of the streamer, using manually
-          curated, public information from channel and social media profiles. Totals will be greater
-          than unique stream/viewer counts if some live streamers live in a different country than
-          their nationality.
+          Based on both the current location and nationality of the streamer (not their viewers),
+          using manually curated, public information from channel and social media profiles. Totals
+          will be greater than unique stream/viewer counts if some live streamers live in a
+          different country than their nationality.
         </div>
       </Section>
 

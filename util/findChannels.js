@@ -4,7 +4,7 @@ import prettyMilliseconds from 'pretty-ms';
 import 'dotenv/config';
 
 import { twitchGetStreamsAll, twitchGetUsersByIds } from '../lib/twitch_api';
-import { gameIds, codingTagIds, gameCodingTagIds } from '../lib/config';
+import { gameIds, codingTagIds, gameCodingTagIds, ALWAYS_CODING_GAMENAMES } from '../lib/config';
 import prisma from '../lib/prisma';
 import logger from '../lib/logger';
 import { addOrUpdateQueueItem } from '../lib/db';
@@ -14,7 +14,7 @@ async function getActiveStreams(tagName) {
 
   return (
     await twitchGetStreamsAll({
-      game: [gameIds['Science & Technology'], gameIds['BASIC Programming']],
+      game: ALWAYS_CODING_GAMENAMES.map((game) => gameIds[game]),
     })
   ).filter(({ tagIds }) => tagIds.includes(tagId));
 }
@@ -41,6 +41,8 @@ async function saveNewChannels({ streams, tagName }) {
   let newQueuedCount = 0;
   const now = new Date();
 
+  logger.info(`Attempting to queue new pending channels...`);
+
   // Need this to recognise newly queued entries later
   const lastQueueItem = await prisma.queue.findFirst({
     orderBy: {
@@ -63,26 +65,28 @@ async function saveNewChannels({ streams, tagName }) {
 
     // Dumb Prisma workaround to check if a record was added
     if (result.id > lastQueueItemId) {
-      logger.info(`Queued https://www.twitch.tv/${result.name}`);
+      logger.info(`...queued https://www.twitch.tv/${result.name}`);
       newQueuedCount++;
     }
   }
 
   if (newQueuedCount > 0)
-    logger.info(`Queued ${pluralize('new channels', newQueuedCount, true)} from ${tagName} search`);
-  else logger.info('No new channels needed to be queued');
+    logger.info(
+      `...added ${pluralize('new channels', newQueuedCount, true)} to the ${tagName} queue`
+    );
+  else logger.info(`...no new ${tagName} channels needed to be queued`);
 }
 
 async function findChannels(tagName) {
   logger.info(`Getting current ${tagName} streams`);
 
   const liveStreams = await getActiveStreams(tagName);
-  logger.info(`Found ${pluralize(`${tagName} stream`, liveStreams.length, true)}`);
+  logger.info(`Found ${pluralize(`${tagName} live stream`, liveStreams.length, true)}`);
 
   if (liveStreams.length === 0) return;
 
   const newChannels = await identifyNewChannels(liveStreams);
-  logger.info(`Identified ${pluralize('untracked channel', newChannels.length, true)}`);
+  logger.info(`...of which there are ${pluralize('untracked channel', newChannels.length, true)}`);
 
   if (newChannels.length === 0) return;
 

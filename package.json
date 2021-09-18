@@ -65,6 +65,7 @@
     "react-image": "^4.0.3",
     "react-loader-spinner": "^4.0.0",
     "react-query": "^3.19.6",
+    "react-svg-worldmap": "^1.1.0",
     "react-toast-notifications": "^2.5.1",
     "slugify": "^1.6.0",
     "superjson": "^1.7.5",

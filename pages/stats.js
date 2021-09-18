@@ -7,6 +7,7 @@ import Loader from '../components/Layout/Loader';
 
 import Layout from '../components/Layout/Layout';
 import Section from '../components/Layout/Section';
+import ChannelMap from '../components/Stats/ChannelMap';
 import { LineChart, BarChart, PieChart } from '../components/Stats/Chart';
 
 export function StatsCharts() {
@@ -16,6 +17,7 @@ export function StatsCharts() {
 
   const addValueToLegend = (seriesName, opts) =>
     `${seriesName} (${opts.w.globals.series[opts.seriesIndex]})`;
+
   async function getStatsData() {
     const response = await fetch('/api/getStatsData');
     const data = await response.json();
@@ -39,18 +41,22 @@ export function StatsCharts() {
 
   return (
     <>
-      <LineChart
-        type='area'
-        title='Viewers'
-        group='viewer_channels'
-        series={statsData.viewerSeries}
-      />
-      <LineChart
-        type='area'
-        title='Channels'
-        group='viewer_channels'
-        series={statsData.channelSeries}
-      />
+      <Section>
+        <LineChart
+          type='area'
+          title='Viewers'
+          group='viewer_channels'
+          series={statsData.viewerSeries}
+        />
+      </Section>
+      <Section>
+        <LineChart
+          type='area'
+          title='Channels'
+          group='viewer_channels'
+          series={statsData.channelSeries}
+        />
+      </Section>
 
       <Section>
         <div className='grid grid-cols-1 md:grid-cols-2'>
@@ -70,7 +76,7 @@ export function StatsCharts() {
           />
         </div>
         <div className='p-3'>
-          Based on the Twitch{' '}
+          For currently live channels, marked as coding and based on the Twitch{' '}
           <a href='https://help.twitch.tv/s/article/languages-on-twitch?language=en_US#streamlang'>
             language
           </a>{' '}
@@ -81,38 +87,49 @@ export function StatsCharts() {
       <Section>
         <div className='grid grid-cols-1 md:grid-cols-2'>
           <PieChart
-            section={false}
-            title={`Countries by Live Streams (${sum(statsData.languagesByStreamsSeries.data)})`}
+            title={`Channel Origin by Live Streams (${sum(
+              statsData.languagesByStreamsSeries.data
+            )})`}
             options={{ legend: { position: 'bottom', formatter: addValueToLegend } }}
             labels={statsData.countriesByStreamsSeries.labels}
             series={statsData.countriesByStreamsSeries.data}
           />
           <PieChart
-            section={false}
-            title={`Countries by Live Viewers (${sum(statsData.languagesByViewersSeries.data)})`}
+            title={`Channel Origin by Live Viewers (${sum(
+              statsData.languagesByViewersSeries.data
+            )})`}
             options={{ legend: { position: 'bottom', formatter: addValueToLegend } }}
             labels={statsData.countriesByViewersSeries.labels}
             series={statsData.countriesByViewersSeries.data}
           />
         </div>
         <div className='p-3'>
-          Based on both the current location and nationality of the streamer (not their viewers),
-          using manually curated, public information from channel and social media profiles. Totals
-          will be greater than unique stream/viewer counts if some live streamers live in a
-          different country than their nationality.
+          For currently live channels, marked as coding and based on both the current location and
+          nationality of the streamer (not their viewers). Locations are manually curated, using
+          public information from channel and social media profiles. Totals will be greater than
+          channel/viewer counts if streamers live in a different country than their nationality.
         </div>
       </Section>
 
-      <BarChart
-        title='Channels by Last Streamed Age'
-        categories={statsData.daysSinceOnlineSeries.categories}
-        data={statsData.daysSinceOnlineSeries.data}
-      />
-      <LineChart
-        type='line'
-        title='Total Tracked Channels'
-        series={statsData.trackedChannelSeries}
-      />
+      <Section>
+        <ChannelMap data={statsData.countriesByStreamersMapData} />
+      </Section>
+
+      <Section>
+        <BarChart
+          title='Channels by Last Streamed Age'
+          categories={statsData.daysSinceOnlineSeries.categories}
+          data={statsData.daysSinceOnlineSeries.data}
+        />
+      </Section>
+
+      <Section>
+        <LineChart
+          type='line'
+          title='Total Tracked Channels'
+          series={statsData.trackedChannelSeries}
+        />
+      </Section>
     </>
   );
 }

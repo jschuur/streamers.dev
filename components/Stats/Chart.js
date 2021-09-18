@@ -3,8 +3,6 @@ import { merge } from 'lodash';
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
-import Section from '../Layout/Section';
-
 const initialChartOptions = ({ title, group }) => ({
   chart: {
     id: title,
@@ -36,14 +34,7 @@ const initialChartOptions = ({ title, group }) => ({
   },
 });
 
-export function LineChart({
-  section = true,
-  series,
-  title,
-  type,
-  group,
-  options: additionalOptions = {},
-}) {
+export function LineChart({ series, title, type, group, options: additionalOptions = {} }) {
   const options = merge(initialChartOptions({ title, group }), additionalOptions, {
     tooltip: {
       x: {
@@ -70,58 +61,35 @@ export function LineChart({
     },
   });
 
-  const chart = (
+  return (
     <div className='py-1'>
       <Chart options={options} series={series} type={type} height={320} />
     </div>
   );
-
-  return section ? <Section>{chart}</Section> : chart;
 }
 
-export function BarChart({
-  section = true,
-  data,
-  categories,
-  title,
-  group,
-  options: additionalOptions,
-}) {
+export function BarChart({ data, categories, title, group, options: additionalOptions }) {
   const options = merge(initialChartOptions({ title, group }), additionalOptions, {
     xaxis: {
       categories,
     },
   });
 
-  const chart = (
+  return (
     <div className='py-1'>
       <Chart options={options} series={[{ name: title, data }]} type='bar' height={320} />
     </div>
   );
-
-  return section ? <Section>{chart}</Section> : chart;
 }
 
-export function PieChart({
-  section = true,
-  series,
-  labels,
-  title,
-  group,
-  options: additionalOptions,
-}) {
+export function PieChart({ series, labels, title, group, options: additionalOptions }) {
   const options = merge(initialChartOptions({ title, group }), additionalOptions, {
     labels,
-    dataLabels: {
-      enabled: true,
-    },
   });
 
-  const chart = (
+  return (
     <div className='py-1'>
       <Chart options={options} series={series} type='pie' height={480} />
     </div>
   );
-
-  return section ? <Section>{chart}</Section> : chart;
 }

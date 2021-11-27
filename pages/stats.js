@@ -107,7 +107,7 @@ export function StatsCharts() {
           For currently live channels, marked as coding and based on both the current location and
           nationality of the streamer (not their viewers). Locations are manually curated, using
           public information from channel and social media profiles. Totals will be greater than
-          channel/viewer counts if streamers live in a different country than their nationality.
+          channel/viewer counts if streamers live in a different location than their nationality.
         </div>
       </Section>
 

@@ -38,7 +38,7 @@ export function LineChart({ series, title, type, group, options: additionalOptio
   const options = merge(initialChartOptions({ title, group }), additionalOptions, {
     tooltip: {
       x: {
-        format: 'dd MMM (H TT)',
+        format: 'dd MMM (H TT GMT)',
       },
     },
     xaxis: {

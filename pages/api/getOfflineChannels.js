@@ -13,4 +13,4 @@ const handler = async (req, res) => {
   }
 };
 
-export default withSentry(handler);
+export default process.env.ENABLE_SENTRY ? withSentry(handler) : handler;

@@ -3,12 +3,13 @@ import pluralize from 'pluralize';
 
 import TwitchProfile from './TwitchProfile';
 import TwitchAvatar from './TwitchAvatar';
+import TwitchLink from './TwitchLink';
 import SocialButtons from './SocialButtons';
 import VideoThumbnail from './VideoThumbnail';
 import CountryFlags from './CountryFlags';
 import ChannelBadges from './ChannelBadges';
 
-import { formatDurationShortNow, TwitchLink } from '../../lib/util';
+import { formatDurationShortNow } from '../../lib/util';
 
 import {
   STREAM_RECENT_MINUTES,

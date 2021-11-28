@@ -7,8 +7,9 @@ import toast, { Toaster } from 'react-hot-toast';
 import Section from '../Layout/Section';
 import Loader from '../Layout/Loader';
 import VideoThumbnail from '../Home/VideoThumbnail';
+import TwitchLink from '../Home/TwitchLink';
 import PopupMenu from '../PopupMenu';
-import { TwitchLink, formatDurationShortNow } from '../../lib/util';
+import { formatDurationShortNow } from '../../lib/util';
 
 import { NEW_STREAMER_AGE_DAYS, POTENTIAL_CHANNELS_AUTOREFRESH_SECONDS } from '../../lib/config';
 

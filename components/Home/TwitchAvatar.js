@@ -1,6 +1,7 @@
 import { useImage } from 'react-image';
 
-import { TwitchLink } from '../../lib/util';
+import TwitchLink from './TwitchLink';
+
 import { DEFAULT_AVATAR_URL } from '../../lib/config';
 import { profilePictureUrl } from '../../lib/util';
 

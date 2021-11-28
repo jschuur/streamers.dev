@@ -4,7 +4,13 @@ import prettyMilliseconds from 'pretty-ms';
 import 'dotenv/config';
 
 import { twitchGetStreamsAll, twitchGetUsersByIds } from '../lib/twitch_api';
-import { gameIds, codingTagIds, gameCodingTagIds, ALWAYS_CODING_GAMENAMES } from '../lib/config';
+import {
+  gameIds,
+  codingTagIds,
+  gameCodingTagIds,
+  ALWAYS_CODING_GAMENAMES,
+  FIND_CHANNEL_TAGS,
+} from '../lib/config';
 import prisma from '../lib/prisma';
 import logger from '../lib/logger';
 import { addOrUpdateQueueItem } from '../lib/db';
@@ -96,26 +102,16 @@ async function findChannels(tagName) {
 (async () => {
   const start = new Date();
 
-  await findChannels('Web Development');
-  await findChannels('Software Development');
-  await findChannels('Programming');
-  await findChannels('Game Development');
-  await findChannels('Desktop Development');
-  await findChannels('Mobile Development');
-  await findChannels('JavaScript');
-  await findChannels('Python');
-  await findChannels('Rust');
-  await findChannels('PHP');
-  await findChannels('C++');
+  for (const tagName of FIND_CHANNEL_TAGS) await findChannels(tagName);
 
   logger.info(`Marking 'PENDING' queue items that exist as channels as 'ADDED'`);
-  await prisma.$queryRaw(`
+  await prisma.$queryRaw`
     UPDATE "Queue"
     SET status = 'ADDED'
     WHERE "twitchId" IN
       (SELECT "Channel"."twitchId" FROM "Channel")
       AND status = 'PENDING';
-  `);
+  `;
 
   logger.info('Disconnecting...');
   await prisma.$disconnect();

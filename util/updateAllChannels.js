@@ -58,7 +58,7 @@ async function saveToS3({ fileName, body }) {
   const params = {
     Bucket: process.env.AWS_BUCKET,
     Key: fileName,
-    Body: JSON.stringify(body, null, 2),
+    Body: JSON.stringify(body),
     CacheControl: 'max-age=0',
     ContentType: 'text/json',
   };
@@ -66,7 +66,7 @@ async function saveToS3({ fileName, body }) {
   return s3.upload(params).promise();
 }
 
-async function saveLiveChannelCachedList() {
+async function saveLiveChannelCachedList({ start }) {
   logger.info('Saving live channel JSON to S3...');
 
   const fileName = isProd() ? 'live_channels.json' : 'live_channels_dev.json';
@@ -76,10 +76,11 @@ async function saveLiveChannelCachedList() {
     await saveToS3({
       fileName,
       body: {
-        channels,
+        createdAt: new Date(),
+        updateTime: new Date() - start,
         trackedChannelCount: await getTrackedChannelCount(),
         distinctCountryCount: await getDistinctCountryCount(),
-        createdAt: new Date(),
+        channels,
       },
     });
 
@@ -134,7 +135,7 @@ async function updateRange({ range, now }) {
         : updateAllChannelStatuses(updateOptions));
     }
 
-    await saveLiveChannelCachedList();
+    await saveLiveChannelCachedList({ start });
   } catch ({ message }) {
     logger.error(`Problem updating all channels: ${message}`);
   }

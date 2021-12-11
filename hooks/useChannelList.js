@@ -46,8 +46,7 @@ export default function useChannelList() {
     topicFilter,
     setTopicFilter,
     setLiveCounts,
-    setTrackedChannelCount,
-    setDistinctCountryCount,
+    setChannelListMetaData,
   } = useContext(HomePageContext);
   const [allChannels, setAllChannels] = useState([]);
   const [visibleChannels, setVisibleChannels] = useState(null);
@@ -59,9 +58,11 @@ export default function useChannelList() {
   // Update allChannels state after the channel list is fetched
   useEffect(() => {
     if (data) {
-      setAllChannels(data.channels);
-      setTrackedChannelCount(data.trackedChannelCount);
-      setDistinctCountryCount(data.distinctCountryCount);
+      const { channels, ...meta } = data;
+      meta.cacheFileSize = JSON.stringify(data).length;
+
+      setAllChannels(channels);
+      setChannelListMetaData(meta);
     }
   }, [data]);
 

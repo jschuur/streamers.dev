@@ -1,5 +1,5 @@
 import { NextSeo } from 'next-seo';
-import { getSession } from 'next-auth/client';
+import { getSession } from 'next-auth/react';
 
 import Layout from '../../components/Layout/Layout';
 import Section from '../../components/Layout/Section';

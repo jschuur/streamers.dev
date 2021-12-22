@@ -1,12 +1,12 @@
 import NextAuth from 'next-auth';
-import Providers from 'next-auth/providers';
+import TwitchProvider from 'next-auth/providers/twitch';
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
 
 import prisma from '../../../lib/prisma';
 
 export default NextAuth({
   providers: [
-    Providers.Twitch({
+    TwitchProvider({
       clientId: process.env.TWITCH_CLIENT_ID,
       clientSecret: process.env.TWITCH_CLIENT_SECRET,
     }),
@@ -17,12 +17,12 @@ export default NextAuth({
   secret: process.env.SECRET,
 
   callbacks: {
-    signIn: async (user, account, profile) => {
+    signIn: async ({ user }) => {
       if (!user.isAdmin && !process.env.ALLOW_NEW_SIGNUPS) return '/';
 
       return true;
     },
-    session: async (session, user) => {
+    session: async ({ session, user }) => {
       session.user.isAdmin = user.isAdmin;
 
       return session;

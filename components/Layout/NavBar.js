@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useSession } from 'next-auth/client';
+import { useSession } from 'next-auth/react';
 
 import PopupMenu from '../PopupMenu';
 import ThemeChanger from '../ThemeChanger';
@@ -26,7 +26,7 @@ function NavLink({ href, children }) {
   );
 }
 export default function NavBar() {
-  const [session] = useSession();
+  const { data: session } = useSession();
   const adminActions = [
     {
       label: 'Live candidates',

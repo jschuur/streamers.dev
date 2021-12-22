@@ -1,13 +1,13 @@
 import Link from 'next/link';
 import { useContext } from 'react';
-import { useSession, signIn, signOut } from 'next-auth/client';
+import { useSession, signIn, signOut } from 'next-auth/react';
 import prettyMilliseconds from 'pretty-ms';
 
 import { adminAuthorised } from '../../lib/util';
 import { HomePageContext } from '../../lib/stores';
 
 export default function Footer() {
-  const [session, loading] = useSession();
+  const { data: session } = useSession();
   const { channelListMetaData } = useContext(HomePageContext);
   const { trackedChannelCount, distinctCountryCount, updateTime, cacheFileSize } =
     channelListMetaData || {};

@@ -5,22 +5,19 @@ import 'dotenv/config';
 
 import { twitchGetStreamsAll, twitchGetUsersByIds } from '../lib/twitch_api';
 import {
-  gameIds,
+  findChannelGameNames,
   codingTagIds,
   gameCodingTagIds,
-  ALWAYS_CODING_GAMENAMES,
-  FIND_CHANNEL_TAGS,
+  findChannelTags,
 } from '../lib/config';
 import prisma from '../lib/prisma';
 import logger from '../lib/logger';
 import { addOrUpdateQueueItem } from '../lib/db';
 
-async function getActiveStreams(tagName) {
-  const tagId = codingTagIds[tagName] || gameCodingTagIds[tagName];
-
+async function getActiveStreams(tagId) {
   return (
     await twitchGetStreamsAll({
-      game: ALWAYS_CODING_GAMENAMES.map((game) => gameIds[game]),
+      game: Object.values(findChannelGameNames),
     })
   ).filter(({ tagIds }) => tagIds.includes(tagId));
 }
@@ -83,10 +80,10 @@ async function saveNewChannels({ streams, tagName }) {
   else logger.info(`...no new ${tagName} channels needed to be queued`);
 }
 
-async function findChannels(tagName) {
+async function findChannels({ tagName, tagId }) {
   logger.info(`Getting current ${tagName} streams`);
 
-  const liveStreams = await getActiveStreams(tagName);
+  const liveStreams = await getActiveStreams(tagId);
   logger.info(`Found ${pluralize(`${tagName} live stream`, liveStreams.length, true)}`);
 
   if (liveStreams.length === 0) return;
@@ -102,7 +99,8 @@ async function findChannels(tagName) {
 (async () => {
   const start = new Date();
 
-  for (const tagName of FIND_CHANNEL_TAGS) await findChannels(tagName);
+  for (const [tagName, tagId] of Object.entries(findChannelTags))
+    await findChannels({ tagName, tagId });
 
   logger.info(`Marking 'PENDING' queue items that exist as channels as 'ADDED'`);
   await prisma.$queryRaw`

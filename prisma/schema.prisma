@@ -78,9 +78,12 @@ model Stream {
   viewers                 Int?
   peakViewers             Int?
   language                String?
-  gameName                String?
-  tags                    String[]
-  twitchTags              String[]
+  currentGameName         String?
+  allGameNames            String[]
+  currentTags             String[]
+  allTags                 String[]
+  currentTwitchTags       String[]
+  allTwitchTags           String[]
 
   startedAt               DateTime
   lastOnline              DateTime?

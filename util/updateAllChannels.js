@@ -1,6 +1,6 @@
 import AWS from 'aws-sdk';
 import { getMinutes } from 'date-fns';
-import { merge } from 'lodash';
+import { pick } from 'lodash';
 import minimist from 'minimist';
 import pluralize from 'pluralize';
 import prettyMilliseconds from 'pretty-ms';
@@ -20,6 +20,8 @@ import {
 } from '../lib/db';
 import { isProd } from '../lib/util';
 import logger from '../lib/logger';
+
+import { TWITCH_CHANNEL_FIELDS } from '../lib/config';
 
 // Definitions to stagger checks for channels that haven't been live for a while,
 // to avoid hitting the Twitch API too often.
@@ -80,7 +82,7 @@ async function saveLiveChannelCachedList({ start }) {
         updateTime: new Date() - start,
         trackedChannelCount: await getTrackedChannelCount(),
         distinctCountryCount: await getDistinctCountryCount(),
-        channels,
+        channels: channels.map((channel) => pick(channel, TWITCH_CHANNEL_FIELDS)),
       },
     });
 

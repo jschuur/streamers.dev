@@ -22,6 +22,8 @@ model Channel {
   isPaused                Boolean       @default(false)
   alwaysCoding            Boolean       @default(false)
 
+  streams                 Stream[]
+
   topics                  String[]
 
   type                    String?
@@ -32,6 +34,7 @@ model Channel {
   views                   Int
 
   lastOnline              DateTime?
+  latestStreamTwitchId    String?
   latestStreamTitle       String?
   latestStreamStartedAt   DateTime?
   latestStreamViewers     Int?
@@ -60,6 +63,30 @@ enum ChannelType {
   BRAND
   SHOW
   COLLABORATION
+}
+
+model Stream {
+  id                      Int           @default(autoincrement()) @id
+
+  channel                 Channel       @relation(fields: [channelId], references: [id])
+  channelId               Int
+
+  twitchStreamId          String        @unique
+  isCoding                Boolean       @default(false)
+  isLive                  Boolean       @default(false)
+  title                   String?
+  viewers                 Int?
+  peakViewers             Int?
+  language                String?
+  currentGameName         String?
+  allGameNames            String[]
+  currentTags             String[]
+  allTags                 String[]
+  currentTwitchTags       String[]
+  allTwitchTags           String[]
+
+  startedAt               DateTime
+  lastOnline              DateTime?
 }
 
 model Snapshot {

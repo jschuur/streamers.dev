@@ -1,4 +1,4 @@
-import { uniq, map, pick } from 'lodash';
+import { map, pick } from 'lodash';
 import { withSentry } from '@sentry/nextjs';
 
 import { getChannels, getTrackedChannelCount, getDistinctCountryCount } from '../../lib/db';

@@ -1,11 +1,9 @@
 import { format } from 'date-fns';
 import { uniq, map, sortBy } from 'lodash';
-import router, { useRouter } from 'next/router';
-import { getSession } from 'next-auth/react';
+import { useRouter } from 'next/router';
 import pluralize from 'pluralize';
 import { useEffect, useContext, useState, useMemo } from 'react';
 import { useToasts } from 'react-toast-notifications';
-import { XCircleIcon } from '@heroicons/react/solid';
 
 import Button from '../Button';
 import DropDown from '../DropDown';
@@ -32,7 +30,7 @@ const filterChannelsSearch = (channels, searchTerm) =>
 const filterChannelsTag = (channels, tagName) => channels.filter(({ tag }) => tag === tagName);
 
 function QueueAction({ id, action, status, ...params }) {
-  const { queue, setQueue, setIsUpdating } = useContext(AdminContext);
+  const { setQueue, setIsUpdating } = useContext(AdminContext);
   const { addToast } = useToasts();
 
   // TODO: Queue up API requests
@@ -112,7 +110,7 @@ function TagQueue({ tagName, navLinks }) {
         <div key={channel.id}>
           {dateHeader}
           <li className='group' key={channel.id}>
-            <a target='_blank' href={`https://twitch.tv/${channel.name}`}>
+            <a target='_blank' rel='noreferrer' href={`https://twitch.tv/${channel.name}`}>
               {channel.name}
             </a>{' '}
             ({channel.language} {channel.views}: {channel.title}){' '}
@@ -144,7 +142,7 @@ function TagQueue({ tagName, navLinks }) {
 }
 
 function QueueFilters() {
-  const { queueDays, setQueueDays } = useContext(AdminContext);
+  const { setQueueDays } = useContext(AdminContext);
 
   return (
     <DropDown label={'Filter'} onChange={(e) => setQueueDays(e.target.value)} defaultValue={2}>
@@ -161,7 +159,7 @@ function QueueFilters() {
 }
 
 function QueueSortControl() {
-  const { queueFilterField, setQueueFilterField } = useContext(AdminContext);
+  const { setQueueFilterField } = useContext(AdminContext);
 
   return (
     <DropDown
@@ -199,7 +197,7 @@ function QueueNavLinks({ queue, home }) {
 }
 
 function QueueSearch() {
-  const { queueSearch, setQueueSearch } = useContext(AdminContext);
+  const { setQueueSearch } = useContext(AdminContext);
 
   return (
     <div>
@@ -218,8 +216,7 @@ function QueueSearch() {
 }
 
 export default function ChannelQueues() {
-  const { queue, setQueue, queueDays, tagQueue, queueSearch, queueFilterField } =
-    useContext(AdminContext);
+  const { queue, setQueue, queueDays, queueSearch, queueFilterField } = useContext(AdminContext);
   const [queueSearchMatches, setQueueSearchMatches] = useState(null);
   const navLinks = useMemo(() => <QueueNavLinks queue={queue} />, [queue]);
 

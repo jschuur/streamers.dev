@@ -15,7 +15,7 @@ import {
   topicSortOptions,
 } from '../../lib/options';
 
-export default function ChannelList({ channels, tagSlugs }) {
+export default function ChannelList() {
   const {
     topicFilter,
     setTopicFilter,
@@ -27,11 +27,9 @@ export default function ChannelList({ channels, tagSlugs }) {
     setLanguageFilter,
     topicSort,
     setTopicSort,
-    offlineChannels,
-    setOfflineChannels,
   } = useContext(HomePageContext);
 
-  const { tagBySlug, slugByTag } = useTagSlugs();
+  const { tagBySlug } = useTagSlugs();
   const router = useRouter();
   const { query, isReady } = router;
 

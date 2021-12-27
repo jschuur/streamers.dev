@@ -1,5 +1,7 @@
-export default ({ username, children }) => (
-  <a target='_blank' href={`https://twitch.tv/${username}`}>
-    {children}
-  </a>
-);
+export default function TwitchLink({ username, children }) {
+  return (
+    <a target='_blank' href={`https://twitch.tv/${username}`} rel='noreferrer'>
+      {children}
+    </a>
+  );
+}

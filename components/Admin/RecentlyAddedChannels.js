@@ -19,11 +19,7 @@ function groupChannelsByDate(channels) {
 export default function RecentlyAddedChannels() {
   const { theme } = useTheme();
 
-  const {
-    isLoading,
-    error,
-    data: recentChannels,
-  } = useQuery('recentChannels', fetchRecentChannels);
+  const { isLoading, data: recentChannels } = useQuery('recentChannels', fetchRecentChannels);
 
   if (isLoading) return <Loader message='Loading recently added channels...' theme={theme} />;
 

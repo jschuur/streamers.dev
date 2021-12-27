@@ -7,7 +7,7 @@ import useChannelList from '../../hooks/useChannelList';
 import useFilterNav from '../../hooks/useFilterNav';
 
 export default function LiveChannels() {
-  const { visibleChannels, error, isFetching } = useChannelList();
+  const { visibleChannels, error } = useChannelList();
   const { theme } = useTheme();
   const filterNav = useFilterNav();
 

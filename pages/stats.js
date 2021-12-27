@@ -1,7 +1,5 @@
 import { sum } from 'lodash';
-import { NextSeo } from 'next-seo';
 import { useTheme } from 'next-themes';
-import pluralize from 'pluralize';
 import { useState, useEffect } from 'react';
 import Loader from '../components/Layout/Loader';
 

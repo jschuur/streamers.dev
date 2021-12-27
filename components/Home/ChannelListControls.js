@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react';
+import { useContext } from 'react';
 
 import StreamTags from './StreamTags';
 import ChannelViewerCounts from './ChannelViewerCounts';
@@ -13,14 +13,7 @@ import {
 } from '../../lib/options';
 
 function SortFilterButtons() {
-  const {
-    channelSort,
-    setChannelSort,
-    languageFilter,
-    setLanguageFilter,
-    categoryFilter,
-    setCategoryFilter,
-  } = useContext(HomePageContext);
+  const { channelSort, languageFilter, categoryFilter } = useContext(HomePageContext);
   const filterNav = useFilterNav();
 
   return (

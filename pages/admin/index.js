@@ -1,6 +1,5 @@
 import { getSession } from 'next-auth/react';
 import { NextSeo } from 'next-seo';
-import { useState, createContext } from 'react';
 import { ToastProvider } from 'react-toast-notifications';
 
 import Layout from '../../components/Layout/Layout';

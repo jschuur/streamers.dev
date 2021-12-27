@@ -5,7 +5,7 @@ import CountryFlags from './CountryFlags';
 import TwitchLink from './TwitchLink';
 
 export default function TwitchProfile({ channel, avatarSize = 'small' }) {
-  const { name, displayName, fullName, broadcasterType } = channel;
+  const { name, displayName, fullName } = channel;
 
   return (
     <div className={'w-48 align-top'}>

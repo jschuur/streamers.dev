@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useContext } from 'react';
 import { useToasts } from 'react-toast-notifications';
 import { useForm } from 'react-hook-form';
 

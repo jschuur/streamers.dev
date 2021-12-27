@@ -5,8 +5,6 @@ import Layout from '../components/Layout/Layout';
 import ChannelList from '../components/Home/ChannelList';
 import OfflineChannels from '../components/Home/OfflineChannels';
 
-import useTagSlugs from '../hooks/useTagSlugs';
-
 import { getKeywords } from '../lib/db';
 import { HomePageContext } from '../lib/stores';
 
@@ -27,7 +25,7 @@ export default function Home({ tagSlugs }) {
   );
 }
 
-export async function getStaticProps(context) {
+export async function getStaticProps() {
   const tags = await getKeywords();
 
   // Slugify handles most slugs, but the keyword list can define overrides

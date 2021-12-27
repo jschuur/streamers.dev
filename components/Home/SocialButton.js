@@ -18,7 +18,7 @@ function SocialLink({ network, channel, children }) {
   else if (network === 'instagram') link = `https://instagram.com/${link}`;
 
   return (
-    <a href={link} target='_blank'>
+    <a href={link} target='_blank' rel='noreferrer'>
       {children}
     </a>
   );

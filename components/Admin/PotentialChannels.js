@@ -1,6 +1,5 @@
 import { RefreshIcon, DotsVerticalIcon } from '@heroicons/react/solid';
 import { useTheme } from 'next-themes';
-import pluralize from 'pluralize';
 import { useState, useEffect } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 
@@ -11,7 +10,7 @@ import TwitchLink from '../Home/TwitchLink';
 import PopupMenu from '../PopupMenu';
 import { formatDurationShortNow } from '../../lib/util';
 
-import { NEW_STREAMER_AGE_DAYS, POTENTIAL_CHANNELS_AUTOREFRESH_SECONDS } from '../../lib/config';
+import { POTENTIAL_CHANNELS_AUTOREFRESH_SECONDS } from '../../lib/config';
 
 const numberFormat = new Intl.NumberFormat().format;
 
@@ -112,7 +111,6 @@ function callToast({ action, message, channel, setChannels }) {
 
 function PotentialChannelCard({ channel, setChannels }) {
   const { name, title, views, viewers, language, created_at } = channel;
-  const now = new Date();
 
   const channelAge = formatDurationShortNow({
     start: new Date(created_at),

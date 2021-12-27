@@ -1,8 +1,6 @@
 import AWS from 'aws-sdk';
-import { getMinutes } from 'date-fns';
 import { pick } from 'lodash';
 import minimist from 'minimist';
-import pluralize from 'pluralize';
 import prettyMilliseconds from 'pretty-ms';
 import 'dotenv/config';
 

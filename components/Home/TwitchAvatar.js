@@ -5,7 +5,7 @@ import TwitchLink from './TwitchLink';
 import { DEFAULT_AVATAR_URL } from '../../lib/config';
 import { profilePictureUrl } from '../../lib/util';
 
-export default function TwitchAvatar({ size = 'small', channel, src }) {
+export default function TwitchAvatar({ size = 'small', channel }) {
   const { name, displayName, broadcasterType } = channel;
 
   // Set up a fallback image, in case a new profile images hasn't been picked up yet by the DB

@@ -2,11 +2,9 @@ import { parseISO, differenceInMinutes } from 'date-fns';
 import pluralize from 'pluralize';
 
 import TwitchProfile from './TwitchProfile';
-import TwitchAvatar from './TwitchAvatar';
 import TwitchLink from './TwitchLink';
 import SocialButtons from './SocialButtons';
 import VideoThumbnail from './VideoThumbnail';
-import CountryFlags from './CountryFlags';
 import ChannelBadges from './ChannelBadges';
 
 import { formatDurationShortNow } from '../../lib/util';

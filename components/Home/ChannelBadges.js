@@ -7,14 +7,7 @@ import Badge from '../Badge';
 import { NEW_STREAMER_AGE_DAYS } from '../../lib/config';
 
 export default function ChannelBadges({
-  channel: {
-    displayName,
-    latestStreamLanguage,
-    latestStreamGameName,
-    channelType,
-    team,
-    creationDate,
-  },
+  channel: { latestStreamLanguage, latestStreamGameName, channelType, team, creationDate },
 }) {
   const teams = team ? team.split(',') : undefined;
 

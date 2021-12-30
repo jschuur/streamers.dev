@@ -64,7 +64,7 @@ export default function NavBar() {
         </NavLink>
       </div>
       <div className='pr-4'>
-        <NavLink href='/about'>About</NavLink>
+        <NavLink href='/explore'>Explore</NavLink>
       </div>
       <div className='pr-4'>
         <NavLink href='/stats'>Stats</NavLink>

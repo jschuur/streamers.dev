@@ -61,25 +61,23 @@ export function LineChart({ series, title, type, group, options: additionalOptio
     },
   });
 
-  return (
-    <div className='py-1'>
-      <Chart options={options} series={series} type={type} height={320} />
-    </div>
-  );
+  return <Chart options={options} series={series} type={type} height={320} />;
 }
 
 export function BarChart({ data, categories, title, group, options: additionalOptions }) {
-  const options = merge(initialChartOptions({ title, group }), additionalOptions, {
-    xaxis: {
-      categories,
-    },
-  });
-
-  return (
-    <div className='py-1'>
-      <Chart options={options} series={[{ name: title, data }]} type='bar' height={320} />
-    </div>
+  const options = merge(
+    initialChartOptions({ title, group }),
+    additionalOptions,
+    categories
+      ? {
+          xaxis: {
+            categories,
+          },
+        }
+      : {}
   );
+
+  return <Chart options={options} series={[{ name: title, data }]} type='bar' height={320} />;
 }
 
 export function PieChart({ series, labels, title, group, options: additionalOptions }) {
@@ -87,9 +85,5 @@ export function PieChart({ series, labels, title, group, options: additionalOpti
     labels,
   });
 
-  return (
-    <div className='py-1'>
-      <Chart options={options} series={series} type='pie' height={480} />
-    </div>
-  );
+  return <Chart options={options} series={series} type='pie' height={480} />;
 }

@@ -30,7 +30,7 @@ export default function LiveChannels() {
         or{' '}
         <a
           className='cursor-pointer'
-          href='https://www.twitch.tv/directory/game/Science%20%26%20Technology?tl=3dc8f084-d886-4264-b20f-8bd5f90562b5'
+          href='https://www.twitch.tv/directory/game/Animals%2C%20Aquariums%2C%20and%20Zoos'
         >
           watch some cute animals
         </a>{' '}

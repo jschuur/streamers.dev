@@ -5,10 +5,12 @@ import Layout from '../components/Layout/Layout';
 import ChannelList from '../components/Home/ChannelList';
 import OfflineChannels from '../components/Home/OfflineChannels';
 
-import { getKeywords } from '../lib/db';
+import { getKeywords, getLiveChannels } from '../lib/db';
 import { HomePageContext } from '../lib/stores';
 
-export default function Home({ tagSlugs }) {
+import { HOME_DATA_STALE_SECONDS } from '../lib/config';
+
+export default function Home({ tagSlugs, initialChannels }) {
   const { setTagSlugs } = useContext(HomePageContext);
 
   // Initialise the status list of tags and slugs loaded at build time
@@ -19,7 +21,7 @@ export default function Home({ tagSlugs }) {
       description='Discover Twitch live-coding channels featuring your favorite tech stacks.'
       url='https://streamers.dev'
     >
-      <ChannelList />
+      <ChannelList initialChannels={initialChannels} />
       <OfflineChannels />
     </Layout>
   );
@@ -34,7 +36,10 @@ export async function getStaticProps() {
     slug: slug || slugify(tag, { lower: true, remove: '.' }),
   }));
 
+  const initialChannels = await getLiveChannels();
+
   return {
-    props: { tagSlugs },
+    props: { tagSlugs, initialChannels },
+    revalidate: HOME_DATA_STALE_SECONDS,
   };
 }

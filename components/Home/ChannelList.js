@@ -15,7 +15,7 @@ import {
   topicSortOptions,
 } from '../../lib/options';
 
-export default function ChannelList() {
+export default function ChannelList({ initialChannels }) {
   const {
     topicFilter,
     setTopicFilter,
@@ -64,7 +64,7 @@ export default function ChannelList() {
   return (
     <Section>
       <ChannelListControls />
-      <LiveChannels />
+      <LiveChannels initialChannels={initialChannels} />
     </Section>
   );
 }

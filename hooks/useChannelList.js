@@ -35,22 +35,20 @@ function visibleChannelViewerCounts({ allChannels, visibleChannels }) {
   return { totalChannelCount, visibleChannelCount, totalViewerCount, visibleViewerCount };
 }
 
-export default function useChannelList() {
+export default function useChannelList({ initialChannels }) {
   const {
     languageFilter,
     categoryFilter,
     channelSort,
     topicSort,
-    streamTags,
     setStreamTags,
     topicFilter,
-    setTopicFilter,
     setLiveCounts,
     setChannelListMetaData,
   } = useContext(HomePageContext);
   const [allChannels, setAllChannels] = useState([]);
   const [visibleChannels, setVisibleChannels] = useState(null);
-  const { data, error, isFetching } = useLiveChannels();
+  const { data, error, isFetching } = useLiveChannels({ placeholderData: initialChannels });
 
   const sortStreamTags = ({ tags, topicSort }) =>
     topicSort === 0 ? sortBy(tags, 'count').reverse() : sortBy(tags, 'name');
@@ -68,7 +66,7 @@ export default function useChannelList() {
 
   // Update visibleChannels state if filter/sort options are changed
   useEffect(async () => {
-    if (allChannels.length) {
+    if (allChannels?.length) {
       let visibleChannels = sortBy(
         allChannels,
         channelSortOptions[channelSort].fieldName

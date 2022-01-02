@@ -4,6 +4,8 @@ import Section from '../components/Layout/Section';
 import { getStatsData } from '../lib/stats';
 import { useStatsData } from '../lib/api';
 
+import { STATS_DATA_STALE_SECONDS } from '../lib/config';
+
 import {
   ViewersChart,
   ChannelsChart,
@@ -61,6 +63,6 @@ export async function getStaticProps() {
     props: {
       cachedStatsData: await getStatsData(),
     },
-    revalidate: 600,
+    revalidate: STATS_DATA_STALE_SECONDS,
   };
 }

@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import { useContext } from 'react';
 import { useSession, signIn, signOut } from 'next-auth/react';
-import prettyMilliseconds from 'pretty-ms';
 
 import { adminAuthorised } from '../../lib/util';
 import { HomePageContext } from '../../lib/stores';
@@ -9,8 +8,7 @@ import { HomePageContext } from '../../lib/stores';
 export default function Footer() {
   const { data: session } = useSession();
   const { channelListMetaData } = useContext(HomePageContext);
-  const { trackedChannelCount, distinctCountryCount, updateTime, cacheFileSize } =
-    channelListMetaData || {};
+  const { trackedChannelCount, distinctCountryCount } = channelListMetaData || {};
 
   let extraFooter = [];
 
@@ -55,11 +53,6 @@ export default function Footer() {
       <a href='https://trello.com/b/a9k1kC65'>Work in progress</a> by{' '}
       <a href='https://twitch.tv/joostschuur/'>Joost Schuur</a>.{' '}
       <a href='https://twitter.com/StreamersDev'>@StreamersDev</a>
-      {updateTime &&
-        cacheFileSize &&
-        ` (${prettyMilliseconds(updateTime, { separateMilliseconds: true })}, ${Math.round(
-          cacheFileSize / 1024
-        )}k)`}
       {extraFooter}
     </footer>
   );

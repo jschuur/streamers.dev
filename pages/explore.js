@@ -6,6 +6,8 @@ import RecentStreamTopics from '../components/Explore/RecentStreamTopics';
 import { getExploreData } from '../lib/explore';
 import { useExploreData } from '../lib/api';
 
+import { EXPLORE_DATA_STALE_SECONDS } from '../lib/config';
+
 function ExploreSections({ data }) {
   if (!data) return <Section>Error: No explore data found</Section>;
 
@@ -36,6 +38,6 @@ export async function getStaticProps() {
     props: {
       cachedExploreData: await getExploreData(),
     },
-    revalidate: 600,
+    revalidate: EXPLORE_DATA_STALE_SECONDS,
   };
 }

@@ -10,9 +10,10 @@ import { HomePageContext } from '../../lib/stores';
 import { OFFLINE_CHANNELS_LIMIT, OFFLINE_CHANNELS_RECENT_DAYS } from '../../lib/config';
 
 export default function OfflineChannels() {
-  const { isLoading, error, data: offlineChannels } = useOfflineChannels();
   const { topicFilter } = useContext(HomePageContext);
+  if (!topicFilter) return null;
 
+  const { isLoading, error, data: offlineChannels } = useOfflineChannels();
   if (isLoading || !offlineChannels?.channels?.length) return null;
 
   if (error)

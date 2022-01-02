@@ -1,24 +1,15 @@
-import { useTheme } from 'next-themes';
-
 import ChannelListEntry from './ChannelListEntry';
-import Loader from '../Layout/Loader';
 
 import useChannelList from '../../hooks/useChannelList';
 import useFilterNav from '../../hooks/useFilterNav';
 
-export default function LiveChannels() {
-  const { visibleChannels, error } = useChannelList();
-  const { theme } = useTheme();
+export default function LiveChannels({ initialChannels }) {
+  const { visibleChannels, error } = useChannelList({ initialChannels });
   const filterNav = useFilterNav();
 
   if (error) return <div className='py-2'>Error: {error} </div>;
 
-  if (!visibleChannels)
-    return (
-      <div className='bg-gray-100 dark:bg-gray-700'>
-        <Loader message='Loading live channel list...' theme={theme} />
-      </div>
-    );
+  if (!visibleChannels) return null;
 
   if (!visibleChannels?.length)
     return (

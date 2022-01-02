@@ -4,9 +4,9 @@ import { getPotentialChannels } from '../../lib/channels';
 
 const handler = async (req, res) => {
   try {
-    const channels = await getPotentialChannels();
+    const potentialChannelData = await getPotentialChannels();
 
-    res.status(200).json({ channels });
+    res.status(200).json(potentialChannelData);
   } catch ({ message }) {
     res.status(500).json({ error: message });
   }

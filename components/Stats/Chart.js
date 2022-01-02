@@ -77,6 +77,7 @@ export function BarChart({ data, categories, title, group, options: additionalOp
       : {}
   );
 
+  // TODO: handle more than one dataset
   return <Chart options={options} series={[{ name: title, data }]} type='bar' height={320} />;
 }
 

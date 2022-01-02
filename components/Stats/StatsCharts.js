@@ -4,7 +4,7 @@ import { WorldMap } from 'react-svg-worldmap';
 import Section, { SectionHeader, SectionText, SectionBlock } from '../Layout/Section';
 import { LineChart, BarChart, PieChart } from '../Stats/Chart';
 
-import { formatPercentage } from '../../lib/util';
+import { formatPercentage, formatNumber } from '../../lib/util';
 
 const addValueToLegend = (seriesName, opts) =>
   `${seriesName} (${opts.w.globals.series[opts.seriesIndex]})`;
@@ -12,7 +12,7 @@ const addValueToLegend = (seriesName, opts) =>
 export function ViewersChart({ data }) {
   return (
     <Section>
-      <SectionHeader id={'viewers'}>Viewers</SectionHeader>
+      <SectionHeader id={'viewers'}>Concurrent Live Viewers</SectionHeader>
 
       <SectionBlock>
         <LineChart type='area' group='viewer_channels' series={data} />
@@ -24,7 +24,7 @@ export function ViewersChart({ data }) {
 export function ChannelsChart({ data }) {
   return (
     <Section>
-      <SectionHeader id={'channels'}>Channels</SectionHeader>
+      <SectionHeader id={'channels'}>Concurrent Live Channels</SectionHeader>
 
       <SectionBlock>
         <LineChart type='area' group='viewer_channels' series={data} />
@@ -36,7 +36,9 @@ export function ChannelsChart({ data }) {
 export function StreamsChart({ data }) {
   return (
     <Section>
-      <SectionHeader id={'streamsByDay'}>{`Streams By Day (${sumBy(data, 'y')})`}</SectionHeader>
+      <SectionHeader id={'streamsByDay'}>{`Streams by Day (${formatNumber(
+        sumBy(data, 'y')
+      )})`}</SectionHeader>
 
       <SectionBlock>
         <BarChart
@@ -64,7 +66,7 @@ export function LanguagesCharts({ data: { languagesByStreamsSeries, languagesByV
       <div className='grid grid-cols-1 md:grid-cols-2'>
         <div>
           <SectionHeader id={'langByLiveStreams'}>
-            {`Languages by Live Streams (${sum(languagesByStreamsSeries.data)})`}
+            {`Languages by Live Streams (${formatNumber(sum(languagesByStreamsSeries.data))})`}
           </SectionHeader>
 
           <SectionBlock>
@@ -78,7 +80,7 @@ export function LanguagesCharts({ data: { languagesByStreamsSeries, languagesByV
         </div>
         <div>
           <SectionHeader id={'langByLiveViewers'}>
-            {`Languages by Live Viewers (${sum(languagesByViewersSeries.data)})`}
+            {`Languages by Live Viewers (${formatNumber(sum(languagesByViewersSeries.data))})`}
           </SectionHeader>
 
           <SectionBlock>
@@ -109,7 +111,7 @@ export function OriginsCharts({ data: { countriesByStreamsSeries, countriesByVie
       <div className='grid grid-cols-1 md:grid-cols-2'>
         <div>
           <SectionHeader id={'originByLiveStreams'}>
-            {`Channel Origin by Live Streams (${sum(countriesByStreamsSeries.data)})`}
+            {`Channel Origin by Live Streams (${formatNumber(sum(countriesByStreamsSeries.data))})`}
           </SectionHeader>
 
           <SectionBlock>
@@ -122,7 +124,7 @@ export function OriginsCharts({ data: { countriesByStreamsSeries, countriesByVie
         </div>
         <div>
           <SectionHeader id={'originByLivewViewers'}>
-            {`Channel Origin by Live Viewers (${sum(countriesByViewersSeries.data)})`}
+            {`Channel Origin by Live Viewers (${formatNumber(sum(countriesByViewersSeries.data))})`}
           </SectionHeader>
 
           <SectionBlock>
@@ -151,11 +153,18 @@ export function ChannelMap({ data: { countries, channelsWithCountriesCount, tota
       <SectionHeader id={'map'}>Total Channels Tracked by Location</SectionHeader>
 
       <SectionBlock>
-        <WorldMap color='#6441a5' valueSuffix='channels' size='responsive' data={countries} />
+        <WorldMap
+          color='#6441a5'
+          valueSuffix='channels'
+          size='responsive'
+          data={countries}
+          richInteraction
+        />
       </SectionBlock>
 
       <SectionText>
-        {countries.length} countries and regions, based on {channelsWithCountriesCount} channels (
+        {countries.length} countries and regions, based on{' '}
+        {formatNumber(channelsWithCountriesCount)} channels (
         {formatPercentage(channelsWithCountriesCount / totalChannels)} of total tracked) with an
         identified location.
       </SectionText>
@@ -166,7 +175,9 @@ export function ChannelMap({ data: { countries, channelsWithCountriesCount, tota
 export function LastStreamAgeChart({ data: { categories, data } }) {
   return (
     <Section>
-      <SectionHeader id={'channelsByLastStreamed'}>Channels by Last Streamed Age</SectionHeader>
+      <SectionHeader id={'channelsByLastStreamed'}>
+        Channels by Time Since Last Streamed
+      </SectionHeader>
 
       <SectionBlock>
         <BarChart categories={categories} data={data} />

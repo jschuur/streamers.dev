@@ -3,9 +3,9 @@ import { getSession } from 'next-auth/react';
 import { ToastProvider } from 'react-toast-notifications';
 
 import Layout from '../../components/Layout/Layout';
+import PotentialChannels from '../../components/Admin/PotentialChannels';
 
 import { adminAuthorised } from '../../lib/util';
-import PotentialChannels from '../../components/Admin/PotentialChannels';
 
 export default function AdminLive() {
   return (

@@ -4,9 +4,9 @@ import { getStatsData } from '../../lib/stats';
 
 const handler = async (req, res) => {
   try {
-    const stats = await getStatsData();
+    const statsData = await getStatsData();
 
-    res.status(200).json({ stats });
+    res.status(200).json(statsData);
   } catch ({ message }) {
     res.status(500).json({ error: message });
   }

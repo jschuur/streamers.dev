@@ -4,15 +4,22 @@ import TwitchAvatar from './TwitchAvatar';
 import CountryFlags from './CountryFlags';
 import TwitchLink from './TwitchLink';
 
-export default function TwitchProfile({ channel, avatarSize = 'small' }) {
-  const { name, displayName, fullName } = channel;
+export default function TwitchProfile({
+  channel,
+  avatarSize = 'small',
+  includeStreamCount = false,
+}) {
+  const { name, displayName, fullName, streamCount } = channel;
 
   return (
     <div className={'w-48 align-top'}>
       <div className='flex flex-col'>
         {/* Channel display name  */}
-        <div className='text-base sm:text-lg'>
+        <div className='text-base sm:text-lg whitespace-nowrap'>
           <TwitchLink username={name}>{displayName}</TwitchLink>
+          {includeStreamCount && streamCount && (
+            <span className='text-slate-400 dark:text-slate-200'> ({streamCount})</span>
+          )}
         </div>
         {/* Channel full name and avatar */}
         <div className='flex'>

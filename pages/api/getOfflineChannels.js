@@ -5,9 +5,9 @@ import { getOfflineChannels } from '../../lib/db';
 const handler = async (req, res) => {
   try {
     const { topic, lang } = req.query;
-    const channels = await getOfflineChannels({ topic, lang });
+    const offlineChannelData = await getOfflineChannels({ topic, lang });
 
-    res.status(200).json({ channels });
+    res.status(200).json(offlineChannelData);
   } catch ({ message }) {
     res.status(500).json({ error: message });
   }

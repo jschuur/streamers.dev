@@ -2,7 +2,6 @@ import { NextSeo } from 'next-seo';
 import { getSession } from 'next-auth/react';
 
 import Layout from '../../components/Layout/Layout';
-import Section from '../../components/Layout/Section';
 import RecentlyAddedChannels from '../../components/Admin/RecentlyAddedChannels';
 
 import { adminAuthorised } from '../../lib/util';
@@ -12,9 +11,7 @@ export default function AdminRecent() {
     <Layout page='Admin Dashboard - Recently Added Channels'>
       <NextSeo noindex nofollow />
 
-      <Section className='p-2'>
-        <RecentlyAddedChannels />
-      </Section>
+      <RecentlyAddedChannels />
     </Layout>
   );
 }

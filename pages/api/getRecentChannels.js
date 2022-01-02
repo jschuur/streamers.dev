@@ -4,11 +4,9 @@ import { getRecentChannels } from '../../lib/db';
 
 const handler = async (req, res) => {
   try {
-    const channels = await getRecentChannels();
+    const recentChannelData = await getRecentChannels();
 
-    res.status(200).json({
-      channels,
-    });
+    res.status(200).json(recentChannelData);
   } catch ({ message }) {
     res.status(500).json({ error: message });
   }

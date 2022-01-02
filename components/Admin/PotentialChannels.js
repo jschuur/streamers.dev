@@ -1,16 +1,16 @@
 import { RefreshIcon, DotsVerticalIcon } from '@heroicons/react/solid';
 import { useTheme } from 'next-themes';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 
-import Section from '../Layout/Section';
+import Section, { SectionBlock } from '../Layout/Section';
 import Loader from '../Layout/Loader';
 import VideoThumbnail from '../Home/VideoThumbnail';
 import TwitchLink from '../Home/TwitchLink';
 import PopupMenu from '../PopupMenu';
-import { formatDurationShortNow } from '../../lib/util';
 
-import { POTENTIAL_CHANNELS_AUTOREFRESH_SECONDS } from '../../lib/config';
+import { formatDurationShortNow } from '../../lib/util';
+import { usePotentialChannels } from '../../lib/api';
 
 const numberFormat = new Intl.NumberFormat().format;
 
@@ -142,35 +142,8 @@ function PotentialChannelCard({ channel, setChannels }) {
   );
 }
 
-function PotentialChannelList() {
-  const [channels, setChannels] = useState(null);
-  const [isRefreshing, setIsRefreshing] = useState(false);
-  const { theme } = useTheme();
-
-  async function getPotentialChannels() {
-    setIsRefreshing(true);
-    const response = await fetch('/api/getPotentialChannels');
-    const data = await response.json();
-    setIsRefreshing(false);
-
-    if (!data.error) setChannels(data.channels);
-  }
-
-  useEffect(() => {
-    getPotentialChannels();
-
-    // Update the list every 10 minutes
-    const timer = setInterval(() => {
-      if (isRefreshing) return;
-
-      getPotentialChannels();
-    }, POTENTIAL_CHANNELS_AUTOREFRESH_SECONDS * 1000);
-
-    return () => clearInterval(timer);
-  }, []);
-
-  if (!channels)
-    return <Loader message='Finding potential live coding channels...' theme={theme} />;
+function PotentialChannelList({ refetch, isRefetching, initialChannels }) {
+  const [channels, setChannels] = useState(initialChannels);
 
   return (
     <>
@@ -178,10 +151,10 @@ function PotentialChannelList() {
         <div className='flex-grow'>
           Currently live, potential channels ({channels?.length || 0})
         </div>
-        <div onClick={getPotentialChannels}>
+        <div onClick={refetch}>
           <RefreshIcon
             className={`${
-              isRefreshing && 'animate-spin transform rotate-180'
+              isRefetching && 'animate-spin transform rotate-180'
             } h-5 w-5 mt-2 mr-2 cursor-pointer`}
           />
         </div>
@@ -201,10 +174,29 @@ function PotentialChannelList() {
 }
 
 export default function PotentialChannels() {
+  const { theme } = useTheme();
+
+  const { data, isLoading, refetch, isRefetching } = usePotentialChannels();
+
+  if (isLoading)
+    return (
+      <Section>
+        <Loader message='Finding potential live coding channels...' theme={theme} />
+      </Section>
+    );
+
+  if (!data || !data.channels) return <Section>Error: No live channels data found</Section>;
+
   return (
-    <Section className='p-2'>
+    <Section>
       <Toaster />
-      <PotentialChannelList />
+      <SectionBlock>
+        <PotentialChannelList
+          initialChannels={data.channels}
+          refetch={refetch}
+          isRefetching={isRefetching}
+        />
+      </SectionBlock>
     </Section>
   );
 }

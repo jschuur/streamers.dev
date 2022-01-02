@@ -15,7 +15,7 @@ export default function LiveChannels() {
 
   if (!visibleChannels)
     return (
-      <div className='py-2 bg-gray-100 dark:bg-gray-700'>
+      <div className='bg-gray-100 dark:bg-gray-700'>
         <Loader message='Loading live channel list...' theme={theme} />
       </div>
     );

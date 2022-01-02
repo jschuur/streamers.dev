@@ -30,7 +30,7 @@ export default function TwitchProfile({
             <CountryFlags channel={channel} />
           </div>
         </div>
-        <div className='sm:text-lg font-light text-gray-500 dark:text-gray-300 mt-1'>
+        <div className='text-sm sm:text-base font-light text-gray-500 dark:text-gray-300 mt-1'>
           {fullName}
         </div>
       </div>

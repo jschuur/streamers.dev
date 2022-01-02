@@ -25,14 +25,17 @@ export default function OfflineChannels() {
 
   return (
     <Section>
-      <SectionHeader iid={'recent'}>Recently online for '{topicFilter}'</SectionHeader>
+      <SectionHeader iid={'recent'}>
+        Recently online for '{topicFilter}' (Stream Count)
+      </SectionHeader>
       <SectionBlock>
         <ChannelGrid channels={offlineChannels.channels} />
       </SectionBlock>
 
       <SectionText>
         Online in the last {pluralize('day', OFFLINE_CHANNELS_RECENT_DAYS, true)}, identified by
-        Twitch tags and title keywords (max {pluralize('channel', OFFLINE_CHANNELS_LIMIT, true)}).
+        Twitch tags and title keywords, ranked by total peak view count (max{' '}
+        {pluralize('channel', OFFLINE_CHANNELS_LIMIT, true)}).
       </SectionText>
     </Section>
   );

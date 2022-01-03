@@ -1,4 +1,5 @@
 import { sum, sumBy } from 'lodash';
+import pluralize from 'pluralize';
 import { WorldMap } from 'react-svg-worldmap';
 
 import Section, { SectionHeader, SectionText, SectionBlock } from '../Layout/Section';
@@ -6,8 +7,15 @@ import { LineChart, BarChart, PieChart } from '../Stats/Chart';
 
 import { formatPercentage, formatNumber } from '../../lib/util';
 
+import { STATS_RECENT_STREAMS_DAYS } from '../../lib/config';
+
 const addValueToLegend = (seriesName, opts) =>
   `${seriesName} (${opts.w.globals.series[opts.seriesIndex]})`;
+
+const addValueAndPercentageToLegend = (seriesName, opts) =>
+  `${seriesName}:  ${formatNumber(opts.w.globals.series[opts.seriesIndex])} (${formatPercentage(
+    opts.w.globals.series[opts.seriesIndex] / sum(opts.w.globals.series)
+  )})`;
 
 export function ViewersChart({ data }) {
   return (
@@ -36,9 +44,7 @@ export function ChannelsChart({ data }) {
 export function StreamsChart({ data }) {
   return (
     <Section>
-      <SectionHeader id={'streamsByDay'}>{`Streams by Day (${formatNumber(
-        sumBy(data, 'y')
-      )})`}</SectionHeader>
+      <SectionHeader id={'streamsByDay'}>{`Streams by Day`}</SectionHeader>
 
       <SectionBlock>
         <BarChart
@@ -51,11 +57,16 @@ export function StreamsChart({ data }) {
               ({ dataPointIndex }) => (dataPointIndex === data.length - 1 ? '#FF4460' : '#008FFB'),
             ],
           }}
+          name={'Streams'}
           data={data}
         />
       </SectionBlock>
 
-      <SectionText>Currently counts coding and non coding streams.</SectionText>
+      <SectionText>
+        {formatNumber(sumBy(data, 'y'), 'stream')} in the last{' '}
+        {pluralize('day', STATS_RECENT_STREAMS_DAYS, true)}. Currently counts coding and non coding
+        streams.
+      </SectionText>
     </Section>
   );
 }
@@ -100,6 +111,44 @@ export function LanguagesCharts({ data: { languagesByStreamsSeries, languagesByV
           language
         </a>{' '}
         of the streamer being watched, not Twitch language tags or viewer language preferences.
+      </SectionText>
+    </Section>
+  );
+}
+
+export function AccountTypeCharts({ data: { channelTypeSeries, broadcasterTypeSeries } }) {
+  return (
+    <Section>
+      <div className='grid grid-cols-1 md:grid-cols-2'>
+        <div>
+          <SectionHeader id={'broadcasterType'}>{`Twitch Broadcaster Types`}</SectionHeader>
+
+          <SectionBlock>
+            <PieChart
+              section={false}
+              options={{ legend: { position: 'bottom', formatter: addValueAndPercentageToLegend } }}
+              labels={broadcasterTypeSeries.labels}
+              series={broadcasterTypeSeries.data}
+            />
+          </SectionBlock>
+        </div>
+        <div>
+          <SectionHeader id={'channelType'}>{`Channel Types`}</SectionHeader>
+
+          <SectionBlock>
+            <PieChart
+              section={false}
+              options={{ legend: { position: 'bottom', formatter: addValueAndPercentageToLegend } }}
+              labels={channelTypeSeries.labels}
+              series={channelTypeSeries.data}
+            />
+          </SectionBlock>
+        </div>
+      </div>
+
+      <SectionText>
+        'Standard' channels are any that are not Twitch Partner or Affiliate. Channel types is based
+        on manual curation.
       </SectionText>
     </Section>
   );
@@ -180,7 +229,7 @@ export function LastStreamAgeChart({ data: { categories, data } }) {
       </SectionHeader>
 
       <SectionBlock>
-        <BarChart categories={categories} data={data} />
+        <BarChart name={'Channels'} categories={categories} data={data} />
       </SectionBlock>
     </Section>
   );

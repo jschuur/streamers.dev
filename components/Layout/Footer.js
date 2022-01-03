@@ -20,7 +20,7 @@ export default function Footer() {
         <Link href='/stats'>
           <a>{trackedChannelCount}</a>
         </Link>{' '}
-        channels and {distinctCountryCount} countries.
+        channels and {distinctCountryCount} countries and regions.
       </span>
     );
   }

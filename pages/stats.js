@@ -14,7 +14,7 @@ import {
   OriginsCharts,
   ChannelMap,
   LastStreamAgeChart,
-  TotalChannelsChart,
+  AccountTypeCharts,
 } from '../components/Stats/StatsCharts';
 
 export function StatsCharts({ data }) {
@@ -39,7 +39,12 @@ export function StatsCharts({ data }) {
       />
       <ChannelMap data={data.countriesByStreamersMapData} />
       <LastStreamAgeChart data={data.daysSinceOnlineSeries} />
-      <TotalChannelsChart data={data.trackedChannelSeries} />
+      <AccountTypeCharts
+        data={{
+          channelTypeSeries: data.channelTypeSeries,
+          broadcasterTypeSeries: data.broadcasterTypeSeries,
+        }}
+      />
     </>
   );
 }

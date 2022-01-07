@@ -1,5 +1,6 @@
 import { parseISO, differenceInMinutes } from 'date-fns';
 import pluralize from 'pluralize';
+import { useSession } from 'next-auth/react';
 
 import TwitchProfile from './TwitchProfile';
 import TwitchLink from './TwitchLink';
@@ -7,7 +8,7 @@ import SocialButtons from './SocialButtons';
 import VideoThumbnail from './VideoThumbnail';
 import ChannelBadges from './ChannelBadges';
 
-import { formatDurationShortNow } from '../../lib/util';
+import { formatDurationShortNow, adminAuthorised } from '../../lib/util';
 
 import {
   STREAM_RECENT_MINUTES,
@@ -32,12 +33,20 @@ export default function ChannelListEntry({ channel, channelIndex = 0 }) {
     format: ['days', 'hours', 'minutes'],
   });
 
+  const { data: session } = useSession();
+  const isAdmin = session && adminAuthorised({ session });
+
   // If a stream title contains a word that is too long, use break-words.
   const breakWords = channel.latestStreamTitle
     .split(/\s+/)
     .some((word) => word.length > STREAM_TITLE_WORD_LENGTH_BREAK_WORDS);
 
-  const openProfile = () => window.open(`https://twitch.tv/${channel.name}`, '_blank');
+  const tweetMessage = `Interesting stream, by ${
+    channel.twitter ? `@${channel.twitter}` : channel.displayName
+  }: ${channel.latestStreamTitle}\n\nhttps://twitch.tv/${channel.name}`;
+  const tweetStream = () =>
+    isAdmin &&
+    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetMessage)}`);
 
   return (
     <>
@@ -58,7 +67,7 @@ export default function ChannelListEntry({ channel, channelIndex = 0 }) {
       {/* Stream details */}
       <div className={`py-2 px-2 align-top  ${rowColor}`}>
         <ChannelBadges channel={channel} />
-        <div className='cursor-pointer' onClick={openProfile}>
+        <div>
           <div
             className={`text-sm sm:text-base font-light text-gray-900 dark:text-gray-300 break-words md:${
               breakWords ? 'break-words' : 'break-normal'
@@ -76,7 +85,9 @@ export default function ChannelListEntry({ channel, channelIndex = 0 }) {
             {channel.latestStreamViewers >= MIN_VISIBLE_VIEWER_COUNT && (
               <>{pluralize('viewers', channel.latestStreamViewers, true)}, </>
             )}
-            live for {streamAge}
+            <span onClick={() => tweetStream()} className={isAdmin && 'cursor-pointer'}>
+              live for {streamAge}
+            </span>
           </div>
         </div>
         <SocialButtons channel={channel} />

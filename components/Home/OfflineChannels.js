@@ -34,7 +34,7 @@ export default function OfflineChannels() {
 
       <SectionText>
         Online in the last {pluralize('day', OFFLINE_CHANNELS_RECENT_DAYS, true)}, identified by
-        Twitch tags and title keywords, ranked by total peak view count (max{' '}
+        Twitch tags and title keywords, ranked by total peak viewer count (max{' '}
         {pluralize('channel', OFFLINE_CHANNELS_LIMIT, true)}).
       </SectionText>
     </Section>

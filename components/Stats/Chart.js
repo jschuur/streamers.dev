@@ -1,3 +1,4 @@
+import { format } from 'date-fns';
 import dynamic from 'next/dynamic';
 import { merge } from 'lodash';
 
@@ -38,7 +39,7 @@ export function LineChart({ series, title, type, group, options: additionalOptio
   const options = merge(initialChartOptions({ title, group }), additionalOptions, {
     tooltip: {
       x: {
-        format: 'dd MMM (H TT GMT)',
+        formatter: (timestamp) => format(new Date(timestamp), 'dd MMM (H aa O)'),
       },
     },
     xaxis: {

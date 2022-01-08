@@ -1,5 +1,3 @@
-import AWS from 'aws-sdk';
-import { pick } from 'lodash';
 import minimist from 'minimist';
 import prettyMilliseconds from 'pretty-ms';
 import 'dotenv/config';
@@ -10,16 +8,8 @@ const argv = minimist(process.argv.slice(2), {
 });
 
 import { updateAllChannelDetails, updateAllChannelStatuses } from '../lib/channels';
-import {
-  getChannels,
-  getTrackedChannelCount,
-  getDistinctCountryCount,
-  disconnectDB,
-} from '../lib/db';
-import { isProd } from '../lib/util';
+import { disconnectDB } from '../lib/db';
 import logger from '../lib/logger';
-
-import { TWITCH_CHANNEL_FIELDS } from '../lib/config';
 
 // Definitions to stagger checks for channels that haven't been live for a while,
 // to avoid hitting the Twitch API too often.
@@ -47,50 +37,6 @@ const updateRanges = [
     updatePercentage: 0.2,
   },
 ];
-
-const s3 = new AWS.S3({
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  region: process.env.AWS_REGION,
-});
-
-async function saveToS3({ fileName, body }) {
-  const params = {
-    Bucket: process.env.AWS_BUCKET,
-    Key: fileName,
-    Body: JSON.stringify(body),
-    CacheControl: 'max-age=0',
-    ContentType: 'text/json',
-  };
-
-  return s3.upload(params).promise();
-}
-
-async function saveLiveChannelCachedList({ start }) {
-  logger.info('Saving live channel JSON to S3...');
-
-  const fileName = isProd() ? 'live_channels.json' : 'live_channels_dev.json';
-  const channels = await getChannels({ isLive: true });
-
-  try {
-    await saveToS3({
-      fileName,
-      body: {
-        createdAt: new Date(),
-        updateTime: new Date() - start,
-        trackedChannelCount: await getTrackedChannelCount(),
-        distinctCountryCount: await getDistinctCountryCount(),
-        channels: channels.map((channel) => pick(channel, TWITCH_CHANNEL_FIELDS)),
-      },
-    });
-
-    logger.info(
-      `...file uploaded successfully: ${process.env.NEXT_PUBLIC_CACHED_CHANNELLIST_URL}/${fileName}`
-    );
-  } catch ({ message }) {
-    logger.error(`...error uploading to S3: ${message}`);
-  }
-}
 
 async function updateRange({ range, now }) {
   const { description, ...rangeOptions } = range;
@@ -134,8 +80,6 @@ async function updateRange({ range, now }) {
         ? updateAllChannelDetails(updateOptions)
         : updateAllChannelStatuses(updateOptions));
     }
-
-    await saveLiveChannelCachedList({ start });
   } catch ({ message }) {
     logger.error(`Problem updating all channels: ${message}`);
   }

@@ -1,10 +1,13 @@
 import { sum, sumBy } from 'lodash';
+import { useTheme } from 'next-themes';
 import pluralize from 'pluralize';
 import { WorldMap } from 'react-svg-worldmap';
+import { useRef, useEffect, useState } from 'react';
 
 import Section, { SectionHeader, SectionText, SectionBlock } from '../Layout/Section';
 import { LineChart, BarChart, PieChart } from '../Stats/Chart';
 
+import useRefWidth from '../../hooks/useRefWidth';
 import { formatPercentage, formatNumber } from '../../lib/util';
 
 import { STATS_RECENT_STREAMS_DAYS } from '../../lib/config';
@@ -197,18 +200,35 @@ export function OriginsCharts({ data: { countriesByStreamsSeries, countriesByVie
 }
 
 export function ChannelMap({ data: { countries, channelsWithCountriesCount, totalChannels } }) {
+  const ref = useRef();
+  const { theme } = useTheme();
+  const { width } = useRefWidth(ref);
+  const [mapColors, setMapColors] = useState();
+
+  useEffect(() => {
+    setMapColors({
+      color: theme === 'dark' ? 'white' : '#6441a5',
+      backgroundColor: theme === 'dark' ? '#4B5563' : 'white',
+    });
+  }, [theme]);
+
   return (
     <Section>
       <SectionHeader id={'map'}>Total Channels Tracked by Location</SectionHeader>
 
       <SectionBlock>
-        <WorldMap
-          color='#6441a5'
-          valueSuffix='channels'
-          size='responsive'
-          data={countries}
-          richInteraction
-        />
+        <div ref={ref}>
+          {width && (
+            <WorldMap
+              color={mapColors.color}
+              backgroundColor={mapColors.backgroundColor}
+              valueSuffix='channels'
+              size={width}
+              data={countries}
+              richInteraction
+            />
+          )}
+        </div>
       </SectionBlock>
 
       <SectionText>

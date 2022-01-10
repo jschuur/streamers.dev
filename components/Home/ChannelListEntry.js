@@ -1,5 +1,6 @@
 import { parseISO, differenceInMinutes } from 'date-fns';
 import pluralize from 'pluralize';
+import { useContext } from 'react';
 import { useSession } from 'next-auth/react';
 
 import TwitchProfile from './TwitchProfile';
@@ -9,6 +10,8 @@ import VideoThumbnail from './VideoThumbnail';
 import ChannelBadges from './ChannelBadges';
 
 import { formatDurationShortNow, adminAuthorised } from '../../lib/util';
+import { hasGameDevStreamTag } from '../../lib/util';
+import { HomePageContext } from '../../lib/stores';
 
 import {
   STREAM_RECENT_MINUTES,
@@ -19,11 +22,16 @@ import {
 } from '../../lib/config';
 
 export default function ChannelListEntry({ channel, channelIndex = 0 }) {
+  const { topicFilter } = useContext(HomePageContext);
+
   const startDate = parseISO(channel.latestStreamStartedAt),
     now = new Date();
+
   const rowColor =
     channel.channelType === 'BRAND'
       ? 'bg-purple-100 dark:bg-indigo-800'
+      : hasGameDevStreamTag(channel.latestStreamTags) && !hasGameDevStreamTag(topicFilter)
+      ? 'bg-green-100 dark:bg-green-800'
       : channelIndex % 2 === 0
       ? 'bg-white dark:bg-gray-600'
       : 'bg-gray-100 dark:bg-gray-700';

@@ -5,6 +5,7 @@ import Badge from '../Badge';
 
 import useFilterNav from '../../hooks/useFilterNav';
 
+import { gameDevStreamTags } from '../../lib/config';
 import { HomePageContext } from '../../lib/stores';
 import { topicSortOptions } from '../../lib/options';
 
@@ -16,7 +17,7 @@ function StreamTagsEntry({ name, count }) {
 
   if (name !== topicFilter) {
     onClick = () => filterNav({ topicFilter: name });
-    color = 'blue';
+    color = gameDevStreamTags.includes(name) ? 'green' : 'blue';
   }
 
   return (
@@ -43,7 +44,7 @@ function StreamTagsReset() {
     color = 'purple';
   } else {
     onClick = () => filterNav({ topicSort: (topicSort + 1) % topicSortOptions.length });
-    color = 'green';
+    color = 'red';
   }
 
   return (

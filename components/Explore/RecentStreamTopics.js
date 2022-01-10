@@ -42,11 +42,7 @@ export default function RecentStreamTopics({ topics }) {
         {formatNumber(topics.length, 'topic')} across{' '}
         {formatNumber(sumBy(topics, 'count'), 'stream')} in the last{' '}
         {formatNumber(EXPLORE_RECENT_STREAM_TOPICS_DAYS, 'day')}, identified by Twitch tags and
-        title keywords. Only a small subset of Twitch{' '}
-        <a href='https://www.twitch.tv/directory/game/Software%20and%20Game%20Development?tl=f588bd74-e496-4d11-9169-3597f38a5d25'>
-          game development streams
-        </a>{' '}
-        currently tracked.
+        title keywords.
       </SectionText>
     </Section>
   );

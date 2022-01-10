@@ -4,30 +4,43 @@ import { by639_1 } from 'iso-language-codes';
 
 import Badge from '../Badge';
 
+import { hasGameDevStreamTag } from '../../lib/util';
+
 import { NEW_STREAMER_AGE_DAYS } from '../../lib/config';
 
-export default function ChannelBadges({
-  channel: { latestStreamLanguage, latestStreamGameName, channelType, team, creationDate },
-}) {
+export default function ChannelBadges({ channel }) {
+  const {
+    latestStreamLanguage,
+    latestStreamGameName,
+    latestStreamTags,
+    channelType,
+    team,
+    creationDate,
+  } = channel;
   const teams = team ? team.split(',') : undefined;
 
   return (
     <>
       {latestStreamLanguage && latestStreamLanguage !== 'en' && (
-        <Badge key={1} color='green'>
+        <Badge key={'lang'} color='yellow'>
           🗣 {by639_1[latestStreamLanguage]?.name || latestStreamLanguage}
+        </Badge>
+      )}
+      {latestStreamTags && hasGameDevStreamTag(channel.latestStreamTags) && (
+        <Badge key={'gamedev'} color='green'>
+          GameDev
         </Badge>
       )}
       {latestStreamGameName &&
         !['Science & Technology', 'Software and Game Development'].includes(
           latestStreamGameName
         ) && (
-          <Badge key={2} color='red'>
+          <Badge key={'gamename'} color='red'>
             In: {latestStreamGameName}
           </Badge>
         )}
       {channelType && channelType !== 'USER' && (
-        <Badge key={3} color='yellow'>
+        <Badge key={'channeltype'} color='cyan'>
           {capitalize(channelType.toLowerCase())}
         </Badge>
       )}
@@ -38,7 +51,7 @@ export default function ChannelBadges({
           </Badge>
         ))}
       {differenceInDays(new Date(), parseISO(creationDate)) <= NEW_STREAMER_AGE_DAYS && (
-        <Badge key={4} color='gray'>
+        <Badge key={'newstreamer'} color='gray'>
           New Streamer
         </Badge>
       )}

@@ -4,12 +4,7 @@ import prettyMilliseconds from 'pretty-ms';
 import 'dotenv/config';
 
 import { twitchGetStreamsAll, twitchGetUsersByIds } from '../lib/twitch_api';
-import {
-  findChannelGameNames,
-  codingTagIds,
-  gameCodingTagIds,
-  findChannelTags,
-} from '../lib/config';
+import { findChannelGameNames, findChannelTags } from '../lib/config';
 import prisma from '../lib/prisma';
 import logger from '../lib/logger';
 import { addOrUpdateQueueItem } from '../lib/db';
@@ -42,7 +37,6 @@ async function saveNewChannels({ streams, tagName }) {
   const result = await twitchGetUsersByIds(map(streams, 'userId'));
   const twitchUsers = keyBy(result, 'id');
   let newQueuedCount = 0;
-  const now = new Date();
 
   logger.info(`Attempting to queue new pending channels...`);
 

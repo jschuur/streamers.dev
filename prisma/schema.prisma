@@ -73,6 +73,7 @@ model Stream {
 
   twitchStreamId          String        @unique
   isCoding                Boolean       @default(false)
+  streamType              StreamType[]
   isLive                  Boolean       @default(false)
   title                   String?
   viewers                 Int?
@@ -87,6 +88,15 @@ model Stream {
 
   startedAt               DateTime
   lastOnline              DateTime?
+}
+
+enum StreamType {
+  CODING
+  GAMEDEV
+  INFOSEC
+  CHATTING
+  OTHER
+  UNKNOWN
 }
 
 model Snapshot {

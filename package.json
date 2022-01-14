@@ -20,7 +20,7 @@
     "update:snapshots:prod": "dotenv -e .env.production babel-node -- --config-file ./util/.babelrc.json util/generateSnapshots.js",
     "update:channels:full": "babel-node --config-file ./util/.babelrc.json util/updateAllChannels.js --fullDetails",
     "update:channels:prod": "dotenv -e .env.production babel-node -- --config-file ./util/.babelrc.json util/updateAllChannels.js",
-    "update:channels:prod:full": "dotenv -e .env.production babel-node -- --config-file ./util/.babelrc.json util/updateAllChannels.js -- --fullDetails",
+    "update:channels:prod:full": "dotenv -e .env.production babel-node -- --config-file ./util/.babelrc.json util/updateAllChannels.js --fullDetails",
     "update:tags": "babel-node --config-file ./util/.babelrc.json util/getAllTags.js",
     "deploy": "[[ `git symbolic-ref --short -q HEAD` = 'main' ]] && git checkout production && git merge main && git push && git checkout main",
     "deploy:backend": "ssh node 'cd streamers.dev && npm run update:backend'",

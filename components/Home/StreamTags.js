@@ -12,16 +12,18 @@ import { topicSortOptions } from '../../lib/options';
 function StreamTagsEntry({ name, count }) {
   const { topicFilter } = useContext(HomePageContext);
   const filterNav = useFilterNav();
+  const gameDev = gameDevStreamTags.includes(name);
 
   let onClick, color;
 
   if (name !== topicFilter) {
     onClick = () => filterNav({ topicFilter: name });
-    color = gameDevStreamTags.includes(name) ? 'green' : 'blue';
+    color = gameDev ? 'green' : 'blue';
   }
 
   return (
     <Badge color={color} onClick={onClick}>
+      {gameDev && '🎮 '}
       {name} ({count})
     </Badge>
   );

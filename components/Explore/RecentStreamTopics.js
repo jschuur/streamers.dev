@@ -5,12 +5,15 @@ import Badge from '../Badge';
 import Section, { SectionText, SectionHeader, SectionBlock } from '../Layout/Section';
 
 import { formatNumber } from '../../lib/util';
+import { gameDevStreamTags } from '../../lib/config';
 
 import { EXPLORE_RECENT_STREAM_TOPICS_DAYS } from '../../lib/config';
 
+// TODO: Create a shared stream topic badge list component between the nav and this
 function RecentStreamTopicsBadge({ name, count, slug }) {
   const url = `/?topic=${slug}`;
   let color = 'gray';
+  const gameDev = gameDevStreamTags.includes(name);
 
   if (count >= 100) color = 'purple';
   else if (count >= 25) color = 'red';
@@ -20,6 +23,7 @@ function RecentStreamTopicsBadge({ name, count, slug }) {
   return (
     <Link href={url} passHref>
       <Badge color={color}>
+        {gameDev && '🎮 '}
         {name} ({count})
       </Badge>
     </Link>

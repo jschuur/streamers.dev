@@ -1,4 +1,4 @@
-import { sum, sumBy } from 'lodash';
+import { sum } from 'lodash';
 import { useTheme } from 'next-themes';
 import pluralize from 'pluralize';
 import { WorldMap } from 'react-svg-worldmap';
@@ -45,6 +45,15 @@ export function ChannelsChart({ data }) {
 }
 
 export function StreamsChart({ data }) {
+  const colorsCurrentDay = ['#FF4460', '#FFB1BC', '#FECA6A'];
+  const colorsEarlierDays = ['#008FFB', '#CBE7FE', '#00E396'];
+
+  // Last bar gets a different color, because it's the current day
+  const color = ({ dataPointIndex, seriesIndex }) =>
+    dataPointIndex === data.series[seriesIndex].data.length - 1
+      ? colorsCurrentDay[seriesIndex]
+      : colorsEarlierDays[seriesIndex];
+
   return (
     <Section>
       <SectionHeader id={'streamsByDay'}>{`Streams by Day`}</SectionHeader>
@@ -55,20 +64,29 @@ export function StreamsChart({ data }) {
             xaxis: {
               type: 'datetime',
             },
-            // Last bar gets a different color, because it's the current day
-            colors: [
-              ({ dataPointIndex }) => (dataPointIndex === data.length - 1 ? '#FF4460' : '#008FFB'),
-            ],
+            colors: Array(data.series.length).fill(color),
+            chart: {
+              stacked: true,
+            },
+            tooltip: {
+              y: {
+                formatter: (value, { dataPointIndex }) =>
+                  `${value} (${formatPercentage(value / data.totals[dataPointIndex])} of ${
+                    data.totals[dataPointIndex]
+                  })`,
+              },
+            },
           }}
           name={'Streams'}
-          data={data}
+          series={data.series}
+          categories={data.categories}
         />
       </SectionBlock>
 
       <SectionText>
-        {formatNumber(sumBy(data, 'y'), 'stream')} in the last{' '}
-        {pluralize('day', STATS_RECENT_STREAMS_DAYS, true)}. Currently counts coding and non coding
-        streams.
+        {formatNumber(sum(data.totals), 'stream')} in the last{' '}
+        {pluralize('day', STATS_RECENT_STREAMS_DAYS, true)}. 'Some Coding' streams contain non
+        coding portions such as Just Chatting or even gaming activity.
       </SectionText>
     </Section>
   );
@@ -241,7 +259,8 @@ export function ChannelMap({ data: { countries, channelsWithCountriesCount, tota
   );
 }
 
-export function LastStreamAgeChart({ data: { categories, data } }) {
+export function LastStreamAgeChart({ data: { categories, series } }) {
+  console.log({ categories, series });
   return (
     <Section>
       <SectionHeader id={'channelsByLastStreamed'}>
@@ -249,7 +268,7 @@ export function LastStreamAgeChart({ data: { categories, data } }) {
       </SectionHeader>
 
       <SectionBlock>
-        <BarChart name={'Channels'} categories={categories} data={data} />
+        <BarChart name={'Channels'} categories={categories} series={series} />
       </SectionBlock>
     </Section>
   );

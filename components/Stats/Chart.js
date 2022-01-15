@@ -65,7 +65,7 @@ export function LineChart({ series, title, type, group, options: additionalOptio
   return <Chart options={options} series={series} type={type} height={320} />;
 }
 
-export function BarChart({ data, categories, name, title, group, options: additionalOptions }) {
+export function BarChart({ series, categories, title, group, options: additionalOptions }) {
   const options = merge(
     initialChartOptions({ title, group }),
     additionalOptions,
@@ -78,8 +78,7 @@ export function BarChart({ data, categories, name, title, group, options: additi
       : {}
   );
 
-  // TODO: handle more than one dataset
-  return <Chart options={options} series={[{ name, data }]} type='bar' height={320} />;
+  return <Chart options={options} series={series} type='bar' height={320} />;
 }
 
 export function PieChart({ series, labels, title, group, options: additionalOptions }) {

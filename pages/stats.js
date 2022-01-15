@@ -24,7 +24,7 @@ export function StatsCharts({ data }) {
     <>
       <ViewersChart data={data.viewerSeries} />
       <ChannelsChart data={data.channelSeries} />
-      <StreamsChart data={data.streamsByDaySeries} />
+      <StreamsChart data={data.streamsByDayData} />
       <LanguagesCharts
         data={{
           languagesByStreamsSeries: data.languagesByStreamsSeries,
@@ -38,7 +38,7 @@ export function StatsCharts({ data }) {
         }}
       />
       <ChannelMap data={data.countriesByStreamersMapData} />
-      <LastStreamAgeChart data={data.daysSinceOnlineSeries} />
+      <LastStreamAgeChart data={data.daysSinceOnlineData} />
       <AccountTypeCharts
         data={{
           channelTypeSeries: data.channelTypeSeries,

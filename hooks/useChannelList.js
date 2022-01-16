@@ -1,4 +1,4 @@
-import { sortBy, sumBy } from 'lodash';
+import { orderBy, sumBy } from 'lodash';
 import { useContext, useEffect, useState } from 'react';
 
 import { useLiveChannels } from '../lib/api';
@@ -7,7 +7,7 @@ import { HomePageContext } from '../lib/stores';
 
 import { channelSortOptions, languageFilterOptions, categoryFilterOptions } from '../lib/options';
 
-function aggregateStreamTags({ channels, topicSort }) {
+function aggregateStreamTags(channels) {
   let tagCounts = {};
 
   // Count the tags used
@@ -22,8 +22,16 @@ function aggregateStreamTags({ channels, topicSort }) {
   if (tagCounts === {}) return [];
 
   // Sort the list of tags by channel usage
-  const tagList = Object.entries(tagCounts).map(([name, count]) => ({ name, count }));
-  return sortBy(tagList, topicSort ? 'name' : 'count').reverse();
+  return Object.entries(tagCounts).map(([name, count]) => ({ name, count }));
+}
+
+function sortStreamTags({ tags, topicSort }) {
+  // Make sure API comes after Algorithm and .NET is not at the start
+  const sortableString = (str) => str.toLowerCase().replace('.', '');
+
+  return topicSort
+    ? orderBy(tags, (tag) => sortableString(tag.name), 'asc')
+    : orderBy(tags, ['count', (tag) => sortableString(tag.name)], ['desc', 'asc']);
 }
 
 function visibleChannelViewerCounts({ allChannels, visibleChannels }) {
@@ -50,9 +58,6 @@ export default function useChannelList({ initialChannels }) {
   const [visibleChannels, setVisibleChannels] = useState(null);
   const { data, error, isFetching } = useLiveChannels({ placeholderData: initialChannels });
 
-  const sortStreamTags = ({ tags, topicSort }) =>
-    topicSort === 0 ? sortBy(tags, 'count').reverse() : sortBy(tags, 'name');
-
   // Update allChannels state after the channel list is fetched
   useEffect(() => {
     if (data) {
@@ -67,19 +72,16 @@ export default function useChannelList({ initialChannels }) {
   // Update visibleChannels state if filter/sort options are changed
   useEffect(async () => {
     if (allChannels?.length) {
-      let visibleChannels = sortBy(
-        allChannels,
-        channelSortOptions[channelSort].fieldName
-      ).reverse();
+      let visibleChannels = orderBy(allChannels, channelSortOptions[channelSort].fieldName, 'desc');
 
       if (categoryFilterOptions[categoryFilter].filter)
         visibleChannels = visibleChannels.filter(categoryFilterOptions[categoryFilter].filter);
       if (languageFilterOptions[languageFilter].filter)
         visibleChannels = visibleChannels.filter(languageFilterOptions[languageFilter].filter);
 
-      const latestStreamTags = aggregateStreamTags({ channels: visibleChannels, topicSort });
+      const latestStreamTags = aggregateStreamTags(visibleChannels);
 
-      setStreamTags((tags) => sortStreamTags({ tags: latestStreamTags, topicSort }));
+      setStreamTags(() => sortStreamTags({ tags: latestStreamTags, topicSort }));
 
       if (topicFilter)
         visibleChannels = visibleChannels.filter(({ latestStreamTags }) =>

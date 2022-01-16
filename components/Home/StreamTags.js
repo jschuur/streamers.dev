@@ -23,7 +23,7 @@ function StreamTagsEntry({ name, count }) {
 
   return (
     <Badge color={color} onClick={onClick}>
-      {gameDev && '🎮 '}
+      {gameDev && <span className='pr-2'>🎮</span>}
       {name} ({count})
     </Badge>
   );

@@ -14,14 +14,14 @@ export default function NewActiveChannels({ channels }) {
 
   return (
     <Section>
-      <SectionHeader id={'channels'}>Newly Added Channels by Stream Count</SectionHeader>
+      <SectionHeader id={'channels'}>Newly Added Channels by Stream Popularity</SectionHeader>
       <SectionBlock>
         <ChannelGrid channels={channels} />
       </SectionBlock>
 
       <SectionText>
         Added in the last {pluralize('day', EXPLORE_NEW_ACTIVE_CHANNEL_DAYS, true)}, with at least{' '}
-        {pluralize('stream', EXPLORE_NEW_ACTIVE_CHANNEL_MIN_STREAMS, true)} (max{' '}
+        {pluralize('coding stream', EXPLORE_NEW_ACTIVE_CHANNEL_MIN_STREAMS, true)} (max{' '}
         {pluralize('channel', EXPLORE_NEW_ACTIVE_CHANNEL_LIMIT, true)}).
       </SectionText>
     </Section>

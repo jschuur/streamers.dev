@@ -7,6 +7,7 @@ import Section from '../Layout/Section';
 
 import useTagSlugs from '../../hooks/useTagSlugs';
 
+import { debug } from '../../lib/util';
 import { HomePageContext } from '../../lib/stores';
 import {
   channelSortOptions,
@@ -15,7 +16,7 @@ import {
   topicSortOptions,
 } from '../../lib/options';
 
-export default function ChannelList({ initialChannels }) {
+export default function ChannelList({ initialChannelData }) {
   const {
     topicFilter,
     setTopicFilter,
@@ -58,13 +59,14 @@ export default function ChannelList({ initialChannels }) {
     // Skip initial pre-hydration call
     if (!isReady) return;
 
+    debug('ChannelList', `Route query update: ${JSON.stringify(query)}`);
     setStateFromQuery(query);
   }, [query]);
 
   return (
     <Section>
       <ChannelListControls />
-      <LiveChannels initialChannels={initialChannels} />
+      <LiveChannels initialChannelData={initialChannelData} />
     </Section>
   );
 }

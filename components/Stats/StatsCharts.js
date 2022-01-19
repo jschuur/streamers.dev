@@ -260,7 +260,6 @@ export function ChannelMap({ data: { countries, channelsWithCountriesCount, tota
 }
 
 export function LastStreamAgeChart({ data: { categories, series } }) {
-  console.log({ categories, series });
   return (
     <Section>
       <SectionHeader id={'channelsByLastStreamed'}>

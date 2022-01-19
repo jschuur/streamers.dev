@@ -6,6 +6,8 @@ import Loader from '../Layout/Loader';
 import useChannelList from '../../hooks/useChannelList';
 import useFilterNav from '../../hooks/useFilterNav';
 
+import { debug } from '../../lib/util';
+
 export default function LiveChannels({ initialChannels }) {
   const { visibleChannels, error } = useChannelList({ initialChannels });
   const filterNav = useFilterNav();
@@ -13,12 +15,15 @@ export default function LiveChannels({ initialChannels }) {
 
   if (error) return <div className='py-2'>Error: {error} </div>;
 
-  if (!visibleChannels)
+  if (!visibleChannels) {
+    debug('ChannelList', 'visibleChannels is null. Loading channels?');
+
     return (
       <div className='bg-gray-100 dark:bg-gray-700'>
         <Loader message='Loading live channel list...' theme={theme} />
       </div>
     );
+  }
 
   if (!visibleChannels?.length)
     return (

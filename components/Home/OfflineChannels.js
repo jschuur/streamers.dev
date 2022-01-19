@@ -11,10 +11,9 @@ import { OFFLINE_CHANNELS_LIMIT, OFFLINE_CHANNELS_RECENT_DAYS } from '../../lib/
 
 export default function OfflineChannels() {
   const { topicFilter } = useContext(HomePageContext);
-  if (!topicFilter) return null;
-
   const { isLoading, error, data: offlineChannels } = useOfflineChannels();
-  if (isLoading || !offlineChannels?.channels?.length) return null;
+
+  if (isLoading || !topicFilter || !offlineChannels?.channels?.length) return null;
 
   if (error)
     return (

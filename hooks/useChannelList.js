@@ -1,7 +1,9 @@
 import { orderBy, sumBy } from 'lodash';
+import pluralize from 'pluralize';
 import { useContext, useEffect, useState } from 'react';
 
 import { useLiveChannels } from '../lib/api';
+import { debug } from '../lib/util';
 
 import { HomePageContext } from '../lib/stores';
 
@@ -43,7 +45,7 @@ function visibleChannelViewerCounts({ allChannels, visibleChannels }) {
   return { totalChannelCount, visibleChannelCount, totalViewerCount, visibleViewerCount };
 }
 
-export default function useChannelList({ initialChannels }) {
+export default function useChannelList({ initialChannelData }) {
   const {
     languageFilter,
     categoryFilter,
@@ -56,13 +58,18 @@ export default function useChannelList({ initialChannels }) {
   } = useContext(HomePageContext);
   const [allChannels, setAllChannels] = useState([]);
   const [visibleChannels, setVisibleChannels] = useState(null);
-  const { data, error, isFetching } = useLiveChannels({ placeholderData: initialChannels });
+  const { data, error, isFetching } = useLiveChannels({
+    placeholderData: initialChannelData,
+  });
 
-  // Update allChannels state after the channel list is fetched
   useEffect(() => {
     if (data) {
       const { channels, ...meta } = data;
       meta.cacheFileSize = JSON.stringify(data).length;
+      debug(
+        'useChannelList',
+        `Channel data received for ${pluralize('channel', channels?.length, true)}`
+      );
 
       setAllChannels(channels);
       setChannelListMetaData(meta);
@@ -70,7 +77,7 @@ export default function useChannelList({ initialChannels }) {
   }, [data]);
 
   // Update visibleChannels state if filter/sort options are changed
-  useEffect(async () => {
+  useEffect(() => {
     if (allChannels?.length) {
       let visibleChannels = orderBy(allChannels, channelSortOptions[channelSort].fieldName, 'desc');
 

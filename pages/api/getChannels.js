@@ -1,22 +1,18 @@
 import { withSentry } from '@sentry/nextjs';
 
-import { getLiveChannels, getTrackedChannelCount, getDistinctCountryCount } from '../../lib/db';
+import { getLiveChannelData } from '../../lib/db';
 import { updateChannelStatuses } from '../../lib/twitch';
 
 const handler = async (req, res) => {
   try {
     const { refresh } = req.query;
 
-    const channels = await getLiveChannels();
+    const liveChannelData = await getLiveChannelData();
 
     // Add in updated status info in case channel data in the DB is outdated (or for live channels if configured)
-    if (parseInt(refresh)) await updateChannelStatuses({ channels });
+    if (parseInt(refresh)) await updateChannelStatuses({ channels: liveChannelData.channels });
 
-    res.status(200).json({
-      channels,
-      trackedChannelCount: await getTrackedChannelCount(),
-      distinctCountryCount: await getDistinctCountryCount(),
-    });
+    res.status(200).json(liveChannelData);
   } catch ({ message }) {
     res.status(500).json({ error: message });
   }

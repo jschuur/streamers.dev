@@ -8,8 +8,8 @@ import useFilterNav from '../../hooks/useFilterNav';
 
 import { debug } from '../../lib/util';
 
-export default function LiveChannels({ initialChannels }) {
-  const { visibleChannels, error } = useChannelList({ initialChannels });
+export default function LiveChannels({ initialChannelData }) {
+  const { visibleChannels, error } = useChannelList({ initialChannelData });
   const filterNav = useFilterNav();
   const { theme } = useTheme();
 

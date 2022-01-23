@@ -3,7 +3,7 @@ import pluralize from 'pluralize';
 import { useContext, useEffect, useState } from 'react';
 
 import { useLiveChannels } from '../lib/api';
-import { debug } from '../lib/util';
+import { debug, hasGameDevStreamTag } from '../lib/util';
 
 import { HomePageContext } from '../lib/stores';
 
@@ -55,6 +55,7 @@ export default function useChannelList({ initialChannelData }) {
     topicFilter,
     setLiveCounts,
     setChannelListMetaData,
+    showGameDev,
   } = useContext(HomePageContext);
   const [allChannels, setAllChannels] = useState([]);
   const [visibleChannels, setVisibleChannels] = useState(null);
@@ -85,6 +86,10 @@ export default function useChannelList({ initialChannelData }) {
         visibleChannels = visibleChannels.filter(categoryFilterOptions[categoryFilter].filter);
       if (languageFilterOptions[languageFilter].filter)
         visibleChannels = visibleChannels.filter(languageFilterOptions[languageFilter].filter);
+      if (!showGameDev)
+        visibleChannels = visibleChannels.filter(
+          (channel) => !hasGameDevStreamTag(channel.latestStreamTags)
+        );
 
       const latestStreamTags = aggregateStreamTags(visibleChannels);
 
@@ -98,7 +103,7 @@ export default function useChannelList({ initialChannelData }) {
       setLiveCounts(visibleChannelViewerCounts({ allChannels, visibleChannels }));
       setVisibleChannels(visibleChannels);
     }
-  }, [allChannels, languageFilter, categoryFilter, channelSort, topicFilter]);
+  }, [allChannels, languageFilter, categoryFilter, channelSort, topicFilter, showGameDev]);
 
   // Resort the list of tags when the topic sort option is changed
   useEffect(() => {

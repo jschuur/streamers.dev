@@ -2,12 +2,15 @@ import pluralize from 'pluralize';
 import { useContext, useState, useEffect } from 'react';
 
 import Badge from '../Badge';
+import Toggle from '../Toggle';
 
 import useFilterNav from '../../hooks/useFilterNav';
 
 import { gameDevStreamTags } from '../../lib/config';
 import { HomePageContext } from '../../lib/stores';
 import { topicSortOptions } from '../../lib/options';
+
+import { debug } from '../../lib/util';
 
 function StreamTagsEntry({ name, count }) {
   const { topicFilter } = useContext(HomePageContext);
@@ -57,19 +60,28 @@ function StreamTagsReset() {
 }
 
 export default function StreamTags() {
-  const { streamTags, categoryFilter } = useContext(HomePageContext);
+  const { streamTags, categoryFilter, showGameDev, setShowGameDev } = useContext(HomePageContext);
 
-  if (!streamTags.length) return null;
+  if (!streamTags.length) {
+    debug('StreamTags', 'no streamTags');
+
+    return null;
+  }
 
   // Don't use tags for the non-coding section
   if (categoryFilter === 1) return null;
 
   return (
-    <div className='px-1 sm:px-2 py-2 sm:py-3 text-black dark:text-white'>
-      <StreamTagsReset />
-      {streamTags.map(({ name, count }) => (
-        <StreamTagsEntry key={name} name={name} count={count} />
-      ))}
+    <div className='px-1 sm:px-2 py-2 sm:py-3 flex flex-col-reverse sm:flex-col text-black dark:text-white'>
+      <div>
+        <StreamTagsReset />
+        {streamTags.map(({ name, count }) => (
+          <StreamTagsEntry key={name} name={name} count={count} />
+        ))}
+      </div>
+      <div className='px-1 sm:px-2 pb-1 sm:pb-0 pt-0 sm:pt-2 flex  sm:flex-row justify-end'>
+        <Toggle text='Include game dev' state={showGameDev} setState={setShowGameDev} />
+      </div>
     </div>
   );
 }

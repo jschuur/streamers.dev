@@ -32,7 +32,7 @@ export default function OfflineChannels() {
       </SectionBlock>
 
       <SectionText>
-        Based on streams under this topic in the last{' '}
+        Based on average peak viewers for streams under this topic in the last{' '}
         {pluralize('day', OFFLINE_CHANNELS_RECENT_DAYS, true)}, identified by Twitch tags and title
         keywords (top {pluralize('channel', OFFLINE_CHANNELS_LIMIT, true)}).
       </SectionText>
